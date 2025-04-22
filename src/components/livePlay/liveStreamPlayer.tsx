@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import Hls from 'hls.js';
 
-const LiveStreamPlayer: React.FC = () => {
+const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
-    const streamUrl = 'http://localhost:8080/hls/mystream.m3u8';
+    const streamUrl = `http://localhost:8080/hls/${streamKey}.m3u8`;
 
     if (video) {
       if (Hls.isSupported()) {
@@ -27,7 +27,7 @@ const LiveStreamPlayer: React.FC = () => {
         });
       }
     }
-  }, []);
+  }, [streamKey]);
 
   return (
     <div className='w-full h-300px'>

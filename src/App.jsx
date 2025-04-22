@@ -74,7 +74,9 @@ function App() {
       <Route path="/profile/index" element={<ProfileIndex />} >
       <Route path="live" element={<LiveStreaming/>} />
       </Route>
-      <Route path="/videoPlay/ownerProfile/:username" element={<OwnerProfile/>} />
+      <Route path="/videoPlay/ownerProfile/:username" element={<OwnerProfile/>} >
+      <Route path="live" element={<LiveStreaming/>} />
+      </Route>
     </Routes>
   </div>
 </div>

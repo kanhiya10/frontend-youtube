@@ -71,7 +71,7 @@ console.log("isCurrentUser",isCurrentUser);
   }
 
   return (
-    <div className='min-h-screen  w-full pt-2'>
+    <div className='h-auto w-full pt-2'>
       <div className='pb-2'>
         {/* Cover Image */}
         <div className="w-full h-[180px] mb-5">
