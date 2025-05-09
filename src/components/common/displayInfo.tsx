@@ -102,13 +102,13 @@ console.log("isCurrentUser",isCurrentUser);
         <nav className="border-b border-gray-300 ml-16">
           <ul className="flex flex-row w-2/5 justify-evenly list-none ml-14 py-1">
             {(isCurrentUser ? [
-              { to: "content", label: "Home" },
+              { to: "home", label: "Home" },
               { to: "video", label: "Upload Video" },
               { to: "getVideo", label: "Videos" },
               { to: "live", label: "Live" },
               { to: "watchHistory", label: "Watch History" },
             ] : [
-              { to: "content", label: "Home" },
+              { to: "home", label: "Home" },
               
               { to: "getVideo", label: "Videos" },
               

@@ -24,7 +24,10 @@ import AuthIndex from './app/auth/index';
 // import DisplayInfo from './app/profile/index';
 import OwnerProfile from './app/videoPlay/ownerProfile';
 import ProfileIndex from './app/profile/index';
-import LiveStreaming from './app/profile/liveStreaming';
+import LiveStreaming from './components/common/liveStreaming';
+import HomeProfile  from './components/common/homeProfile';
+import VideosTab from './components/common/videoTab';
+import WatchHistory from './components/common/watchHistory';
 // import axios from "axios"
 
 function App() {
@@ -69,13 +72,21 @@ function App() {
   >
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/watchHistory" element={<WatchHistory />} />
       <Route path="/videoPlay/streaming" element={<Streaming />} />
       <Route path="/auth/index" element={<AuthIndex />} />
       <Route path="/profile/index" element={<ProfileIndex />} >
+      <Route index element={<HomeProfile />} />
       <Route path="live" element={<LiveStreaming/>} />
+      <Route path="home" element={<HomeProfile/>} />
+      <Route path="getVideo" element={<VideosTab/>} />
+      <Route path="watchHistory" element={<WatchHistory />} />
       </Route>
       <Route path="/videoPlay/ownerProfile/:username" element={<OwnerProfile/>} >
+      <Route index element={<HomeProfile />} />
       <Route path="live" element={<LiveStreaming/>} />
+      <Route path="home" element={<HomeProfile/>} />
+      <Route path="getVideo" element={<VideosTab/>} />
       </Route>
     </Routes>
   </div>

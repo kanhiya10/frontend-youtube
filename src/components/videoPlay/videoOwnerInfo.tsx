@@ -93,7 +93,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
 
   return (
     <div>
-    <div className="w-[70%] flex flex-col md:flex-row justify-between items-center gap-4  pb-4 px-2 md:px-6 mt-4 ">
+    <div className="w-[70%] flex flex-row justify-between  gap-4  pb-4 px-2 md:px-6 mt-4">
       {/* Left - Channel Info */}
       <div className="flex items-center gap-4  p-3 rounded-lg">
   {/* Owner Info: Avatar + Name + Subscribers */}
@@ -130,7 +130,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
 </div>
 
       {/* Right - Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ">
         {/* Like/Dislike */}
         <div className="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 shadow-sm">
   <div className="flex items-center gap-1 border-r border-gray-400 pr-3">

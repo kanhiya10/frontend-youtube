@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import GoLiveForm from '../../components/livePlay/goLiveForm';
-import LiveStreamPlayer from '../../components/livePlay/liveStreamPlayer';
+import GoLiveForm from '../livePlay/goLiveForm';
+import LiveStreamPlayer from '../livePlay/liveStreamPlayer';
 import { useParams } from 'react-router-dom';
 
 interface StreamMeta {
