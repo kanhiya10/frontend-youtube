@@ -23,6 +23,8 @@ import UploadVideo from './components/common/uploadVideo';
 function App() {
   const [sidebarData, setSidebarData] = useState(false);
 
+  console.log('url from render ',import.meta.env.VITE_API_URL);
+
   const handleSideBar=()=>{
     setSidebarData(!sidebarData);
   }
