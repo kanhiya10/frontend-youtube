@@ -11,7 +11,7 @@ export default function Home() {
     const FetchRandomVideos = async () => {
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
-          "http://localhost:8000/api/v1/videos/randomVideos"
+          `${import.meta.env.VITE_API_URL}/api/v1/videos/randomVideos`
         );
         setRandomVideos(response.data.data);
         console.log('randomVideos:', response.data.data);

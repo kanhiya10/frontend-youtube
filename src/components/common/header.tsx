@@ -6,6 +6,7 @@ import { SlLogin, SlLogout } from 'react-icons/sl';
 import { RiUser3Line, RiMenu2Fill, RiMenu3Fill } from 'react-icons/ri';
 import { resetInfo } from '../../features/slice/fetchUser.slice';
 import Search from './serach';
+import { useTheme } from '../../context/themeContext';
 
 interface HeaderProps {
   handleSideBar: () => void;
@@ -22,6 +23,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { theme, toggleTheme, mode } = useTheme();
 
   const toggle = () => {
     handleSideBar();
@@ -33,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        'http://localhost:8000/api/v1/users/logout',
+        `${import.meta.env.VITE_API_URL}/api/v1/users/logout`,
         {},
         {
           headers: {
@@ -51,7 +53,8 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   };
 
   return (
-    <header className="flex justify-between items-center h-[10%] w-full bg-black fixed top-0 left-0 z-50 px-4 md:px-8 border-b border-gray-700">
+    <header className="flex justify-between items-center h-[10%] w-full fixed top-0 left-0 z-50 px-4 md:px-8 border-b border-gray-700"
+    style={{ backgroundColor: theme.background }}>
 
       <div className="flex items-center gap-10 md:gap-40">
         {isOpen ? (

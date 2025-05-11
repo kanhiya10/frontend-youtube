@@ -44,7 +44,7 @@ const UserInfo: React.FC = () => {
 
     try {
       const result = await axios.patch(
-        'http://localhost:8000/api/v1/users/avatar',
+        `${import.meta.env.VITE_API_URL}/api/v1/users/avatar`,
         formData,
         {
           headers: {

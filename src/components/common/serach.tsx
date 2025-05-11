@@ -16,7 +16,7 @@ const Search: React.FC = () => {
     if (!text.trim()) return;
     dispatch(
       ChannelApi({
-        url: `http://localhost:8000/api/v1/users/visitChannel/${text}`,
+        url: `${import.meta.env.VITE_API_URL}/api/v1/users/visitChannel/${text}`,
         options: { Accept: 'application/json' },
       })
     );

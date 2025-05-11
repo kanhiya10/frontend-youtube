@@ -125,7 +125,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",                // ✅ Add this
+    "paths": {                     // ✅ And this
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"]
 }

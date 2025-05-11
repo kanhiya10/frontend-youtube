@@ -28,7 +28,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("username",username);
             // POST request for visiting another user's channel
             response = await axios.post<{ data: UserType }>(
-              `http://localhost:8000/api/v1/users/visitChannel/${username}`,
+              `${import.meta.env.VITE_API_URL}/api/v1/users/visitChannel/${username}`,
               {}, // send an empty body
               {
                 headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("current user");
             // GET request for current user
             response = await axios.get<{ data: UserType }>(
-              `http://localhost:8000/api/v1/users/current-user`,
+              `${import.meta.env.VITE_API_URL}/api/v1/users/current-user`,
               {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
@@ -103,7 +103,7 @@ console.log("isCurrentUser",isCurrentUser);
           <ul className="flex flex-row w-2/5 justify-evenly list-none ml-14 py-1">
             {(isCurrentUser ? [
               { to: "home", label: "Home" },
-              { to: "video", label: "Upload Video" },
+              { to: "uploadVideo", label: "Upload Video" },
               { to: "getVideo", label: "Videos" },
               { to: "live", label: "Live" },
               { to: "watchHistory", label: "Watch History" },
