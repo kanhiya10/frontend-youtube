@@ -33,7 +33,7 @@ const UpdateCover = () => {
     formData.append("coverImage", cover);
 
     try {
-      await fetch(`${process.env.VITE_API_URL}/api/v1/users/cover-image`, {
+      await fetch(`https://backend-youtube-zba1.onrender.com/api/v1/users/cover-image`, {
         method: "PATCH",
         credentials: "include",
         body: formData,

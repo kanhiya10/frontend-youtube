@@ -9,9 +9,11 @@ export default function Home() {
 
   useEffect(() => {
     const FetchRandomVideos = async () => {
+      const FetchUrl= 'https://backend-youtube-zba1.onrender.com/api/v1/videos/randomVideos';
+      console.log('FetchUrl:', FetchUrl);
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
-          `${process.env.VITE_API_URL}/api/v1/videos/randomVideos`
+          FetchUrl
         );
         setRandomVideos(response.data.data);
         console.log('randomVideos:', response.data.data);

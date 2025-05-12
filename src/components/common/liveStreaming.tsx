@@ -32,14 +32,14 @@ const Live = () => {
       try {
         if (!isCurrentUser) {
             console.log("username in fetchLiveAndPast",username);
-          const liveRes = await axios.get(`${process.env.VITE_API_URL}/api/v1/stream/fetchLive/${username}`, {
+          const liveRes = await axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/stream/fetchLive/${username}`, {
             withCredentials: true,
           });
           setStreamData(liveRes.data.data);
         }
 
         const historyRes = await axios.get(
-            `${process.env.VITE_API_URL}/api/v1/stream/history${username ? `/${username}` : ""}`,
+            `https://backend-youtube-zba1.onrender.com/api/v1/stream/history${username ? `/${username}` : ""}`,
             { withCredentials: true }
           );
           

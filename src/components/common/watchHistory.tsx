@@ -13,7 +13,7 @@ const WatchHistory = () => {
 
         try {
             const response = await axios.get(
-                `${process.env.VITE_API_URL}/api/v1/users/GetHistory`,
+                `https://backend-youtube-zba1.onrender.com/api/v1/users/GetHistory`,
                 {
                     headers: {
                       'Content-Type': 'application/json',

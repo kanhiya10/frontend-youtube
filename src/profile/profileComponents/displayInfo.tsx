@@ -25,7 +25,7 @@ const DisplayInfo = () => {
     const handleCurrentUser = async () => {
       try {
         const response = await axios.get<{ data: UserType }>(
-          `${process.env.VITE_API_URL}/api/v1/users/current-user`,
+          `https://backend-youtube-zba1.onrender.com/api/v1/users/current-user`,
           {
             headers: {
               'Content-Type': 'application/json',

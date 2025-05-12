@@ -12,7 +12,7 @@ export const useVideoPlayTracker = (videoId: string) => {
       console.log("First time play - Tracking view");
 
       // Increment view count
-      axios.post(`${process.env.VITE_API_URL}/api/v1/viewVideo/viewVideo/${videoId}`, {}, {
+      axios.post(`https://backend-youtube-zba1.onrender.com/api/v1/viewVideo/viewVideo/${videoId}`, {}, {
         withCredentials: true,
       }).then((res) => {
         console.log('View count updated:', res.data);
@@ -22,7 +22,7 @@ export const useVideoPlayTracker = (videoId: string) => {
       });
 
       // Add to watch history (no userId needed)
-      axios.post(`${process.env.VITE_API_URL}/api/v1/users/history/${videoId}`, {}, {
+      axios.post(`https://backend-youtube-zba1.onrender.com/api/v1/users/history/${videoId}`, {}, {
         withCredentials: true,
       }).then((res) => {
         console.log('Watch history updated:', res.data);

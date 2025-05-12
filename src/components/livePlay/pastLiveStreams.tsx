@@ -17,7 +17,7 @@ const PastLiveStreams = ({ username }: { username: string }) => {
     const fetchPast = async () => {
       try {
         const res = await axios.get(
-          `${process.env.VITE_API_URL}/api/v1/stream/history/${username}`
+          `${https://backend-youtube-zba1.onrender.com}/api/v1/stream/history/${username}`
         );
         console.log("res",res.data);
         setPastStreams(res.data.data);

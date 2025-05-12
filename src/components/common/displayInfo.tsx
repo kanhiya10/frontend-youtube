@@ -28,7 +28,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("username",username);
             // POST request for visiting another user's channel
             response = await axios.post<{ data: UserType }>(
-              `${process.env.VITE_API_URL}/api/v1/users/visitChannel/${username}`,
+              `https://backend-youtube-zba1.onrender.com/api/v1/users/visitChannel/${username}`,
               {}, // send an empty body
               {
                 headers: { 'Content-Type': 'application/json' },
@@ -39,7 +39,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("current user");
             // GET request for current user
             response = await axios.get<{ data: UserType }>(
-              `${process.env.VITE_API_URL}/api/v1/users/current-user`,
+              'https://backend-youtube-zba1.onrender.com/api/v1/users/current-user',
               {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true

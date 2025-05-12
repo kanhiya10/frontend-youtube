@@ -44,7 +44,7 @@ const UserInfo: React.FC = () => {
 
     try {
       const result = await axios.patch(
-        `${process.env.VITE_API_URL}/api/v1/users/avatar`,
+        `${https://backend-youtube-zba1.onrender.com}/api/v1/users/avatar`,
         formData,
         {
           headers: {

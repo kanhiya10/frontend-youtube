@@ -24,7 +24,7 @@ const UploadVideo: React.FC = () => {
 
     try {
       const uploadResp = await axios.post(
-        `${process.env.VITE_API_URL}/api/v1/videos/uploadVideo`,
+        `https://backend-youtube-zba1.onrender.com/api/v1/videos/uploadVideo`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        `${process.env.VITE_API_URL}/api/v1/users/logout`,
+        `https://backend-youtube-zba1.onrender.com/api/v1/users/logout`,
         {},
         {
           headers: {
