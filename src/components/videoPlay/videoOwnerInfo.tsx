@@ -24,7 +24,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
 
   const getVideoOwnerInfo = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/videos/videoOwnerInfo/${VideoInfo._id}`);
+      const response = await axios.get(`${process.env.VITE_API_URL}/api/v1/videos/videoOwnerInfo/${VideoInfo._id}`);
       setOwnerInfo(response.data.data);
     } catch (error) {
       console.log('Error fetching owner info:', error);
@@ -34,7 +34,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   const handleSubscribe = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/subscription/toggle/${ownerInfo?._id}`,
+        `${process.env.VITE_API_URL}/api/v1/subscription/toggle/${ownerInfo?._id}`,
         {},
         { withCredentials: true }
       );
@@ -52,7 +52,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   const toggleReaction = async (type: 'like' | 'dislike') => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/videos/toggleReaction/${VideoInfo._id}`,
+        `${process.env.VITE_API_URL}/api/v1/videos/toggleReaction/${VideoInfo._id}`,
         { reaction: type },
         { withCredentials: true }
       );

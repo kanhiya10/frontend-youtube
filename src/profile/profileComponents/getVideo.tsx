@@ -31,7 +31,7 @@ function GetVideo() {
 
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/v1/videos/handleGetVideos/${info._id}`,
+          `${process.env.VITE_API_URL}/api/v1/videos/handleGetVideos/${info._id}`,
           {},
           {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -59,7 +59,7 @@ function GetVideo() {
       const addVideoToWatchHistory = async () => {
         try {
           await axios.post(
-            `${import.meta.env.VITE_API_URL}/api/v1/users/history/${info._id}/${activeVideo._id}`,
+            `${process.env.VITE_API_URL}/api/v1/users/history/${info._id}/${activeVideo._id}`,
             {},
             {
               headers: {

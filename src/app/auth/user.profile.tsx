@@ -24,7 +24,7 @@ const UserProfile: React.FC = () => {
     e.preventDefault();
     try {
       const option = { password, username, email };
-      dispatch(UserApi({ url: `${import.meta.env.VITE_API_URL}/api/v1/users/login`, option }));
+      dispatch(UserApi({ url: `${process.env.VITE_API_URL}/api/v1/users/login`, option }));
     } catch (error) {
       console.error('Error during login:', error);
     }

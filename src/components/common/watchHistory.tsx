@@ -13,7 +13,7 @@ const WatchHistory = () => {
 
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/api/v1/users/GetHistory`,
+                `${process.env.VITE_API_URL}/api/v1/users/GetHistory`,
                 {
                     headers: {
                       'Content-Type': 'application/json',

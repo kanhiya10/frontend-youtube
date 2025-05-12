@@ -17,7 +17,7 @@ const PastLiveStreams = ({ username }: { username: string }) => {
     const fetchPast = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/stream/history/${username}`
+          `${process.env.VITE_API_URL}/api/v1/stream/history/${username}`
         );
         console.log("res",res.data);
         setPastStreams(res.data.data);

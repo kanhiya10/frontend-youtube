@@ -22,7 +22,7 @@ const Video: React.FC = () => {
 
     try {
       const uploadResp = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/videos/uploadVideo`,
+        `${process.env.VITE_API_URL}/api/v1/videos/uploadVideo`,
         formData,
         {
           headers: {

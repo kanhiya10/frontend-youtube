@@ -25,7 +25,7 @@ const DisplayInfo = () => {
     const handleCurrentUser = async () => {
       try {
         const response = await axios.get<{ data: UserType }>(
-          `${import.meta.env.VITE_API_URL}/api/v1/users/current-user`,
+          `${process.env.VITE_API_URL}/api/v1/users/current-user`,
           {
             headers: {
               'Content-Type': 'application/json',
