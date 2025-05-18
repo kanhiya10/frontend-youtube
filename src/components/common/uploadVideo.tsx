@@ -18,13 +18,13 @@ const UploadVideo: React.FC = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("views", views.toString());
-    formData.append("isPublished", isPublished);
+    formData.append("isPublished", JSON.stringify(isPublished === "true"));
     if (file) formData.append("video", file);
     if (thumbnail) formData.append("thumbnail", thumbnail);
 
     try {
       const uploadResp = await axios.post(
-        `https://backend-youtube-zba1.onrender.com/api/v1/videos/uploadVideo`,
+        `http://localhost:8000/api/v1/videos/uploadVideo`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

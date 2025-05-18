@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { VideoInfoType } from '../types/types';
+import { useTheme } from '../context/themeContext';
 
 export default function Home() {
   const [randomVideos, setRandomVideos] = useState<VideoInfoType[]>([]);
   const navigate = useNavigate();
+ const { theme, toggleTheme, mode } = useTheme();
 
   useEffect(() => {
     const FetchRandomVideos = async () => {
-      const FetchUrl= 'https://backend-youtube-zba1.onrender.com/api/v1/videos/randomVideos';
+      const FetchUrl= 'http://localhost:8000/api/v1/videos/randomVideos';
       console.log('FetchUrl:', FetchUrl);
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
@@ -25,7 +27,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full  p-5 " >
+    <div className={`min-h-screen w-full  p-5`} style={{ backgroundColor: theme.background }} >
       <div className="flex flex-wrap gap-x-6 gap-y-10 justify-start">
         {randomVideos.length > 0 ? (
           randomVideos.map((video) => (

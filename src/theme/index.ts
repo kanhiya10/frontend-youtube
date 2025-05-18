@@ -1,6 +1,10 @@
 export const lightTheme = {
     background: '#FFFFFF',
+    sideBarIconsActive:"bg-orange-700",
+    sideBarIconsInActive:"bg-purple-400",
+    card:"#FFFFFF",
     surface: '#F5F5F5',
+    btn:'722F37',
     text: '#121212',
     primary: '#8A9A5B',
     secondary: '#C4C3D0',
@@ -12,7 +16,11 @@ export const lightTheme = {
   
   export const darkTheme = {
     background: 'black',
+    sideBarIconsActive:"bg-blue-700",
+    sideBarIconsInActive:"bg-gray-400",
+     card:"#94A3B8",
     surface: '#1E1E1E',
+    btn:'#3E3A61',
     text: '#FFFFFF',
     primary: '#8A9A5B',
     secondary: '#C4C3D0',

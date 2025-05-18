@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        `https://backend-youtube-zba1.onrender.com/api/v1/users/logout`,
+        `http://localhost:8000/api/v1/users/logout`,
         {},
         {
           headers: {
@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   };
 
   return (
-    <header className="flex justify-between items-center h-[10%] w-full fixed top-0 left-0 z-50 px-4 md:px-8 border-b border-gray-700"
+    <header className="flex justify-between items-center h-[10%] w-full fixed top-0 left-0 z-50 px-4 md:px-8 "
     style={{ backgroundColor: theme.background }}>
 
       <div className="flex items-center gap-10 md:gap-40">

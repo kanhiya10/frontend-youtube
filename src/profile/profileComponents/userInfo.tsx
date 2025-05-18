@@ -44,7 +44,7 @@ const UserInfo: React.FC = () => {
 
     try {
       const result = await axios.patch(
-        `https://backend-youtube-zba1.onrender.com/api/v1/users/avatar`,
+        `http://localhost:8000/api/v1/users/avatar`,
         formData,
         {
           headers: {

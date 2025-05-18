@@ -9,6 +9,13 @@ import { useVideoPlayTracker } from '../../hooks/useVideoPlayerTracker';
 interface PlayVideoProps {
   VideoInfo: VideoInfoType;
 }
+const videoTimestamps = [
+    { time: 0, label: 'Introduction' },
+    { time: 5, label: 'Main concepts' },
+    { time: 10, label: 'Technical demonstration' },
+    { time: 20, label: 'Case study' },
+    { time: 23, label: 'Conclusion' }
+  ];
 
 const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
   const navigate = useNavigate();
@@ -36,7 +43,8 @@ const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
   src={VideoInfo.videoFile}
   poster={VideoInfo.thumbnail}
   onPlay={handlePlay}
-  className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
+   timestamps={videoTimestamps}
+  className="w-10 h-10 max-h-[60vh] rounded-lg shadow-xl"
 />
         </div>
 

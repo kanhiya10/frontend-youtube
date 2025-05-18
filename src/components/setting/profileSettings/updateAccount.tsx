@@ -12,7 +12,7 @@ const UpdateAccount = () => {
 
     try {
       await axios.patch(
-        `https://backend-youtube-zba1.onrender.com/api/v1/users/update-account`,
+        `http://localhost:8000/api/v1/users/update-account`,
         { fullName, email },
         { withCredentials: true }
       );

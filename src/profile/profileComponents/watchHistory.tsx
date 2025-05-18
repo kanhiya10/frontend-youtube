@@ -18,7 +18,7 @@ const WatchHistory: React.FC = () => {
     const getHistory = async () => {
       try {
         const response = await axios.get(
-          `https://backend-youtube-zba1.onrender.com/api/v1/users/GetHistory/${info._id}`,
+          `http://localhost:8000/api/v1/users/GetHistory/${info._id}`,
           {
             headers: { 'Content-Type': 'multipart/form-data' },
             withCredentials: true,
@@ -37,7 +37,7 @@ const WatchHistory: React.FC = () => {
   const handleClearHistory = async () => {
     try {
       const response = await axios.get(
-        `https://backend-youtube-zba1.onrender.com/api/v1/users/ClearHistory/${info._id}`,
+        `http://localhost:8000/api/v1/users/ClearHistory/${info._id}`,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
           withCredentials: true,

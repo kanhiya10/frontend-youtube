@@ -33,7 +33,7 @@ const UpdateCover = () => {
     formData.append("coverImage", cover);
 
     try {
-      await fetch(`https://backend-youtube-zba1.onrender.com/api/v1/users/cover-image`, {
+      await fetch(`http://localhost:8000/api/v1/users/cover-image`, {
         method: "PATCH",
         credentials: "include",
         body: formData,

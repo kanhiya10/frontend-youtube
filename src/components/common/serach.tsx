@@ -16,7 +16,7 @@ const Search: React.FC = () => {
     if (!text.trim()) return;
     dispatch(
       ChannelApi({
-        url: `https://backend-youtube-zba1.onrender.com/api/v1/users/visitChannel/${text}`,
+        url: `http://localhost:8000/api/v1/users/visitChannel/${text}`,
         options: { Accept: 'application/json' },
       })
     );

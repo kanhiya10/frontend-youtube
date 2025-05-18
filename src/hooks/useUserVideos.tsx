@@ -16,7 +16,7 @@ export const useUserVideos = (username?: string) => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const endpoint = `https://backend-youtube-zba1.onrender.com/api/v1/videos/user${username ? `/${username}` : ""}`;
+        const endpoint = `http://localhost:8000/api/v1/videos/user${username ? `/${username}` : ""}`;
         const response = await axios.get<{ data: Video[] }>(endpoint, { withCredentials: true });
         setVideos(response.data.data);
       } catch (error) {

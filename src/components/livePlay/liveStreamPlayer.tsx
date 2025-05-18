@@ -6,7 +6,7 @@ const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
 
   useEffect(() => {
     const video = videoRef.current;
-    const streamUrl = `https://backend-youtube-zba1.onrender.com/hls/${streamKey}.m3u8`;
+    const streamUrl = `http://localhost:8000/hls/${streamKey}.m3u8`;
 
     if (video) {
       if (Hls.isSupported()) {

@@ -4,6 +4,7 @@ import { FaHome } from 'react-icons/fa';
 import { BsClockHistory } from 'react-icons/bs';
 import { IoSettings } from 'react-icons/io5';
 import { NavLink } from 'react-router-dom';
+import { useTheme } from '../../context/themeContext';
 
 interface SidebarProps {
   sidebarData: boolean;
@@ -32,6 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarData }) => {
   const expandedWidth = 'w-[12.5rem]'; // 200px
 
   const [sidebarClass, setSidebarClass] = useState(collapsedWidth);
+  const { theme, toggleTheme, mode } = useTheme();
 
   useEffect(() => {
     setSidebarClass(sidebarData ? expandedWidth : collapsedWidth);
@@ -41,7 +43,8 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarData }) => {
     <div className="fixed top-0 left-0 h-screen  ">
       <motion.div
         animate={{ width: sidebarData ? expandedWidth : collapsedWidth }}
-        className={`h-full bg-black text-white shadow-lg overflow-hidden `}
+        className={`h-full text-white overflow-hidden `}
+        style={{ backgroundColor: theme.background }}
       >
         <div className="flex flex-col items-start mt-30 p-4 gap-4 ">
           {routes.map((route) => (
@@ -50,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarData }) => {
               key={route.name}
               className={({ isActive }) =>
                 `flex items-center gap-4 px-3 py-2 w-full rounded-md transition-colors duration-200 ${
-                  isActive ? 'bg-gray-700' : 'hover:bg-gray-800'
+                  isActive ? theme.sideBarIconsActive : theme.sideBarIconsInActive
                 }`
               }
             >

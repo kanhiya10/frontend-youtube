@@ -126,10 +126,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": ".",                // ✅ Add this
+    "baseUrl": ".",  
+    "typeRoots": ["./node_modules/@types", "./types"],              // ✅ Add this
     "paths": {                     // ✅ And this
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src/**/*",
+    "src/types/marker_plugin.ts"
+  ]
 }
