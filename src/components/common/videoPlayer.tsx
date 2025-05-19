@@ -37,7 +37,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       controls: true,
       autoplay: false,
       preload: 'auto',
-      fluid: true,
+      fluid: false,
       controlBar: {
         skipForward: true,
         skipBack: true,
@@ -60,7 +60,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     
     // Update current time for timestamp highlighting
     player.on('timeupdate', () => {
-      setCurrentTime(Math.floor(player.currentTime()));
+      const time = player.currentTime();
+      setCurrentTime(Math.floor(time !== undefined ? time : 0));
     });
   
     return () => {

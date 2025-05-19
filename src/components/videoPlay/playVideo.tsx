@@ -29,7 +29,7 @@ const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
 
   if (!VideoInfo) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-5rem)] text-red-500 text-lg font-semibold">
+      <div className="flex items-center justify-center h-[calc(100vh-5rem)] text-red-500 text-lg font-semibold border-2 ">
         No video information available.
       </div>
     );

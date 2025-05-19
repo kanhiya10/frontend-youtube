@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { VideoInfoType, UserInfoType } from '../../types/types';
 import { ThumbsUp, ThumbsDown, Share2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import VideoComments from './videoComments';
 interface VideoOwnerInfoProps {
   VideoInfo: VideoInfoType;
 }
@@ -176,6 +177,8 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
         </div> 
         <p className='text-gray-600 dark:text-gray-400'>{VideoInfo.description}</p>
     </div>
+    <VideoComments VideoInfo={VideoInfo} />
+
     </div>
   );
 };

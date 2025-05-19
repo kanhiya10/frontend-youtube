@@ -3,10 +3,12 @@ import { useLocation } from 'react-router-dom';
 import PlayVideo from '../../components/videoPlay/playVideo';
 import { VideoInfoType } from '../../types/types';
 import VideoOwnerInfo from '../../components/videoPlay/videoOwnerInfo';
+import { useTheme } from '../../context/themeContext';
 
 
 const Streaming: React.FC = () => {
     const location = useLocation();
+    const { theme } = useTheme();
     const { VideoInfo } = (location.state as { VideoInfo: VideoInfoType }) || {};
 
     if (!VideoInfo) {
@@ -19,7 +21,7 @@ const Streaming: React.FC = () => {
       
 
   return (
-    <div>
+    <div  style={{ backgroundColor: theme.background }} >
       <PlayVideo VideoInfo={VideoInfo} />
       <VideoOwnerInfo VideoInfo={VideoInfo} />
     </div>
