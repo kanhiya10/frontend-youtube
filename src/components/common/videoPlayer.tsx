@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import 'videojs-markers';
 
 interface Timestamp {
   time: number;  // Time in seconds
@@ -26,48 +27,64 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const playerRef = useRef<any>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
 
-  useEffect(() => {
-    if (!videoRef.current) return;
-  
-    if (playerRef.current) {
-      playerRef.current.dispose();
-    }
-  
-    const player = videojs(videoRef.current, {
-      controls: true,
-      autoplay: false,
-      preload: 'auto',
-      fluid: false,
-      controlBar: {
-        skipForward: true,
-        skipBack: true,
-        pictureInPictureToggle: true,
-        volumePanel: { inline: false },
-      },
-      poster,
-      sources: [{
-        src,
-        type: src.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',
-      }],
-    });
-  
-    playerRef.current = player;
-    
-    // Handle onPlay event
-    player.on('play', () => {
-      if (onPlay) onPlay();
-    });
-    
-    // Update current time for timestamp highlighting
-    player.on('timeupdate', () => {
-      const time = player.currentTime();
-      setCurrentTime(Math.floor(time !== undefined ? time : 0));
-    });
-  
-    return () => {
-      player.dispose();
-    };
-  }, [src, poster, onPlay]);
+ useEffect(() => {
+  if (!videoRef.current) return;
+
+  if (playerRef.current) {
+    playerRef.current.dispose();
+  }
+
+  const player = videojs(videoRef.current, {
+    controls: true,
+    autoplay: false,
+    preload: 'auto',
+    fluid: false,
+    controlBar: {
+      skipForward: true,
+      skipBack: true,
+      pictureInPictureToggle: true,
+      volumePanel: { inline: false },
+    },
+    poster,
+    sources: [{
+      src,
+      type: src.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',
+    }],
+  });
+
+  playerRef.current = player;
+
+  player.on('play', () => {
+    if (onPlay) onPlay();
+  });
+
+  player.on('timeupdate', () => {
+    const time = player.currentTime();
+    setCurrentTime(Math.floor(time !== undefined ? time : 0));
+  });
+
+  // ✅ Add markers
+  // player.markers({
+  //   markers: timestamps.map(t => ({
+  //     time: t.time,
+  //     text: t.label,
+  //   })),
+  //   markerStyle: {
+  //     'background-color': 'red',
+  //     'width': '4px',
+  //   },
+  //   onMarkerReached: function(marker: any) {
+  //     console.log("Reached marker:", marker.text);
+  //   },
+  //   onMarkerClick: function(marker: any) {
+  //     player.currentTime(marker.time);
+  //   },
+  // });
+
+  return () => {
+    player.dispose();
+  };
+}, [src, poster, onPlay, timestamps]);
 
   // Format seconds to MM:SS or HH:MM:SS
   const formatTime = (seconds: number): string => {

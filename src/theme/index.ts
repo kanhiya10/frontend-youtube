@@ -1,7 +1,7 @@
 export const lightTheme = {
     background: '#FFFFFF',
     sideBarIconsActive:"bg-orange-700",
-    sideBarIconsInActive:"bg-purple-400",
+    sideBarIconsInActive:"bg-black/20",
     card:"#FFFFFF",
     surface: '#F5F5F5',
     btn:'722F37',
@@ -17,7 +17,7 @@ export const lightTheme = {
   export const darkTheme = {
     background: 'black',
     sideBarIconsActive:"bg-blue-700",
-    sideBarIconsInActive:"bg-gray-400",
+    sideBarIconsInActive:"bg-white/20",
      card:"#94A3B8",
     surface: '#1E1E1E',
     btn:'#3E3A61',

@@ -19,9 +19,66 @@ import ManageProfile from './components/setting/profileSettings/index';
 import SecuritySettings from './components/setting/securitySettings';
 import NotificationSettings from './components/setting/notificationSettings';
 import UploadVideo from './components/common/uploadVideo';
+import { useEffect } from 'react';
+import { messaging } from './firebase';
+import { getToken,getMessaging,onMessage } from 'firebase/messaging';
+
 
 function App() {
   const [sidebarData, setSidebarData] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+useEffect(() => {
+  function requestPermissionAndGetToken() {
+    console.log('Requesting permission...');
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+
+        // ✅ Now get the FCM token here
+        getToken(messaging, {
+          vapidKey: 'BF4TFslNWwWhxOeWb060JYTlx82keMX02npTdIaqlRfmUy2qfCJXd70_WJox3on_hoRxxgrbWccmzv0_WVhTjQI',
+        })
+          .then((currentToken) => {
+            if (currentToken) {
+              console.log('Token generated:', currentToken);
+              localStorage.setItem('fcmToken', currentToken);
+              // Send token to backend server if needed
+            } else {
+              console.log('No registration token available.');
+            }
+          })
+          .catch((err) => {
+            console.log('Error retrieving token:', err);
+          });
+
+      } else {
+        console.log('Unable to get permission to notify.', permission);
+      }
+    });
+  }
+
+  requestPermissionAndGetToken();
+}, []);
+
+
+ useEffect(() => {
+    // Foreground message listener
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log('Message received in foreground: ', payload);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+
+      // Optional: show a custom toast or popup here
+      alert(`${payload.notification.title}\n${payload.notification.body}`);
+    });
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, []);
+
 
   
 
@@ -38,7 +95,7 @@ function App() {
 
   {/* Content wrapper that adjusts margin-left based on sidebar */}
   <div
-    className={`mt-[5%] transition-all duration-300  ${
+    className={`mt-[4%] transition-all duration-300  ${
       sidebarData ? 'ml-[11.5rem]' : 'ml-[4.5rem]'
     }`}
   >
@@ -65,7 +122,14 @@ function App() {
       <Route path="home" element={<HomeProfile/>} />
       <Route path="getVideo" element={<VideosTab/>} />
       </Route>
-    </Routes>
+    </Routes>\
+
+     {/* {notification && (
+      <div className="fixed bottom-0 right-0 m-4 p-4 bg-blue-500 text-white rounded-lg shadow-lg z-50">
+        <h2 className="text-lg font-semibold">{notification.title}</h2>
+        <p>{notification.body}</p>
+      </div>
+    )} */}
   </div>
 </div>
 

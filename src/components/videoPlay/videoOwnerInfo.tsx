@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { VideoInfoType, UserInfoType } from '../../types/types';
 import { ThumbsUp, ThumbsDown, Share2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import VideoComments from './videoComments';
+// import VideoComments from './videoComments';
+import VideoComments from '../comments/videoComments';
 interface VideoOwnerInfoProps {
   VideoInfo: VideoInfoType;
 }

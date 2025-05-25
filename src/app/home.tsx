@@ -26,8 +26,33 @@ export default function Home() {
     FetchRandomVideos();
   }, []);
 
+   const handleSendNotification = async () => {
+    try {
+      const token = localStorage.getItem('fcmToken');
+      const response = await axios.post('http://localhost:8000/api/v1/notifications/send-notification', {
+        token: token, // Replace with a valid client token
+        title: 'Test Notification',
+        body: 'This is a test notification from the frontend.',
+      });
+      console.log('Notification sent:', response.data);
+      alert('Notification sent!');
+    } catch (err) {
+      console.error('Error sending notification:', err);
+      alert('Failed to send notification');
+    }
+  };
+
+
   return (
     <div className={`min-h-screen w-full  p-5`} style={{ backgroundColor: theme.background }} >
+
+      {/* <button
+        onClick={handleSendNotification}
+        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Send Test Notification
+      </button> */}
+
       <div className="flex flex-wrap gap-x-6 gap-y-10 justify-start">
         {randomVideos.length > 0 ? (
           randomVideos.map((video) => (
