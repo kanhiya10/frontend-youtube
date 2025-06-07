@@ -18,7 +18,7 @@ export const lightTheme = {
     background: 'black',
     sideBarIconsActive:"bg-blue-700",
     sideBarIconsInActive:"bg-white/20",
-     card:"#94A3B8",
+     card:"	#2E2E2E",
     surface: '#1E1E1E',
     btn:'#3E3A61',
     text: '#FFFFFF',

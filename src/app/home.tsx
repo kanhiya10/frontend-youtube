@@ -12,13 +12,13 @@ export default function Home() {
   useEffect(() => {
     const FetchRandomVideos = async () => {
       const FetchUrl= 'http://localhost:8000/api/v1/videos/randomVideos';
-      console.log('FetchUrl:', FetchUrl);
+      // console.log('FetchUrl:', FetchUrl);
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
           FetchUrl
         );
         setRandomVideos(response.data.data);
-        console.log('randomVideos:', response.data.data);
+        // console.log('randomVideos:', response.data.data);
       } catch (error) {
         console.log('error:', error);
       }
@@ -26,21 +26,21 @@ export default function Home() {
     FetchRandomVideos();
   }, []);
 
-   const handleSendNotification = async () => {
-    try {
-      const token = localStorage.getItem('fcmToken');
-      const response = await axios.post('http://localhost:8000/api/v1/notifications/send-notification', {
-        token: token, // Replace with a valid client token
-        title: 'Test Notification',
-        body: 'This is a test notification from the frontend.',
-      });
-      console.log('Notification sent:', response.data);
-      alert('Notification sent!');
-    } catch (err) {
-      console.error('Error sending notification:', err);
-      alert('Failed to send notification');
-    }
-  };
+  //  const handleSendNotification = async () => {
+  //   try {
+  //     const token = localStorage.getItem('fcmToken');
+  //     const response = await axios.post('http://localhost:8000/api/v1/notifications/send-notification', {
+  //       token: token, // Replace with a valid client token
+  //       title: 'Test Notification',
+  //       body: 'This is a test notification from the frontend.',
+  //     });
+  //     console.log('Notification sent:', response.data);
+  //     alert('Notification sent!');
+  //   } catch (err) {
+  //     console.error('Error sending notification:', err);
+  //     alert('Failed to send notification');
+  //   }
+  // };
 
 
   return (

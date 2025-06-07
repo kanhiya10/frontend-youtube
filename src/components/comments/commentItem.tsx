@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import CommentForm from './commentForm';
 import { useCommentLike } from '../../hooks/useCommentLike';
-import { UserApi } from '@/features/slice/fetchUser.slice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import ReplyItem from './replyItem'; // import new component
 
 interface CommentItemProps {
   comment: any;
@@ -14,33 +14,38 @@ interface CommentItemProps {
 const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) => {
   const [replyBoxOpen, setReplyBoxOpen] = useState(false);
   const [replyText, setReplyText] = useState('');
+  const [activeParentId, setActiveParentId] = useState(comment._id); // default to main comment
+
 
   const { info } = useSelector((state: RootState) => state.User);
 
+
   const {
-  likes,
-  dislikes,
-  userLiked,
-  userDisliked,
-  toggleLike,
-  toggleDislike,
-} = useCommentLike({
-  initialLikes: comment.likes,
-  initialDislikes: comment.dislikes || [],
-  commentId: comment._id,
-  currentUserId: info?.id ?? '', // You need to pass this
-});
+    likes,
+    dislikes,
+    userLiked,
+    userDisliked,
+    toggleLike,
+    toggleDislike,
+  } = useCommentLike({
+    initialLikes: comment.likes,
+    initialDislikes: comment.dislikes || [],
+    commentId: comment._id,
+    currentUserId: info?.id ?? '',
+  });
+
+  console.log('activeParentId',activeParentId);
 
   const handleReplySubmit = async () => {
     if (!replyText.trim()) return;
 
     try {
-      await fetch(`http://localhost:8000/api/v1/comments/${comment._id}/reply`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ text: replyText, videoId }),
-      });
+     await fetch(`http://localhost:8000/api/v1/comments/${activeParentId}/reply`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({ text: replyText, videoId }),
+});
 
       setReplyText('');
       setReplyBoxOpen(false);
@@ -48,6 +53,12 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
     } catch (err) {
       console.error('Error submitting reply', err);
     }
+  };
+
+  const handleOpenReply = (username?: string, parentId?: string) => {
+    setReplyBoxOpen(true);
+    setActiveParentId(parentId || comment._id);
+    setReplyText(username ? `@${username} ` : `@${comment.user.fullName.split(" ")[0]} `);
   };
 
   return (
@@ -59,8 +70,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
       <p className="text-gray-700 dark:text-gray-300">{comment.text}</p>
 
       <button
-        className="text-sm text-blue-500 mt-1"
-        onClick={() => setReplyBoxOpen(!replyBoxOpen)}
+        onClick={() => handleOpenReply()}
+        className="text-xs text-blue-500"
       >
         {replyBoxOpen ? 'Cancel' : 'Reply'}
       </button>
@@ -76,31 +87,33 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
         </div>
       )}
 
-      {comment.replies?.length > 0 && (
-        <div className="ml-6 mt-2 space-y-2">
-          {comment.replies.map((reply: any) => (
-            <div key={reply._id} className="text-sm text-gray-600 dark:text-gray-400">
-              <span className="font-semibold">{reply.user.fullName}:</span> {reply.text}
-            </div>
-          ))}
-        </div>
-      )}
+     {comment.replies?.length > 0 && (
+  <div className="ml-6 mt-2 space-y-2">
+    {comment.replies.map((reply: any) => (
+      <ReplyItem
+        key={reply._id}
+        reply={reply}
+        onReplyToReply={(username, parentId) => handleOpenReply(username, parentId)}
+      />
+    ))}
+  </div>
+)}
+
 
       <div className="flex gap-4 mt-2 text-sm">
-  <button
-    onClick={toggleLike}
-    className={`flex items-center gap-1 ${userLiked ? 'text-blue-500' : 'text-gray-500'}`}
-  >
-    👍 {likes}
-  </button>
-  <button
-    onClick={toggleDislike}
-    className={`flex items-center gap-1 ${userDisliked ? 'text-red-500' : 'text-gray-500'}`}
-  >
-    👎 {dislikes}
-  </button>
-</div>
-
+        <button
+          onClick={toggleLike}
+          className={`flex items-center gap-1 ${userLiked ? 'text-blue-500' : 'text-gray-500'}`}
+        >
+          👍 {likes}
+        </button>
+        <button
+          onClick={toggleDislike}
+          className={`flex items-center gap-1 ${userDisliked ? 'text-red-500' : 'text-gray-500'}`}
+        >
+          👎 {dislikes}
+        </button>
+      </div>
     </div>
   );
 };

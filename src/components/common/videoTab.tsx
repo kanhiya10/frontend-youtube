@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useUserVideos } from "../../hooks/useUserVideos";
 import { usePagination } from "../../hooks/usePagination";
-
+import { useVideoPlayTracker } from "../../hooks/useVideoPlayerTracker";
 import {PaginationControls} from "./paginationControl";
 import VideoPlayer from "./videoPlayer";
 
@@ -13,6 +13,7 @@ const VideosTab = () => {
   const { videos, loading } = useUserVideos(username);
 
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const trackPlay = useVideoPlayTracker(videos[0]?._id);
 
   const sortedVideos = useMemo(() => {
     return [...videos].sort((a, b) => {
@@ -30,6 +31,12 @@ const VideosTab = () => {
     prev,
     setCurrentPage,
   } = usePagination(sortedVideos, 3);
+
+  const handlePlay = () => {
+    if (currentVideos.length > 0) {
+      trackPlay();
+    }
+  };
 
   if (loading) return <p className="text-center py-10">Loading videos...</p>;
 
@@ -62,7 +69,7 @@ const VideosTab = () => {
               className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
                 src={video.videoFile}
                 poster={video.thumbnail}
-                onPlay={() => console.log("Video is playing")}
+                onPlay={() => handlePlay()}
               />
             ))}
           </div>

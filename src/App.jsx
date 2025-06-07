@@ -1,25 +1,26 @@
 import { useState } from 'react'
 import './App.css'
 import { Route,Routes,Outlet } from 'react-router-dom';
-
-import Home from './app/home';
+import {lazyImport} from './utils/lazyImport';
 import Header from './components/common/header';
 import Sidebar from './components/common/sidebar';
 import Search from './components/common/serach';
-import Streaming from './app/videoPlay/streaming';
-import AuthIndex from './app/auth/index';
-import OwnerProfile from './app/videoPlay/ownerProfile';
-import ProfileIndex from './app/profile/index';
-import LiveStreaming from './components/common/liveStreaming';
-import HomeProfile  from './components/common/homeProfile';
-import VideosTab from './components/common/videoTab';
+import Home from './app/home';
 import WatchHistory from './components/common/watchHistory';
 import Settings from './components/setting/settings';
-import ManageProfile from './components/setting/profileSettings/index';
-import SecuritySettings from './components/setting/securitySettings';
-import NotificationSettings from './components/setting/notificationSettings';
-import UploadVideo from './components/common/uploadVideo';
-import { useEffect } from 'react';
+const ManageProfile = lazyImport(() => import('./components/setting/profileSettings/index'));
+const SecuritySettings = lazyImport(() => import('./components/setting/securitySettings'));
+const NotificationSettings = lazyImport(() => import('./components/setting/notificationSettings'));
+const Streaming = lazyImport(() => import('./app/videoPlay/streaming'));
+const AuthIndex = lazyImport(() => import('./app/auth/index'));
+const ProfileIndex = lazyImport(() => import('./app/profile/index'));
+const OwnerProfile = lazyImport(() => import('./app/videoPlay/ownerProfile'));
+const HomeProfile = lazyImport(() => import('./components/common/homeProfile'));
+const LiveStreaming = lazyImport(() => import('./components/common/liveStreaming'));
+const VideosTab = lazyImport(() => import('./components/common/videoTab'));
+const UploadVideo = lazyImport(() => import('./components/common/uploadVideo'));
+import NotificationPage from './app/notifications/notificationPage';
+import { useEffect,Suspense } from 'react';
 import { messaging } from './firebase';
 import { getToken,getMessaging,onMessage } from 'firebase/messaging';
 
@@ -28,38 +29,6 @@ function App() {
   const [sidebarData, setSidebarData] = useState(false);
   const [notification, setNotification] = useState(null);
 
-useEffect(() => {
-  function requestPermissionAndGetToken() {
-    console.log('Requesting permission...');
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-
-        // ✅ Now get the FCM token here
-        getToken(messaging, {
-          vapidKey: 'BF4TFslNWwWhxOeWb060JYTlx82keMX02npTdIaqlRfmUy2qfCJXd70_WJox3on_hoRxxgrbWccmzv0_WVhTjQI',
-        })
-          .then((currentToken) => {
-            if (currentToken) {
-              console.log('Token generated:', currentToken);
-              localStorage.setItem('fcmToken', currentToken);
-              // Send token to backend server if needed
-            } else {
-              console.log('No registration token available.');
-            }
-          })
-          .catch((err) => {
-            console.log('Error retrieving token:', err);
-          });
-
-      } else {
-        console.log('Unable to get permission to notify.', permission);
-      }
-    });
-  }
-
-  requestPermissionAndGetToken();
-}, []);
 
 
  useEffect(() => {
@@ -90,6 +59,7 @@ useEffect(() => {
   return (
 
       <div>
+        <Suspense fallback={<div className="text-center mt-10">Loading...</div>}>
   <Header handleSideBar={handleSideBar} />
   <Sidebar sidebarData={sidebarData} />
 
@@ -102,6 +72,7 @@ useEffect(() => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/watchHistory" element={<WatchHistory />} />
+      <Route path="/notifications" element={<NotificationPage />} />
       <Route path="/settings" element={< Settings/>} />
       <Route path="/manageProfile" element={<ManageProfile />} />
       <Route path="/manageSecurity" element={<SecuritySettings />} />
@@ -131,6 +102,7 @@ useEffect(() => {
       </div>
     )} */}
   </div>
+  </Suspense>
 </div>
 
       

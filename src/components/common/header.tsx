@@ -1,9 +1,11 @@
+import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { SlLogin, SlLogout } from 'react-icons/sl';
 import { RiUser3Line, RiMenu2Fill, RiMenu3Fill } from 'react-icons/ri';
+import { IoNotificationsOutline } from "react-icons/io5";
 import { resetInfo } from '../../features/slice/fetchUser.slice';
 import Search from './serach';
 import { useTheme } from '../../context/themeContext';
@@ -77,10 +79,11 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
       <IconButton onClick={() => navigate('/auth/index')} Icon={<SlLogin size={28} color="#8A9A5B" />} label="Login" />
 <IconButton onClick={() => navigate('/profile/index')} Icon={<RiUser3Line size={28} color="#8A9A5B" />} label="Profile" />
 <IconButton onClick={handleLogout} Icon={<SlLogout size={28} color="#8A9A5B" />} label="Logout" />
+<IconButton onClick={() => navigate('/notifications')} Icon={<IoNotificationsOutline size={28} color="#8A9A5B" />} label="Notifications" />
 
       </div>
     </header>
   );
 };
 
-export default Header;
+export default React.memo(Header);

@@ -5,6 +5,7 @@ import { VideoInfoType } from '../../types/types';
 import axios from 'axios';
 import VideoPlayer from '../common/videoPlayer';
 import { useVideoPlayTracker } from '../../hooks/useVideoPlayerTracker';
+import { useTheme } from '../../context/themeContext';
 
 interface PlayVideoProps {
   VideoInfo: VideoInfoType;
@@ -20,6 +21,7 @@ const videoTimestamps = [
 const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
   const navigate = useNavigate();
   const trackPlay = useVideoPlayTracker(VideoInfo._id);
+  const { theme } = useTheme();
 
   const goBack = () => navigate(-1);
 
@@ -36,8 +38,8 @@ const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
   }
 
   return (
-    <div className="w-[70%] px-4 md:px-2 pt-3 pb-2 bg-white dark:bg-[#1a1a1a] text-black dark:text-white  transition-all duration-300 ">
-      <div className="max-w-5xl">
+    <div className={`w-full px-4 md:px-2 pt-3 pb-2 bg-${theme.background} dark:bg-[#1a1a1a] text-black dark:text-white transition-all duration-300`}>
+      <div className="">
         <div className="rounded-lg overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700">
         <VideoPlayer
   src={VideoInfo.videoFile}

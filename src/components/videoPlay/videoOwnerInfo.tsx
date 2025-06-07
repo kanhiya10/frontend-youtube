@@ -5,12 +5,16 @@ import { ThumbsUp, ThumbsDown, Share2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 // import VideoComments from './videoComments';
 import VideoComments from '../comments/videoComments';
+import { useTheme } from '../../context/themeContext';
+
+
 interface VideoOwnerInfoProps {
   VideoInfo: VideoInfoType;
 }
 
 const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
     const navigate = useNavigate();
+  const { theme } = useTheme();
   const [ownerInfo, setOwnerInfo] = useState<UserInfoType | null>(null);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [subscribersCount, setSubscribersCount] = useState<number>(0);
@@ -94,14 +98,15 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   
 
   return (
-    <div>
-    <div className="w-[70%] flex flex-row justify-between  gap-4  pb-4 px-2 md:px-6 mt-4">
+    <div className='w-full '>
+    <div className={`flex flex-row justify-between gap-4  pb-4 px-2 md:px-6 mt-4  dark:bg-gray-900 shadow-lg rounded-lg  `} >
       {/* Left - Channel Info */}
       <div className="flex items-center gap-4  p-3 rounded-lg">
   {/* Owner Info: Avatar + Name + Subscribers */}
   <div
     onClick={() => navigate(`/videoPlay/ownerProfile/${ownerInfo.username}`)}
     className="flex items-center gap-3 cursor-pointer"
+    
   >
     <img
       src={ownerInfo.avatar}
@@ -170,7 +175,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
       </div>
      
     </div>
-    <div className=' w-[70%] shadow-xl bg-gray-100 dark:bg-gray-800 rounded-lg p-4'> 
+    <div className=' w-full shadow-xl dark:bg-gray-800 rounded-lg p-4' style={{ backgroundColor: theme.card }}> 
         <div className='flex justify-start items-center gap-2 border-b border-gray-300 pb-4'>
             <h1 className='text-md font-semibold text-gray-900 dark:text-white'>{VideoInfo.views || 0} views</h1>
             <h1 className='text-md font-semibold text-gray-900 dark:text-white'>6 months ago</h1>

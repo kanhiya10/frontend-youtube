@@ -117,7 +117,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       </div>
       
-      {timestamps.length > 0 && (
+      {/* {timestamps.length > 0 && (
         <div className="timestamps-container mt-4">
           <h3 className="text-lg font-medium mb-2">Timestamps</h3>
           <div className="timestamps-list">
@@ -138,7 +138,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

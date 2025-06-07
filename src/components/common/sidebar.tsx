@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { FaHome } from 'react-icons/fa';
 import { BsClockHistory } from 'react-icons/bs';
@@ -10,7 +10,16 @@ interface SidebarProps {
   sidebarData: boolean;
 }
 
-const routes = [
+
+
+const Sidebar: React.FC<SidebarProps> = ({ sidebarData }) => {
+  const collapsedWidth = 'w-[4.5rem]'; // 72px
+  const expandedWidth = 'w-[12.5rem]'; // 200px
+
+  const [sidebarClass, setSidebarClass] = useState(collapsedWidth);
+  const { theme, toggleTheme, mode } = useTheme();
+
+  const routes = useMemo(() => [
   {
     path: '/',
     name: 'Home',
@@ -26,18 +35,12 @@ const routes = [
     name: 'Settings',
     icon: <IoSettings />,
   },
-];
+], []);
 
-const Sidebar: React.FC<SidebarProps> = ({ sidebarData }) => {
-  const collapsedWidth = 'w-[4.5rem]'; // 72px
-  const expandedWidth = 'w-[12.5rem]'; // 200px
 
-  const [sidebarClass, setSidebarClass] = useState(collapsedWidth);
-  const { theme, toggleTheme, mode } = useTheme();
-
-  useEffect(() => {
-    setSidebarClass(sidebarData ? expandedWidth : collapsedWidth);
-  }, [sidebarData]);
+  // useEffect(() => {
+  //   setSidebarClass(sidebarData ? expandedWidth : collapsedWidth);
+  // }, [sidebarData]);
 
   return (
     <div className="fixed top-0 left-0 h-screen  ">
@@ -69,4 +72,5 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarData }) => {
   );
 };
 
-export default Sidebar;
+export default React.memo(Sidebar);
+
