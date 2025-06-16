@@ -61,7 +61,7 @@ const Settings: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Control your notification preferences.
             </p>
-            <button className="mt-3 px-4 py-2 text-white rounded hover:bg-blue-700" style={{backgroundColor: theme.btn}}
+            <button className="mt-3 px-4 py-2 bg-black text-white rounded hover:bg-blue-700" 
             onClick={() => navigate("/manageNotifications")}
             >
               Notification Settings

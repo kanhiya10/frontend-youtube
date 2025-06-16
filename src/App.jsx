@@ -4,7 +4,6 @@ import { Route,Routes,Outlet } from 'react-router-dom';
 import {lazyImport} from './utils/lazyImport';
 import Header from './components/common/header';
 import Sidebar from './components/common/sidebar';
-import Search from './components/common/serach';
 import Home from './app/home';
 import WatchHistory from './components/common/watchHistory';
 import Settings from './components/setting/settings';
@@ -23,7 +22,7 @@ import NotificationPage from './app/notifications/notificationPage';
 import { useEffect,Suspense } from 'react';
 import { messaging } from './firebase';
 import { getToken,getMessaging,onMessage } from 'firebase/messaging';
-
+import SearchResult from './app/search/index';
 
 function App() {
   const [sidebarData, setSidebarData] = useState(false);
@@ -79,6 +78,7 @@ function App() {
       <Route path="/manageNotifications" element={<NotificationSettings />} />
       <Route path="/videoPlay/streaming" element={<Streaming />} />
       <Route path="/auth/index" element={<AuthIndex />} />
+      <Route path="/search" element={<SearchResult />} />
       <Route path="/profile/index" element={<ProfileIndex />} >
       <Route index element={<HomeProfile />} />
       <Route path="live" element={<LiveStreaming/>} />

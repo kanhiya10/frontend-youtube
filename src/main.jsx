@@ -6,9 +6,14 @@ import App from './App.jsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './context/themeContext.tsx'
+import {GoogleOAuthProvider} from '@react-oauth/google';
+
+const clientId="489943413452-n33kjdhudobo4jfti2jbvoqs5tjghat9.apps.googleusercontent.com";
+
 
 // ⬇️ Render the app
 createRoot(document.getElementById('root')).render(
+<GoogleOAuthProvider clientId={clientId}>
   <BrowserRouter>
     <Provider store={store}>
       <ThemeProvider>
@@ -16,6 +21,7 @@ createRoot(document.getElementById('root')).render(
       </ThemeProvider>
     </Provider>
   </BrowserRouter>
+</GoogleOAuthProvider>
 )
 
 // ✅ Register the service worker for Firebase Messaging

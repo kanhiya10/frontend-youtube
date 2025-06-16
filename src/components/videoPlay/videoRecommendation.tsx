@@ -40,12 +40,12 @@ function RecommendedVideos() {
 
   return (
     <div className={'w-[100%] p-8 bg-${theme.background} flex flex-col gap-4'}>
-      <h3>Recommended Videos</h3>
+      {/* <h3>Recommended Videos</h3> */}
       <ul>
         {videos.map((video) => (
            <div
               key={video._id}
-              className="w-full bg-black m-4 shadow-md rounded-md overflow-hidden cursor-pointer"
+              className="w-full bg-black m-2 shadow-md rounded-md overflow-hidden cursor-pointer"
               onClick={()=>navigate('/videoPlay/streaming',{state:{VideoInfo:video}})}
             >
               <img

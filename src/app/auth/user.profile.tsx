@@ -4,6 +4,7 @@ import { AppDispatch, RootState } from '../../store';
 import { UserApi } from '../../features/slice/fetchUser.slice';
 import { useNavigate } from 'react-router-dom';
 
+
 const UserProfile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -13,6 +14,10 @@ const UserProfile: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [username, setUserName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+
+
+ 
+  
 
   useEffect(() => {
     if (info && Object.keys(info).length > 0) {
@@ -29,6 +34,7 @@ const UserProfile: React.FC = () => {
       console.error('Error during login:', error);
     }
   };
+
 
   return (
 <div className="w-full">
@@ -68,6 +74,7 @@ const UserProfile: React.FC = () => {
             Login
           </button>
         </form>
+       
       </div>
 
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
+import TimeDisplay from 'videojs-time-display';
 import 'video.js/dist/video-js.css';
 import 'videojs-markers';
 
@@ -38,7 +39,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     controls: true,
     autoplay: false,
     preload: 'auto',
-    fluid: false,
+    fluid: true,
+    aspectRatio: '16:9',
     controlBar: {
       skipForward: true,
       skipBack: true,
@@ -62,24 +64,28 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     const time = player.currentTime();
     setCurrentTime(Math.floor(time !== undefined ? time : 0));
   });
+  
 
-  // ✅ Add markers
-  // player.markers({
-  //   markers: timestamps.map(t => ({
-  //     time: t.time,
-  //     text: t.label,
-  //   })),
-  //   markerStyle: {
-  //     'background-color': 'red',
-  //     'width': '4px',
-  //   },
-  //   onMarkerReached: function(marker: any) {
-  //     console.log("Reached marker:", marker.text);
-  //   },
-  //   onMarkerClick: function(marker: any) {
-  //     player.currentTime(marker.time);
-  //   },
-  // });
+  player.markers({
+    markers: timestamps.map(ts => ({
+      time: ts.time,
+      text: ts.label
+    })),
+    markerStyle: {
+      width: '8px',
+      backgroundColor: 'red'
+    },
+    onMarkerReached(marker) {
+      console.log("Reached marker:", marker.text);
+    },
+    tooltip: {
+      display: true,
+      text(marker) {
+        return marker.text;
+      }
+    }
+  });
+
 
   return () => {
     player.dispose();
@@ -87,25 +93,25 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }, [src, poster, onPlay, timestamps]);
 
   // Format seconds to MM:SS or HH:MM:SS
-  const formatTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
+  // const formatTime = (seconds: number): string => {
+  //   const hours = Math.floor(seconds / 3600);
+  //   const minutes = Math.floor((seconds % 3600) / 60);
+  //   const secs = Math.floor(seconds % 60);
     
-    if (hours > 0) {
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    } else {
-      return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-  };
+  //   if (hours > 0) {
+  //     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  //   } else {
+  //     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  //   }
+  // };
 
   // Jump to specific timestamp
-  const jumpToTimestamp = (time: number) => {
-    if (playerRef.current) {
-      playerRef.current.currentTime(time);
-      playerRef.current.play();
-    }
-  };
+  // const jumpToTimestamp = (time: number) => {
+  //   if (playerRef.current) {
+  //     playerRef.current.currentTime(time);
+  //     playerRef.current.play();
+  //   }
+  // };
 
   return (
     <div className="video-player-container">

@@ -27,7 +27,7 @@ const Streaming: React.FC = () => {
     <div className="flex flex-row justify-start w-full p-4 gap-4 ">
 
       {/* Left Section */}
-      <div className="w-[70%] flex flex-col gap-4">
+      <div className="w-[70%] flex flex-col gap-4 ">
         <PlayVideo VideoInfo={VideoInfo} />
         <VideoOwnerInfo VideoInfo={VideoInfo} />
       </div>

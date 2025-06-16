@@ -38,15 +38,15 @@ const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
   }
 
   return (
-    <div className={`w-full px-4 md:px-2 pt-3 pb-2 bg-${theme.background} dark:bg-[#1a1a1a] text-black dark:text-white transition-all duration-300`}>
+    <div className={`w-full px-4 md:px-2 pt-3 pb-2 bg-${theme.background} dark:bg-[#1a1a1a] text-black dark:text-white transition-all duration-300 `}>
       <div className="">
-        <div className="rounded-lg overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700">
+        <div className="rounded-lg overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700 ">
         <VideoPlayer
   src={VideoInfo.videoFile}
   poster={VideoInfo.thumbnail}
   onPlay={handlePlay}
    timestamps={videoTimestamps}
-  className="w-10 h-10 max-h-[60vh] rounded-lg shadow-xl"
+  className="w-full rounded-lg shadow-xl"
 />
         </div>
 

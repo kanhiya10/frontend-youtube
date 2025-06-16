@@ -104,6 +104,7 @@ const UserSlice = createSlice({
     });
     builder.addCase(UserApi.fulfilled, (state, action: PayloadAction<AxiosResponse<LoginResponse>>) => {
       state.isLoading = false;
+      console.log('action payload.data', action.payload.data.data.user);
       state.info = action.payload.data.data.user;
       console.log('state.info', state.info);
     });

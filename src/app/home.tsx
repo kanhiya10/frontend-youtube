@@ -58,7 +58,7 @@ export default function Home() {
           randomVideos.map((video) => (
             <div
               key={video._id}
-              className="w-[22%] bg-white shadow-md rounded-md overflow-hidden cursor-pointer"
+              className="w-[22%]  shadow-md rounded-md overflow-hidden cursor-pointer "
               onClick={()=>navigate('/videoPlay/streaming',{state:{VideoInfo:video}})}
             >
               <img
@@ -66,7 +66,7 @@ export default function Home() {
                 alt={`Thumbnail for ${video.title}`}
                 className="w-full h-48 object-contain"
               />
-              <div className="p-2">
+              <div className='p-2 ' style={{backgroundColor:theme.block}} >
                 <h1 className="text-sm font-bold mb-1">{video.title}</h1>
                 {/* <p className="text-xs text-gray-600">{video.description}</p> */}
                 <p className="text-xs text-gray-500 mt-1">
