@@ -6,7 +6,7 @@ const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
 
   useEffect(() => {
     const video = videoRef.current;
-    const streamUrl = `http://localhost:8000/hls/${streamKey}.m3u8`;
+    const streamUrl = `${import.meta.env.VITE_API_URL}/hls/${streamKey}.m3u8`;
 
     if (video) {
       if (Hls.isSupported()) {

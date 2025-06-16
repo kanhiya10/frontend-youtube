@@ -3,12 +3,18 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { VideoInfoType, UserInfoType } from '../../types/types';
 import { ThumbsUp, ThumbsDown, Share2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// import VideoComments from './videoComments';
+import VideoComments from '../comments/videoComments';
+import { useTheme } from '../../context/themeContext';
+
+
 interface VideoOwnerInfoProps {
   VideoInfo: VideoInfoType;
 }
 
 const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
     const navigate = useNavigate();
+  const { theme } = useTheme();
   const [ownerInfo, setOwnerInfo] = useState<UserInfoType | null>(null);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [subscribersCount, setSubscribersCount] = useState<number>(0);
@@ -24,7 +30,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
 
   const getVideoOwnerInfo = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/v1/videos/videoOwnerInfo/${VideoInfo._id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/videos/videoOwnerInfo/${VideoInfo._id}`);
       setOwnerInfo(response.data.data);
     } catch (error) {
       console.log('Error fetching owner info:', error);
@@ -34,7 +40,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   const handleSubscribe = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/subscription/toggle/${ownerInfo?._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/subscription/toggle/${ownerInfo?._id}`,
         {},
         { withCredentials: true }
       );
@@ -52,7 +58,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   const toggleReaction = async (type: 'like' | 'dislike') => {
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/videos/toggleReaction/${VideoInfo._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/videos/toggleReaction/${VideoInfo._id}`,
         { reaction: type },
         { withCredentials: true }
       );
@@ -92,14 +98,15 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   
 
   return (
-    <div>
-    <div className="w-[70%] flex flex-row justify-between  gap-4  pb-4 px-2 md:px-6 mt-4">
+    <div className='w-full '>
+    <div className={`flex flex-row justify-between gap-4  pb-4 px-2 md:px-6 mt-4  dark:bg-gray-900 shadow-lg rounded-lg  `} >
       {/* Left - Channel Info */}
       <div className="flex items-center gap-4  p-3 rounded-lg">
   {/* Owner Info: Avatar + Name + Subscribers */}
   <div
     onClick={() => navigate(`/videoPlay/ownerProfile/${ownerInfo.username}`)}
     className="flex items-center gap-3 cursor-pointer"
+    
   >
     <img
       src={ownerInfo.avatar}
@@ -168,7 +175,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
       </div>
      
     </div>
-    <div className=' w-[70%] shadow-xl bg-gray-100 dark:bg-gray-800 rounded-lg p-4'> 
+    <div className=' w-full shadow-xl dark:bg-gray-800 rounded-lg p-4' style={{ backgroundColor: theme.card }}> 
         <div className='flex justify-start items-center gap-2 border-b border-gray-300 pb-4'>
             <h1 className='text-md font-semibold text-gray-900 dark:text-white'>{VideoInfo.views || 0} views</h1>
             <h1 className='text-md font-semibold text-gray-900 dark:text-white'>6 months ago</h1>
@@ -176,6 +183,8 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
         </div> 
         <p className='text-gray-600 dark:text-gray-400'>{VideoInfo.description}</p>
     </div>
+    <VideoComments VideoInfo={VideoInfo} />
+
     </div>
   );
 };

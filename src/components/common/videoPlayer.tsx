@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
+import TimeDisplay from 'videojs-time-display';
 import 'video.js/dist/video-js.css';
+import 'videojs-markers';
 
 interface Timestamp {
   time: number;  // Time in seconds
@@ -26,68 +28,90 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const playerRef = useRef<any>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
 
-  useEffect(() => {
-    if (!videoRef.current) return;
+ useEffect(() => {
+  if (!videoRef.current) return;
+
+  if (playerRef.current) {
+    playerRef.current.dispose();
+  }
+
+  const player = videojs(videoRef.current, {
+    controls: true,
+    autoplay: false,
+    preload: 'auto',
+    fluid: true,
+    aspectRatio: '16:9',
+    controlBar: {
+      skipForward: true,
+      skipBack: true,
+      pictureInPictureToggle: true,
+      volumePanel: { inline: false },
+    },
+    poster,
+    sources: [{
+      src,
+      type: src.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',
+    }],
+  });
+
+  playerRef.current = player;
+
+  player.on('play', () => {
+    if (onPlay) onPlay();
+  });
+
+  player.on('timeupdate', () => {
+    const time = player.currentTime();
+    setCurrentTime(Math.floor(time !== undefined ? time : 0));
+  });
   
-    if (playerRef.current) {
-      playerRef.current.dispose();
+
+  player.markers({
+    markers: timestamps.map(ts => ({
+      time: ts.time,
+      text: ts.label
+    })),
+    markerStyle: {
+      width: '8px',
+      backgroundColor: 'red'
+    },
+    onMarkerReached(marker) {
+      console.log("Reached marker:", marker.text);
+    },
+    tooltip: {
+      display: true,
+      text(marker) {
+        return marker.text;
+      }
     }
-  
-    const player = videojs(videoRef.current, {
-      controls: true,
-      autoplay: false,
-      preload: 'auto',
-      fluid: true,
-      controlBar: {
-        skipForward: true,
-        skipBack: true,
-        pictureInPictureToggle: true,
-        volumePanel: { inline: false },
-      },
-      poster,
-      sources: [{
-        src,
-        type: src.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',
-      }],
-    });
-  
-    playerRef.current = player;
-    
-    // Handle onPlay event
-    player.on('play', () => {
-      if (onPlay) onPlay();
-    });
-    
-    // Update current time for timestamp highlighting
-    player.on('timeupdate', () => {
-      setCurrentTime(Math.floor(player.currentTime()));
-    });
-  
-    return () => {
-      player.dispose();
-    };
-  }, [src, poster, onPlay]);
+  });
+
+
+  return () => {
+    player.dispose();
+  };
+}, [src, poster, onPlay, timestamps]);
 
   // Format seconds to MM:SS or HH:MM:SS
-  const formatTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
+  // const formatTime = (seconds: number): string => {
+  //   const hours = Math.floor(seconds / 3600);
+  //   const minutes = Math.floor((seconds % 3600) / 60);
+  //   const secs = Math.floor(seconds % 60);
     
-    if (hours > 0) {
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    } else {
-      return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-  };
+  //   if (hours > 0) {
+  //     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  //   } else {
+  //     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  //   }
+  // };
 
   // Jump to specific timestamp
-  const jumpToTimestamp = (time: number) => {
-    if (playerRef.current) {
-      playerRef.current.currentTime(time);
-      playerRef.current.play();
-    }
-  };
+  // const jumpToTimestamp = (time: number) => {
+  //   if (playerRef.current) {
+  //     playerRef.current.currentTime(time);
+  //     playerRef.current.play();
+  //   }
+  // };
 
   return (
     <div className="video-player-container">
@@ -99,7 +123,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       </div>
       
-      {timestamps.length > 0 && (
+      {/* {timestamps.length > 0 && (
         <div className="timestamps-container mt-4">
           <h3 className="text-lg font-medium mb-2">Timestamps</h3>
           <div className="timestamps-list">
@@ -120,7 +144,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

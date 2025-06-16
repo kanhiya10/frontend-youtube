@@ -29,7 +29,7 @@ const UpdateAvatar = () => {
     formData.append("avatar", avatar);
 
     try {
-      await fetch(`http://localhost:8000/api/v1/users/avatar`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/avatar`, {
         method: "PATCH",
         credentials: "include",
         body: formData,

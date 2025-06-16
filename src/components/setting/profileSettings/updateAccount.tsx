@@ -12,7 +12,7 @@ const UpdateAccount = () => {
 
     try {
       await axios.patch(
-        `http://localhost:8000/api/v1/users/update-account`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/update-account`,
         { fullName, email },
         { withCredentials: true }
       );

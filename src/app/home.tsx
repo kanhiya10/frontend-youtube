@@ -11,14 +11,14 @@ export default function Home() {
 
   useEffect(() => {
     const FetchRandomVideos = async () => {
-      const FetchUrl= 'http://localhost:8000/api/v1/videos/randomVideos';
+      const FetchUrl=`${import.meta.env.VITE_API_URL}/api/v1/videos/randomVideos`;
       console.log('FetchUrl:', FetchUrl);
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
           FetchUrl
         );
         setRandomVideos(response.data.data);
-        console.log('randomVideos:', response.data.data);
+        // console.log('randomVideos:', response.data.data);
       } catch (error) {
         console.log('error:', error);
       }
@@ -26,14 +26,39 @@ export default function Home() {
     FetchRandomVideos();
   }, []);
 
+  //  const handleSendNotification = async () => {
+  //   try {
+  //     const token = localStorage.getItem('fcmToken');
+  //     const response = await axios.post('${import.meta.env.VITE_API_URL}/api/v1/notifications/send-notification', {
+  //       token: token, // Replace with a valid client token
+  //       title: 'Test Notification',
+  //       body: 'This is a test notification from the frontend.',
+  //     });
+  //     console.log('Notification sent:', response.data);
+  //     alert('Notification sent!');
+  //   } catch (err) {
+  //     console.error('Error sending notification:', err);
+  //     alert('Failed to send notification');
+  //   }
+  // };
+
+
   return (
     <div className={`min-h-screen w-full  p-5`} style={{ backgroundColor: theme.background }} >
+
+      {/* <button
+        onClick={handleSendNotification}
+        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Send Test Notification
+      </button> */}
+
       <div className="flex flex-wrap gap-x-6 gap-y-10 justify-start">
         {randomVideos.length > 0 ? (
           randomVideos.map((video) => (
             <div
               key={video._id}
-              className="w-[22%] bg-white shadow-md rounded-md overflow-hidden cursor-pointer"
+              className="w-[22%]  shadow-md rounded-md overflow-hidden cursor-pointer "
               onClick={()=>navigate('/videoPlay/streaming',{state:{VideoInfo:video}})}
             >
               <img
@@ -41,7 +66,7 @@ export default function Home() {
                 alt={`Thumbnail for ${video.title}`}
                 className="w-full h-48 object-contain"
               />
-              <div className="p-2">
+              <div className='p-2 ' style={{backgroundColor:theme.block}} >
                 <h1 className="text-sm font-bold mb-1">{video.title}</h1>
                 {/* <p className="text-xs text-gray-600">{video.description}</p> */}
                 <p className="text-xs text-gray-500 mt-1">

@@ -21,3 +21,4 @@ export interface UserInfoType{
     coverImage:string;
 
 }
+

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import VideoPlayer from "./videoPlayer";
 import { useUserVideos } from "../../hooks/useUserVideos";
+import { useVideoPlayTracker } from "../../hooks/useVideoPlayerTracker";
 
 interface Video {
   _id: string;
@@ -15,6 +16,14 @@ const HomeProfile = () => {
    const { username } = useParams<{ username: string }>();
 
    const { videos, loading } = useUserVideos(username);
+
+   const trackPlay = useVideoPlayTracker(videos[0]?._id);
+
+   const handlePlay = () => {
+     if (videos.length > 0) {
+       trackPlay();
+     }
+   };
 
    if (loading) {
      return (
@@ -44,7 +53,7 @@ const HomeProfile = () => {
               <VideoPlayer
                 src={videos[0].videoFile}
                 poster={videos[0].thumbnail}
-                onPlay={() => console.log("Video is playing")}
+                onPlay={() => handlePlay()}
                 className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
               />
               <div className="p-4">

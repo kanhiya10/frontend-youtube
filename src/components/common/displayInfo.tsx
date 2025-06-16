@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { NavLink, Outlet } from 'react-router-dom';
+import { useTheme } from '../../context/themeContext';
 
 interface UserType {
   avatar: string;
@@ -18,6 +19,7 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
   const [userVal, setUserVal] = useState<UserType | null>(null);
   const isCurrentUser = !username;
   console.log("username",username);
+  const { theme } = useTheme();
 console.log("isCurrentUser",isCurrentUser);
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,7 +30,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("username",username);
             // POST request for visiting another user's channel
             response = await axios.post<{ data: UserType }>(
-              `http://localhost:8000/api/v1/users/visitChannel/${username}`,
+              `${import.meta.env.VITE_API_URL}/api/v1/users/visitChannel/${username}`,
               {}, // send an empty body
               {
                 headers: { 'Content-Type': 'application/json' },
@@ -39,7 +41,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("current user");
             // GET request for current user
             response = await axios.get<{ data: UserType }>(
-              'http://localhost:8000/api/v1/users/current-user',
+              '${import.meta.env.VITE_API_URL}/api/v1/users/current-user',
               {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
@@ -71,7 +73,7 @@ console.log("isCurrentUser",isCurrentUser);
   }
 
   return (
-    <div className='h-auto w-full pt-2'>
+    <div className='h-auto w-full pt-2' style={{ backgroundColor: theme.background }}>
       <div className='pb-2'>
         {/* Cover Image */}
         <div className="w-full h-[180px] mb-5">
@@ -83,7 +85,7 @@ console.log("isCurrentUser",isCurrentUser);
         </div>
 
         {/* Avatar & User Info */}
-        <div className='flex flex-row items-start pl-32 justify-start bg-white rounded-xl w-full'>
+        <div className='flex flex-row items-start pl-32 justify-start  rounded-xl w-full'>
           <div className="py-3 pr-5">
             <img
               src={userVal.avatar}
@@ -91,7 +93,7 @@ console.log("isCurrentUser",isCurrentUser);
               className="w-44 h-56 rounded-full object-cover"
             />
           </div>
-          <div className='bg-white rounded-xl p-6 w-full max-w-md text-start'>
+          <div className='rounded-xl p-6 w-full max-w-md text-start'>
             <h1 className='text-4xl font-extrabold'>{userVal.fullName}</h1>
             <h1 className='text-gray-600 italic'>{userVal.username}</h1>
             {/* <h1 className='text-gray-600 italic'>{userVal.description}</h1> */}

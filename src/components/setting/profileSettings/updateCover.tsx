@@ -33,7 +33,7 @@ const UpdateCover = () => {
     formData.append("coverImage", cover);
 
     try {
-      await fetch(`http://localhost:8000/api/v1/users/cover-image`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/cover-image`, {
         method: "PATCH",
         credentials: "include",
         body: formData,
