@@ -18,7 +18,7 @@ function RecommendedVideos() {
     async function fetchRecommendations() {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/recommendations/collection`,
+          'https://backend-youtube-zba1.onrender.com/api/v1/recommendations/collection',
           {
               headers: {
             'Content-Type': 'application/json',

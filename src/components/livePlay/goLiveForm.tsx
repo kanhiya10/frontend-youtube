@@ -13,7 +13,7 @@ const GoLiveForm: React.FC = () => {
 
   const handleGoLive = async () => {
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/stream/start`, { title, category }, {
+      const res = await axios.post('https://backend-youtube-zba1.onrender.com/api/v1/stream/start', { title, category }, {
         withCredentials: true, // if using cookies for auth
       });
       console.log("res",res);
@@ -25,7 +25,7 @@ const GoLiveForm: React.FC = () => {
 
   const handleStopStream = async () => {
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/stream/stop`,{}, {
+      const res = await axios.post('https://backend-youtube-zba1.onrender.com/api/v1/stream/stop', {}, {
         withCredentials: true,
       });
       console.log("Stream stopped:", res.data);

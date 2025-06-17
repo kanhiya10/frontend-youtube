@@ -24,7 +24,7 @@ const NotificationSettings = () => {
     if (!token) return;
 
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/notifications/token-topics`, {
+      const res = await axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/token-topics', {
         params: { token },
         withCredentials: true
       });
@@ -59,7 +59,7 @@ const NotificationSettings = () => {
 
         // Send token to backend
         await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/v1/notifications/save-token`,
+          'https://backend-youtube-zba1.onrender.com/api/v1/notifications/save-token',
           { token: fcmToken, platform: 'web' },
           {withCredentials:true}
         );
@@ -77,13 +77,13 @@ const handleTopicToggle = async (topic: string): Promise<void> => {
     try {
         if (isSubscribed) {
             await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/v1/notifications/unsubscribe`,
+                'https://backend-youtube-zba1.onrender.com/api/v1/notifications/unsubscribe',
                 { token, topic },
                 { withCredentials: true }
             );
         } else {
             await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/v1/notifications/subscribe`,
+                'https://backend-youtube-zba1.onrender.com/api/v1/notifications/subscribe',
                 { token, topic },
                 {withCredentials:true} 
             );

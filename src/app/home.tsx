@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     const FetchRandomVideos = async () => {
-      const FetchUrl=`${import.meta.env.VITE_API_URL}/api/v1/videos/randomVideos`;
+      const FetchUrl = 'https://backend-youtube-zba1.onrender.com/api/v1/videos/randomVideos';
       console.log('FetchUrl:', FetchUrl);
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
@@ -29,7 +29,7 @@ export default function Home() {
   //  const handleSendNotification = async () => {
   //   try {
   //     const token = localStorage.getItem('fcmToken');
-  //     const response = await axios.post('${import.meta.env.VITE_API_URL}/api/v1/notifications/send-notification', {
+  //     const response = await axios.post('${https://backend-youtube-zba1.onrender.com}/api/v1/notifications/send-notification', {
   //       token: token, // Replace with a valid client token
   //       title: 'Test Notification',
   //       body: 'This is a test notification from the frontend.',
