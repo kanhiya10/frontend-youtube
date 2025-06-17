@@ -7,6 +7,7 @@ interface VideoType {
   _id: string;
   title: string;
   thumbnail: string;
+  
   // Add any other fields as necessary
 }
 
@@ -37,7 +38,7 @@ const WatchHistory: React.FC = () => {
   const handleClearHistory = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/ClearHistory/${info._id}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/ClearHistory/${info?._id}`,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
           withCredentials: true,

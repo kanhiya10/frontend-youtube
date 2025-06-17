@@ -43,7 +43,7 @@ const AuthIndex: React.FC = () => {
   try {
     // Send credential to your backend
     const res = await axios.post(
-      '${import.meta.env.VITE_API_URL}/api/v1/users/google-login',
+      `${import.meta.env.VITE_API_URL}/api/v1/users/google-login`,
       { idToken: credential }, // <-- just the object, no need for body or stringify
       {
         headers: { 'Content-Type': 'application/json' },

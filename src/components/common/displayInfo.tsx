@@ -41,7 +41,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("current user");
             // GET request for current user
             response = await axios.get<{ data: UserType }>(
-              '${import.meta.env.VITE_API_URL}/api/v1/users/current-user',
+              `${import.meta.env.VITE_API_URL}/api/v1/users/current-user`,
               {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
