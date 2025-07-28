@@ -59,7 +59,8 @@ export default function Home() {
             <div
               key={video._id}
               className="w-[22%]  shadow-md rounded-md overflow-hidden cursor-pointer "
-              onClick={()=>navigate('/videoPlay/streaming',{state:{VideoInfo:video}})}
+              onClick={() => navigate(`/videoPlay/streaming/${video._id}`)}
+
             >
               <img
                 src={video.thumbnail}
