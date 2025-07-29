@@ -19,6 +19,7 @@ const LiveStreaming = lazyImport(() => import('./components/common/liveStreaming
 const VideosTab = lazyImport(() => import('./components/common/videoTab'));
 const UploadVideo = lazyImport(() => import('./components/common/uploadVideo'));
 import NotificationPage from './app/notifications/notificationPage';
+import Chat from './app/chat/index';
 import { useEffect,Suspense } from 'react';
 import { messaging } from './firebase';
 import { getToken,getMessaging,onMessage } from 'firebase/messaging';
@@ -76,7 +77,7 @@ function App() {
       <Route path="/manageProfile" element={<ManageProfile />} />
       <Route path="/manageSecurity" element={<SecuritySettings />} />
       <Route path="/manageNotifications" element={<NotificationSettings />} />
-      <Route path="/videoPlay/streaming" element={<Streaming />} />
+      <Route path="/videoPlay/streaming/:id" element={<Streaming />} />
       <Route path="/auth/index" element={<AuthIndex />} />
       <Route path="/search" element={<SearchResult />} />
       <Route path="/profile/index" element={<ProfileIndex />} >
@@ -93,7 +94,8 @@ function App() {
       <Route path="home" element={<HomeProfile/>} />
       <Route path="getVideo" element={<VideosTab/>} />
       </Route>
-    </Routes>\
+      <Route path="/chat" element={<Chat/>} />
+    </Routes>
 
      {/* {notification && (
       <div className="fixed bottom-0 right-0 m-4 p-4 bg-blue-500 text-white rounded-lg shadow-lg z-50">

@@ -78,10 +78,22 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   };
   
   
-  const handleShare = useCallback(() => {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Video link copied to clipboard!');
-  }, []);
+const handleShare = useCallback(() => {
+  if (navigator.share) {
+    navigator
+      .share({
+        title: VideoInfo.title,
+        text: `Check out this video: ${VideoInfo.title}`,
+        url: `${window.location.origin}/videoPlay/streaming/${VideoInfo._id}`,
+      })
+      .then(() => console.log('Shared successfully'))
+      .catch((error) => console.error('Error sharing:', error));
+  } else {
+    // Fallback
+    alert('Your browser does not support direct sharing. You can share via these options below.');
+  }
+}, [VideoInfo]);
+
   
   const handleDownload = useCallback(() => {
     const link = document.createElement('a');

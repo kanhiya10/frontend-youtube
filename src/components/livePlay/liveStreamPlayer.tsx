@@ -6,27 +6,54 @@ const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
 
   useEffect(() => {
     const video = videoRef.current;
-    const streamUrl = `https://backend-youtube-zba1.onrender.com/hls/${streamKey}.m3u8`;
 
-    if (video) {
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(streamUrl);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-        });
+    const streamUrl = `http://localhost:9000/hls/${streamKey}/index.m3u8`;
 
-        return () => {
-          hls.destroy();
-        };
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = streamUrl;
-        video.addEventListener('loadedmetadata', () => {
-          video.play();
-        });
+
+    let hls: Hls | null = null;
+    let retryCount = 0;
+    const maxRetries = 15;
+    const retryDelay = 2000;
+
+    const loadStream = async () => {
+      try {
+        const res = await fetch(streamUrl, { method: 'HEAD' });
+        if (!res.ok) throw new Error('Stream not available');
+
+        if (video) {
+          if (Hls.isSupported()) {
+            hls = new Hls();
+            hls.loadSource(streamUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              video.play();
+            });
+          } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = streamUrl;
+            video.addEventListener('loadedmetadata', () => {
+              video.play();
+            });
+          }
+        }
+      } catch (error) {
+        console.log('Error loading stream:', error);
+        console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(loadStream, retryDelay);
+        } else {
+          console.error('Stream failed to load after retries:', error);
+        }
       }
-    }
+    };
+
+    loadStream();
+
+    return () => {
+      if (hls) {
+        hls.destroy();
+      }
+    };
   }, [streamKey]);
 
   return (

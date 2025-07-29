@@ -119,6 +119,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "jsx": "react-jsx",
+    "types": ["react", "react-dom"], // ✅ Add this
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

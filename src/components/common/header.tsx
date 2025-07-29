@@ -1,14 +1,17 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { SlLogin, SlLogout } from 'react-icons/sl';
 import { RiUser3Line, RiMenu2Fill, RiMenu3Fill } from 'react-icons/ri';
+import { BsChatDotsFill } from 'react-icons/bs';
 import { IoNotificationsOutline } from "react-icons/io5";
 import { resetInfo } from '../../features/slice/fetchUser.slice';
 import Search from './serach';
 import { useTheme } from '../../context/themeContext';
+import { fetchUnreadCount } from '../../features/slice/unreadCount.slice';
 
 interface HeaderProps {
   handleSideBar: () => void;
@@ -32,7 +35,13 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
     setIsOpen(!isOpen);
   };
 
-  
+  useEffect(() => {
+    dispatch(fetchUnreadCount());
+  }, []);
+
+  const unreadCount = useSelector((state: RootState) => state.Unread.count);
+
+
 
   const handleLogout = async () => {
     try {
@@ -56,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
 
   return (
     <header className="flex justify-between items-center h-[10%] w-full fixed top-0 left-0 z-50 px-4 md:px-8 "
-    style={{ backgroundColor: theme.background }}>
+      style={{ backgroundColor: theme.background }}>
 
       <div className="flex items-center gap-10 md:gap-40">
         {isOpen ? (
@@ -64,10 +73,10 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
         ) : (
           <RiMenu2Fill size={40} color="#8A9A5B" onClick={toggle} className="cursor-pointer" />
         )}
-       <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-  <h1 className="text-[#E0B0FF] font-light text-xl">Video</h1>
-  <h1 className="text-[#C4C3D0] text-xl ml-1">Tube</h1>
-</div>
+        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+          <h1 className="text-[#E0B0FF] font-light text-xl">Video</h1>
+          <h1 className="text-[#C4C3D0] text-xl ml-1">Tube</h1>
+        </div>
 
       </div>
 
@@ -76,10 +85,24 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
       </div>
 
       <div className="flex items-center gap-8 md:gap-16 pr-2 md:pr-8">
-      <IconButton onClick={() => navigate('/auth/index')} Icon={<SlLogin size={28} color="#8A9A5B" />} label="Login" />
-<IconButton onClick={() => navigate('/profile/index')} Icon={<RiUser3Line size={28} color="#8A9A5B" />} label="Profile" />
-<IconButton onClick={handleLogout} Icon={<SlLogout size={28} color="#8A9A5B" />} label="Logout" />
-<IconButton onClick={() => navigate('/notifications')} Icon={<IoNotificationsOutline size={28} color="#8A9A5B" />} label="Notifications" />
+        <IconButton onClick={() => navigate('/auth/index')} Icon={<SlLogin size={28} color="#8A9A5B" />} label="Login" />
+        <IconButton onClick={() => navigate('/profile/index')} Icon={<RiUser3Line size={28} color="#8A9A5B" />} label="Profile" />
+        <IconButton onClick={handleLogout} Icon={<SlLogout size={28} color="#8A9A5B" />} label="Logout" />
+        <IconButton
+          onClick={() => navigate('/chat')}
+          Icon={
+            <div className="relative">
+              <BsChatDotsFill size={28} color="#8A9A5B" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                  {unreadCount}
+                </span>
+              )}
+            </div>
+          }
+          label="Chat"
+        />
+        <IconButton onClick={() => navigate('/notifications')} Icon={<IoNotificationsOutline size={28} color="#8A9A5B" />} label="Notifications" />
 
       </div>
     </header>

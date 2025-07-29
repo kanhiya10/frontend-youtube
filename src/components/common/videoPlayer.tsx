@@ -3,6 +3,8 @@ import videojs from 'video.js';
 import TimeDisplay from 'videojs-time-display';
 import 'video.js/dist/video-js.css';
 import 'videojs-markers';
+import "videojs-contrib-quality-levels";
+import "videojs-http-source-selector";
 
 interface Timestamp {
   time: number;  // Time in seconds
@@ -64,27 +66,34 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     const time = player.currentTime();
     setCurrentTime(Math.floor(time !== undefined ? time : 0));
   });
+
+  player.on('ready', () => {
+       if (typeof player.httpSourceSelector === "function") {
+          player.httpSourceSelector({ default: "high" });
+          
+        }
+      });
   
 
-  player.markers({
-    markers: timestamps.map(ts => ({
-      time: ts.time,
-      text: ts.label
-    })),
-    markerStyle: {
-      width: '8px',
-      backgroundColor: 'red'
-    },
-    onMarkerReached(marker) {
-      console.log("Reached marker:", marker.text);
-    },
-    tooltip: {
-      display: true,
-      text(marker) {
-        return marker.text;
-      }
-    }
-  });
+  // player.markers({
+  //   markers: timestamps.map(ts => ({
+  //     time: ts.time,
+  //     text: ts.label
+  //   })),
+  //   markerStyle: {
+  //     width: '8px',
+  //     backgroundColor: 'red'
+  //   },
+  //   onMarkerReached(marker) {
+  //     console.log("Reached marker:", marker.text);
+  //   },
+  //   tooltip: {
+  //     display: true,
+  //     text(marker) {
+  //       return marker.text;
+  //     }
+  //   }
+  // });
 
 
   return () => {
