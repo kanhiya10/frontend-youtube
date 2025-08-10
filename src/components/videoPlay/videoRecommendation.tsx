@@ -18,7 +18,7 @@ function RecommendedVideos() {
     async function fetchRecommendations() {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/recommendations/collection`,
+          `/target/api/v1/recommendations/collection`,
           {
               headers: {
             'Content-Type': 'application/json',

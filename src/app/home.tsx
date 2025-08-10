@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     const FetchRandomVideos = async () => {
-      const FetchUrl= 'http://localhost:8000/api/v1/videos/randomVideos';
+      const FetchUrl= '/target/api/v1/videos/randomVideos';
       // console.log('FetchUrl:', FetchUrl);
       try {
         const response = await axios.get<{ data: VideoInfoType[] }>(
@@ -29,7 +29,7 @@ export default function Home() {
   //  const handleSendNotification = async () => {
   //   try {
   //     const token = localStorage.getItem('fcmToken');
-  //     const response = await axios.post('http://localhost:8000/api/v1/notifications/send-notification', {
+  //     const response = await axios.post('/target/api/v1/notifications/send-notification', {
   //       token: token, // Replace with a valid client token
   //       title: 'Test Notification',
   //       body: 'This is a test notification from the frontend.',

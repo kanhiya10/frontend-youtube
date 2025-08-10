@@ -1,9 +1,26 @@
 import { io } from "socket.io-client";
 
-// Assuming your backend is service-named "backend" in docker-compose
-const socket = io("http://localhost:8000", {
+// Connect to your backend
+const socket = io("http://localhost:9000", {
+  path: "/socket.io/", // must match backend path
   withCredentials: true,
+  transports: ["websocket", "polling"],
 });
- // Replace with correct internal or proxied address if needed
+
+// ====== Connection success ======
+socket.on("connect", () => {
+  console.log("✅ Connected to server");
+  console.log("Socket ID:", socket.id);
+});
+
+// ====== Connection error ======
+socket.on("connect_error", (err) => {
+  console.error("❌ Connection failed:", err.message);
+});
+
+// ====== Disconnected ======
+socket.on("disconnect", (reason) => {
+  console.warn("⚠️ Disconnected:", reason);
+});
 
 export default socket;

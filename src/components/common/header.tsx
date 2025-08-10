@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        `http://localhost:8000/api/v1/users/logout`,
+        `/target/api/v1/users/logout`,
         {},
         {
           headers: {

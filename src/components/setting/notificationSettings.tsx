@@ -24,7 +24,7 @@ const NotificationSettings = () => {
     if (!token) return;
 
     try {
-      const res = await axios.get('http://localhost:8000/api/v1/notifications/token-topics', {
+      const res = await axios.get('/target/api/v1/notifications/token-topics', {
         params: { token },
         withCredentials: true
       });
@@ -59,7 +59,7 @@ const NotificationSettings = () => {
 
         // Send token to backend
         await axios.post(
-          'http://localhost:8000/api/v1/notifications/save-token',
+          '/target/api/v1/notifications/save-token',
           { token: fcmToken, platform: 'web' },
           {withCredentials:true}
         );
@@ -77,13 +77,13 @@ const handleTopicToggle = async (topic: string): Promise<void> => {
     try {
         if (isSubscribed) {
             await axios.post(
-                'http://localhost:8000/api/v1/notifications/unsubscribe',
+                '/target/api/v1/notifications/unsubscribe',
                 { token, topic },
                 { withCredentials: true }
             );
         } else {
             await axios.post(
-                'http://localhost:8000/api/v1/notifications/subscribe',
+                '/target/api/v1/notifications/subscribe',
                 { token, topic },
                 {withCredentials:true} 
             );

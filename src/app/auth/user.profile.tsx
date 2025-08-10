@@ -29,7 +29,7 @@ const UserProfile: React.FC = () => {
     e.preventDefault();
     try {
       const option = { password, username, email };
-      dispatch(UserApi({ url: 'http://localhost:8000/api/v1/users/login', option }));
+      dispatch(UserApi({ url: '/target/api/v1/users/login', option }));
     } catch (error) {
       console.error('Error during login:', error);
     }

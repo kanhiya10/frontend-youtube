@@ -22,7 +22,7 @@ export default function ChatLayout() {
 
 useEffect(() => {
   axios
-    .get<{ data: User }>("http://localhost:8000/api/v1/users/current-user", {
+    .get<{ data: User }>("/target/api/v1/users/current-user", {
       withCredentials: true,
     })
     .then((res) => {

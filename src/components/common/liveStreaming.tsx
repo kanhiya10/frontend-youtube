@@ -32,14 +32,14 @@ const Live = () => {
       try {
         if (!isCurrentUser) {
             console.log("username in fetchLiveAndPast",username);
-          const liveRes = await axios.get(`http://localhost:8000/api/v1/stream/fetchLive/${username}`, {
+          const liveRes = await axios.get(`/target/api/v1/stream/fetchLive/${username}`, {
             withCredentials: true,
           });
           setStreamData(liveRes.data.data);
         }
 
         const historyRes = await axios.get(
-            `http://localhost:8000/api/v1/stream/history${username ? `/${username}` : ""}`,
+            `/target/api/v1/stream/history${username ? `/${username}` : ""}`,
             { withCredentials: true }
           );
           

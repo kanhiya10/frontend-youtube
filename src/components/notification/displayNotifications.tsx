@@ -32,7 +32,7 @@ const DisplayNotifications: React.FC = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/notifications/fetchUserNotifications", {
+        const res = await axios.get("/target/api/v1/notifications/fetchUserNotifications", {
           withCredentials: true,
         });
         console.log("Fetched notifications:", res.data.data);

@@ -15,7 +15,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
   const toggleLike = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/comments/like/${commentId}`,
+        `/target/api/v1/comments/like/${commentId}`,
         {},
         { withCredentials: true }
       );
@@ -34,7 +34,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
   const toggleDislike = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/comments/dislike/${commentId}`,
+        `/target/api/v1/comments/dislike/${commentId}`,
         {},
         { withCredentials: true }
       );

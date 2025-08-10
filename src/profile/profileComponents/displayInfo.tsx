@@ -25,7 +25,7 @@ const DisplayInfo = () => {
     const handleCurrentUser = async () => {
       try {
         const response = await axios.get<{ data: UserType }>(
-          `http://localhost:8000/api/v1/users/current-user`,
+          `/target/api/v1/users/current-user`,
           {
             headers: {
               'Content-Type': 'application/json',

@@ -30,7 +30,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("username",username);
             // POST request for visiting another user's channel
             response = await axios.post<{ data: UserType }>(
-              `http://localhost:8000/api/v1/users/visitChannel/${username}`,
+              `/target/api/v1/users/visitChannel/${username}`,
               {}, // send an empty body
               {
                 headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ console.log("isCurrentUser",isCurrentUser);
             console.log("current user");
             // GET request for current user
             response = await axios.get<{ data: UserType }>(
-              'http://localhost:8000/api/v1/users/current-user',
+              '/target/api/v1/users/current-user',
               {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true

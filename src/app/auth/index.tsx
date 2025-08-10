@@ -43,7 +43,7 @@ const AuthIndex: React.FC = () => {
   try {
     // Send credential to your backend
     const res = await axios.post(
-      'http://localhost:8000/api/v1/users/google-login',
+      '/target/api/v1/users/google-login',
       { idToken: credential }, // <-- just the object, no need for body or stringify
       {
         headers: { 'Content-Type': 'application/json' },

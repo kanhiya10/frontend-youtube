@@ -39,11 +39,11 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     }
 
     axios
-      .get(`http://localhost:8000/api/v1/conversations/between/${selectedUser}`, { withCredentials: true })
+      .get(`/target/api/v1/conversations/between/${selectedUser}`, { withCredentials: true })
       .then(res => {
         const conv = res.data.data;
         setConversationId(conv._id);
-        return axios.get(`http://localhost:8000/api/v1/conversations/${conv._id}/messages`, { withCredentials: true });
+        return axios.get(`/target/api/v1/conversations/${conv._id}/messages`, { withCredentials: true });
       })
       .then(res => setMessages(res?.data?.data || []))
       .catch(err => {
@@ -119,7 +119,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     formData.append('mediaFile', file);
 
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/conversations/uploadMedia', formData, {
+      const res = await axios.post('/target/api/v1/conversations/uploadMedia', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });
@@ -150,7 +150,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
           alt="Chat placeholder"
           className="w-1/3 max-w-[200px] mb-4 opacity-80 drop-shadow-lg transition-transform duration-300 hover:scale-105"
         />
-        <p className="text-sm text-center text-gray-400">Start a conversation!</p>
+        <p className="text-sm text-center text-gray-400">Start a talk!</p>
       </div>
 
     );

@@ -20,7 +20,7 @@ console.log("query", query);
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/v1/search?q=${query}`);
+        const res = await axios.get(`/target/api/v1/search?q=${query}`);
         setResults(res.data);
       } catch (error) {
         console.error("Search failed", error);

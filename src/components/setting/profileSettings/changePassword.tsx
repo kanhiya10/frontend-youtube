@@ -20,7 +20,7 @@ const ChangePassword = () => {
 
     try {
         const res = await axios.post(
-            `http://localhost:8000/api/v1/users/change-password`,
+            `/target/api/v1/users/change-password`,
             { currentPassword, newPassword },
             { withCredentials: true } // This includes cookies (like auth tokens)
           );

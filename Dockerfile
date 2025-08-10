@@ -1,14 +1,13 @@
-FROM node:22.15.0
+# ---------- STAGE 1: Build React App ----------
+FROM node:20-alpine AS builder
+
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --legacy-peer-deps && npm rebuild
-
-COPY tsconfig.json ./
+RUN npm install --legacy-peer-deps
 
 COPY . .
+RUN npm run build
 
-EXPOSE 8080
 
-CMD ["npm", "run", "dev"]
