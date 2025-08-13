@@ -1,17 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-
-  server: {
-    port: 8080,
-    strictPort: true,
-    host: true,
-    proxy: {
-      '/target': 'http://backend:8000',
-    },
-
+  server:{
+    proxy:{
+      '/target':'https://backend-youtube-zba1.onrender.com}', 
+    }
   },
- 
   plugins: [react()],
-})
+}) 

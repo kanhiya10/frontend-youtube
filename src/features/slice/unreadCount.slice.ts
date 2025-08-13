@@ -9,7 +9,7 @@ interface UnreadState {
 export const fetchUnreadCount = createAsyncThunk<number>(
   "unreadCount/fetchUnreadCount",
   async () => {
-    const response = await axios.get("http://localhost:8000/api/v1/conversations/unread-count", {
+    const response = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/conversations/unread-count", {
       withCredentials: true,
     });
     return response.data.unreadCount;

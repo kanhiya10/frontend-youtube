@@ -39,11 +39,11 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     }
 
     axios
-      .get(`http://localhost:8000/api/v1/conversations/between/${selectedUser}`, { withCredentials: true })
+      .get(`https://backend-youtube-zba1.onrender.com/api/v1/conversations/between/${selectedUser}`, { withCredentials: true })
       .then(res => {
         const conv = res.data.data;
         setConversationId(conv._id);
-        return axios.get(`http://localhost:8000/api/v1/conversations/${conv._id}/messages`, { withCredentials: true });
+        return axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/conversations/${conv._id}/messages`, { withCredentials: true });
       })
       .then(res => setMessages(res?.data?.data || []))
       .catch(err => {
@@ -119,7 +119,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     formData.append('mediaFile', file);
 
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/conversations/uploadMedia', formData, {
+      const res = await axios.post('https://backend-youtube-zba1.onrender.com/api/v1/conversations/uploadMedia', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });

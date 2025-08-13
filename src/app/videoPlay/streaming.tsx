@@ -17,7 +17,7 @@ const Streaming: React.FC = () => {
 
   useEffect(() => {
     async function fetchVideo() {
-      const res = await axios.get(`http://localhost:8000/api/v1/videos/getSingleVideo/${id}`);
+      const res = await axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/videos/getSingleVideo/${id}`);
       console.log("Fetched video info:", res.data.data);
       setVideoInfo(res.data.data);
     }
