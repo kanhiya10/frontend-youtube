@@ -150,7 +150,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
           alt="Chat placeholder"
           className="w-1/3 max-w-[200px] mb-4 opacity-80 drop-shadow-lg transition-transform duration-300 hover:scale-105"
         />
-        <p className="text-sm text-center text-gray-400">Start a talk!</p>
+        <p className="text-sm text-center text-gray-400">Start a conversation!</p>
       </div>
 
     );

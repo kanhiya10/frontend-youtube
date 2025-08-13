@@ -21,10 +21,10 @@ export default function SearchBar() {
         onChange={(e) => setQuery(e.target.value)}
         className="border px-4 py-2 rounded-lg flex-1"
         style={{ backgroundColor: theme.search}}
-        placeholder="Search creas..."
+        placeholder="Search creators or videos..."
       />
       <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded">
-        Sea
+        Search
       </button>
     </form>
   );
