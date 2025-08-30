@@ -8,7 +8,7 @@ export default defineConfig({
     strictPort: true,
     host: true,
     proxy: {
-      '/target': 'http://backend:8000',
+      '/target': 'http://backend:8001',
     },
 
   },

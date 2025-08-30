@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
-import TimeDisplay from 'videojs-time-display';
 import 'video.js/dist/video-js.css';
 import 'videojs-markers';
 import "videojs-contrib-quality-levels";

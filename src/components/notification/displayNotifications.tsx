@@ -32,7 +32,7 @@ const DisplayNotifications: React.FC = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/fetchUserNotifications', {
+        const res = await axios.get('http://localhost:8001/api/v1/notifications/fetchUserNotifications', {
           withCredentials: true,
         });
         console.log("Fetched notifications:", res.data.data);
@@ -48,7 +48,44 @@ const DisplayNotifications: React.FC = () => {
   }, []);
 
   if (loading) return <p>Loading notifications...</p>;
-  if (notifications.length === 0) return <p>No notifications yet.</p>;
+  // if (notifications.length === 0) return <p>No notifications yet.</p>;
+  // dummy-notification
+
+
+   const fetchSubscriptions = async () => {
+      try {
+        const res = await axios.get("http://localhost:8001/api/v1/subscription/user", {
+          withCredentials: true,
+        });
+        console.log("Fetched subscriptions:", res.data);
+      } catch (error) {
+        console.error("Failed to fetch subscriptions", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const dummyNotification = async () => {
+      try {
+        const res = await axios.get("http://localhost:8001/api/v1/notifications/dummy-notification", {
+          withCredentials: true,
+        });
+        console.log("Dummy notification response:", res.data);
+      } catch (error) {
+        console.error("Failed to send dummy notification", error);
+      }
+    } 
+
+    const checkForeground = async () => {
+      try {
+        const res = await axios.get("http://localhost:8001/api/v1/notifications/dummy-to-myself", {
+          withCredentials: true,
+        });
+        console.log("Check foreground response:", res.data);
+      } catch (error) { 
+        console.error("Failed to check foreground", error);
+      }
+    }
 
   return (
     <div className="w-full min-h-screen p-5" style={{ background: theme.background }}>
@@ -82,6 +119,20 @@ const DisplayNotifications: React.FC = () => {
           </li>
         ))}
       </ul>
+      <button
+        onClick={fetchSubscriptions}
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" 
+        >Check Subscribers</button>
+
+      <button
+        onClick={dummyNotification}
+        className="mt-4 ml-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+      >Send Dummy Notification</button> 
+      <button
+      onClick={checkForeground}
+      className="mt-4 ml-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+      >checkForegroundNotification
+      </button>
     </div>
   );
 };

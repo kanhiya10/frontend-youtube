@@ -31,7 +31,7 @@ function GetVideo() {
 
       try {
         const response = await axios.post(
-          `https://backend-youtube-zba1.onrender.com/api/v1/videos/handleGetVideos/${info._id}`,
+          `http://localhost:8001/api/v1/videos/handleGetVideos/${info._id}`,
           {},
           {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -59,7 +59,7 @@ function GetVideo() {
       const addVideoToWatchHistory = async () => {
         try {
           await axios.post(
-            `https://backend-youtube-zba1.onrender.com/api/v1/users/history/${info._id}/${activeVideo._id}`,
+            `http://localhost:8001/api/v1/users/history/${info._id}/${activeVideo._id}`,
             {},
             {
               headers: {

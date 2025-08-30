@@ -3,6 +3,7 @@ import axios from "axios";
 import UserList from "./UserList";
 import ChatWindow from "./ChatWindow";
 import socket from "../../socket";
+import api from "../../services/api"
 
 interface User {
   _id: string;
@@ -20,22 +21,40 @@ export default function ChatLayout() {
 
 
 
-useEffect(() => {
-  axios
-    .get<{ data: User }>("http://localhost:8000/api/v1/users/current-user", {
-      withCredentials: true,
-    })
-    .then((res) => {
-      setCurrentUser(res.data.data);
-      // console.log("Current user fetched in chatLayout:", res.data.data);
-      // socket.emit("register", res.data.data._id);
-    })
-    .catch((err) => console.error("Failed to fetch current user", err));
+// useEffect(() => {
+//   axios
+//     .get<{ data: User }>("http://localhost:8001/api/v1/users/current-user", {
+//       withCredentials: true,
+//     })
+//     .then((res) => {
+//       setCurrentUser(res.data.data);
+//       // console.log("Current user fetched in chatLayout:", res.data.data);
+//       // socket.emit("register", res.data.data._id);
+//     })
+//     .catch((err) => console.error("Failed to fetch current user", err));
 
-  // return () => {
-  //   socket.disconnect();
-  // };
-}, []);
+//   // return () => {
+//   //   socket.disconnect();
+//   // };
+// }, []);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get<{ data: User }>("/users/current-user");
+        setCurrentUser(res.data.data);
+        // socket.emit("register", res.data.data._id);
+      } catch (err) {
+        console.error("Failed to fetch current user", err);
+      }
+    };
+
+    fetchUser();
+
+    // return () => {
+    //   socket.disconnect();
+    // };
+  }, []);
 
 
   if (!currentUser) {

@@ -15,7 +15,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
   const toggleLike = async () => {
     try {
       const res = await axios.post(
-        `https://backend-youtube-zba1.onrender.com/api/v1/comments/like/${commentId}`,
+        `http://localhost:8001/api/v1/comments/like/${commentId}`,
         {},
         { withCredentials: true }
       );
@@ -34,7 +34,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
   const toggleDislike = async () => {
     try {
       const res = await axios.post(
-        `https://backend-youtube-zba1.onrender.com/api/v1/comments/dislike/${commentId}`,
+        `http://localhost:8001/api/v1/comments/dislike/${commentId}`,
         {},
         { withCredentials: true }
       );

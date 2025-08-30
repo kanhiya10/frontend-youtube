@@ -30,7 +30,7 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
   const fetchConversations = async () => {
     console.log("Fetching conversations...");
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/conversations", {
+      const response = await axios.get("http://localhost:8001/api/v1/conversations", {
         withCredentials: true,
       });
       setConversations(response.data.data);
@@ -66,7 +66,7 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
     setIsSearching(true);
     const timeout = setTimeout(() => {
       fetch(
-        `http://localhost:8000/api/v1/search/users?query=${encodeURIComponent(search)}`
+        `http://localhost:8001/api/v1/search/users?query=${encodeURIComponent(search)}`
       )
         .then((res) => res.json())
         .then((data) => {

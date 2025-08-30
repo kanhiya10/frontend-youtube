@@ -19,7 +19,7 @@ export default function SearchBar() {
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="border px-4 py-2 rounded-lg flex-1"
+        className="border px-4 py-2 rounded-lg w-28 md:w-auto md:flex-1"
         style={{ backgroundColor: theme.search}}
         placeholder="Search creators or videos..."
       />

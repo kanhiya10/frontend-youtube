@@ -9,7 +9,7 @@ import WatchHistory from './components/common/watchHistory';
 import Settings from './components/setting/settings';
 const ManageProfile = lazyImport(() => import('./components/setting/profileSettings/index'));
 const SecuritySettings = lazyImport(() => import('./components/setting/securitySettings'));
-const NotificationSettings = lazyImport(() => import('./components/setting/notificationSettings'));
+const NotificationSettings = lazyImport(() => import('./components/setting/notifications/notificationSettings'));
 const Streaming = lazyImport(() => import('./app/videoPlay/streaming'));
 const AuthIndex = lazyImport(() => import('./app/auth/index'));
 const ProfileIndex = lazyImport(() => import('./app/profile/index'));
@@ -24,10 +24,18 @@ import { useEffect,Suspense } from 'react';
 import { messaging } from './firebase';
 import { getToken,getMessaging,onMessage } from 'firebase/messaging';
 import SearchResult from './app/search/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPermission, registerFcmToken, removeFcmToken } from './features/slice/notificationFcm.slice';
 
 function App() {
   const [sidebarData, setSidebarData] = useState(false);
   const [notification, setNotification] = useState(null);
+  const dispatch = useDispatch();
+
+  const { info } = useSelector((state) => state.User);
+const isLoggedIn = !!info; // true if user is logged in
+
+  const { token } = useSelector((state) => state.notifications);
 
 
 
@@ -47,6 +55,29 @@ function App() {
     // Cleanup listener on unmount
     return () => unsubscribe();
   }, []);
+
+  
+  useEffect(() => {
+    navigator.permissions.query({ name: "notifications" }).then((permissionStatus) => {
+      dispatch(setPermission(permissionStatus.state ));
+
+      permissionStatus.onchange = () => {
+        const newPermission = permissionStatus.state;
+        console.log('Notification permission changed to:', newPermission);
+        dispatch(setPermission(newPermission));
+
+        if (isLoggedIn) {
+          if (newPermission === "granted" && !token) {
+            console.log('Permission granted, registering token in app.jsx');
+            dispatch(registerFcmToken());
+          } else if (newPermission === "denied" && token) {
+            console.log('Permission denied, removing token in app.jsx');
+            dispatch(removeFcmToken(token));
+          }
+        }
+      };
+    });
+  }, [dispatch, isLoggedIn, token]);
 
 
   
@@ -97,12 +128,12 @@ function App() {
       <Route path="/chat" element={<Chat/>} />
     </Routes>
 
-     {/* {notification && (
+     {notification && (
       <div className="fixed bottom-0 right-0 m-4 p-4 bg-blue-500 text-white rounded-lg shadow-lg z-50">
         <h2 className="text-lg font-semibold">{notification.title}</h2>
         <p>{notification.body}</p>
       </div>
-    )} */}
+    )}
   </div>
   </Suspense>
 </div>
