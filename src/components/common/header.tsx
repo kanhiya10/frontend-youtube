@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState, AppDispatch } from '../../store';
 import { SlLogin, SlLogout } from 'react-icons/sl';
 import { RiUser3Line, RiMenu2Fill, RiMenu3Fill } from 'react-icons/ri';
 import { BsChatDotsFill } from 'react-icons/bs';
@@ -12,6 +12,8 @@ import { resetInfo } from '../../features/slice/fetchUser.slice';
 import Search from './serach';
 import { useTheme } from '../../context/themeContext';
 import { fetchUnreadCount } from '../../features/slice/unreadCount.slice';
+import { removeFcmToken } from '../../features/slice/notificationFcm.slice';
+import { store } from '../../store';
 
 interface HeaderProps {
   handleSideBar: () => void;
@@ -27,7 +29,7 @@ const IconButton = ({ onClick, Icon, label }: { onClick: () => void; Icon: React
 const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { theme, toggleTheme, mode } = useTheme();
 
   const toggle = () => {
@@ -44,9 +46,19 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
 
 
   const handleLogout = async () => {
+
     try {
+
+        const token = store.getState().notifications.token;
+
+    // 1️⃣ If token exists, remove via thunk (this already calls backend + clears Redux/localStorage)
+    if (token) {
+      dispatch(removeFcmToken(token));
+      console.log("🔴 FCM token removed:", token);
+    }
+
       await axios.post(
-        'https://backend-youtube-zba1.onrender.com/api/v1/users/logout',
+        'http://localhost:8001/api/v1/users/logout',
         {},
         {
           headers: {
@@ -64,10 +76,10 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
   };
 
   return (
-    <header className="flex justify-between items-center h-[10%] w-full fixed top-0 left-0 z-50 px-4 md:px-8 "
+    <header className="flex justify-between items-center h-[10%] w-full fixed top-0 left-0 z-50 px-4 md:px-8  "
       style={{ backgroundColor: theme.background }}>
 
-      <div className="flex items-center gap-10 md:gap-40">
+      <div className="flex items-center  gap-8 sm:gap-10 lg:gap-28 ">
         {isOpen ? (
           <RiMenu3Fill size={40} color="#8A9A5B" onClick={toggle} className="cursor-pointer" />
         ) : (
@@ -80,11 +92,11 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
 
       </div>
 
-      <div className="hidden sm:block">
+      <div className="hidden sm:block ">
         <Search />
       </div>
 
-      <div className="flex items-center gap-8 md:gap-16 pr-2 md:pr-8">
+      <div className="flex items-center gap-8  lg:gap-16 pr-2">
         <IconButton onClick={() => navigate('/auth/index')} Icon={<SlLogin size={28} color="#8A9A5B" />} label="Login" />
         <IconButton onClick={() => navigate('/profile/index')} Icon={<RiUser3Line size={28} color="#8A9A5B" />} label="Profile" />
         <IconButton onClick={handleLogout} Icon={<SlLogout size={28} color="#8A9A5B" />} label="Logout" />

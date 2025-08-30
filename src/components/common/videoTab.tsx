@@ -13,7 +13,7 @@ const VideosTab = () => {
   const { videos, loading } = useUserVideos(username);
 
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
-  const trackPlay = useVideoPlayTracker(videos[0]?._id);
+  const trackPlay = useVideoPlayTracker();
 
   const sortedVideos = useMemo(() => {
     return [...videos].sort((a, b) => {
@@ -32,11 +32,16 @@ const VideosTab = () => {
     setCurrentPage,
   } = usePagination(sortedVideos, 3);
 
-  const handlePlay = () => {
-    if (currentVideos.length > 0) {
-      trackPlay();
-    }
-  };
+  const videoTimestamps = [
+  { time: 0, label: 'Introduction' },
+  { time: 5, label: 'Main concepts' },
+  { time: 10, label: 'Technical demonstration' },
+  { time: 20, label: 'Case study' },
+  { time: 23, label: 'Conclusion' }
+];
+
+
+
 
   if (loading) return <p className="text-center py-10">Loading videos...</p>;
 
@@ -66,13 +71,16 @@ const VideosTab = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentVideos.map((video) => (
               <VideoPlayer
-              className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
                 src={video.videoFile}
                 poster={video.thumbnail}
-                onPlay={() => handlePlay()}
+                onPlay={() => trackPlay(video._id)} 
+                className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl "
+                timestamps={videoTimestamps}
               />
             ))}
           </div>
+
+          
 
           <PaginationControls
             currentPage={currentPage}

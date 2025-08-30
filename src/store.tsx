@@ -25,6 +25,8 @@ import UserReducer from './features/slice/fetchUser.slice';
 import VideoUserReducer from './features/slice/fetchVideos.slice';
 import channelFetchUserReducer from './features/slice/channelFetchUser.slice';
 import unreadReducer from './features/slice/unreadCount.slice';
+import NotificationReducer from './features/slice/notificationFcm.slice';
+
 
 export const store = configureStore({
   reducer: {
@@ -33,6 +35,7 @@ export const store = configureStore({
     Channel: channelFetchUserReducer,
     VideoUser: VideoUserReducer,
     Unread: unreadReducer,
+    notifications: NotificationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

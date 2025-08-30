@@ -92,7 +92,9 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     };
 
     socket.on("message", handleMessage);
-    return () => socket.off("message", handleMessage);
+    return () => {
+      socket.off("message", handleMessage);
+    };
   }, [selectedUser, currentUserId]);
 
   // ✅ Send message

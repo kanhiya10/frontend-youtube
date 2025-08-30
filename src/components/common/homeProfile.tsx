@@ -17,13 +17,18 @@ const HomeProfile = () => {
 
    const { videos, loading } = useUserVideos(username);
 
-   const trackPlay = useVideoPlayTracker(videos[0]?._id);
+   const trackPlay = useVideoPlayTracker();
 
-   const handlePlay = () => {
-     if (videos.length > 0) {
-       trackPlay();
-     }
-   };
+     const videoTimestamps = [
+  { time: 0, label: 'Introduction' },
+  { time: 5, label: 'Main concepts' },
+  { time: 10, label: 'Technical demonstration' },
+  { time: 20, label: 'Case study' },
+  { time: 23, label: 'Conclusion' }
+];
+
+
+
 
    if (loading) {
      return (
@@ -53,8 +58,9 @@ const HomeProfile = () => {
               <VideoPlayer
                 src={videos[0].videoFile}
                 poster={videos[0].thumbnail}
-                onPlay={() => handlePlay()}
+                onPlay={() => trackPlay(videos[0]._id)}
                 className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
+                timestamps={videoTimestamps}
               />
               <div className="p-4">
                 <h3 className="text-lg font-medium">{videos[0].title}</h3>

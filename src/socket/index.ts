@@ -4,6 +4,14 @@ import { io } from "socket.io-client";
 const socket = io("https://backend-youtube-zba1.onrender.com", {
   withCredentials: true,
 });
- // Replace with correct internal or proxied address if needed
+// Replace with correct internal or proxied address if needed
+
+socket.on("connect", () => {
+  console.log("Socket connected successfully:", socket.id);
+});
+
+socket.on("connect_error", (err) => {
+  console.error("Socket connection error:", err.message);
+});
 
 export default socket;

@@ -2,8 +2,8 @@
 import { useCallback } from 'react';
 import axios from 'axios';
 
-export const useVideoPlayTracker = (videoId: string) => {
-  const trackPlay = useCallback(() => {
+export const useVideoPlayTracker = () => {
+  const trackPlay = useCallback((videoId: string) => {
     if (!videoId) return;
 
     const viewedKey = `viewed-${videoId}`;
@@ -12,7 +12,7 @@ export const useVideoPlayTracker = (videoId: string) => {
       console.log("First time play - Tracking view");
 
       // Increment view count
-      axios.post(`https://backend-youtube-zba1.onrender.com/api/v1/viewVideo/viewVideo/${videoId}`, {}, {
+      axios.post(`http://localhost:8001/api/v1/viewVideo/viewVideo/${videoId}`, {}, {
         withCredentials: true,
       }).then((res) => {
         console.log('View count updated:', res.data);
@@ -22,7 +22,7 @@ export const useVideoPlayTracker = (videoId: string) => {
       });
 
       // Add to watch history (no userId needed)
-      axios.post(`https://backend-youtube-zba1.onrender.com/api/v1/users/history/${videoId}`, {}, {
+      axios.post(`http://localhost:8001/api/v1/users/history/${videoId}`, {}, {
         withCredentials: true,
       }).then((res) => {
         console.log('Watch history updated:', res.data);
@@ -32,7 +32,7 @@ export const useVideoPlayTracker = (videoId: string) => {
     } else {
       console.log('Video already viewed in this session');
     }
-  }, [videoId]);
+  }, []);
 
   return trackPlay;
 };

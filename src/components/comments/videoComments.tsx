@@ -5,17 +5,17 @@ import CommentList from './commentList';
 import { VideoInfoType } from '../../types/types';
 
 interface VideoCommentsProps {
-  VideoInfo: VideoInfoType;
+  VideoId: string;
 }
 
-const VideoComments: React.FC<VideoCommentsProps> = ({ VideoInfo }) => {
+const VideoComments: React.FC<VideoCommentsProps> = ({ VideoId }) => {
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
 
   const fetchComments = async () => {
-    if (!VideoInfo._id) return;
+    if (!VideoId) return;
     try {
-      const res = await axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/comments/readComment/${VideoInfo._id}`);
+      const res = await axios.get(`http://localhost:8001/api/v1/comments/readComment/${VideoId}`);
       console.log('Fetched comments:', res.data.data);
       setComments(res.data.data);
     } catch (err) {
@@ -25,17 +25,17 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoInfo }) => {
 
   useEffect(() => {
     fetchComments();
-  }, [VideoInfo._id]);
+  }, [VideoId]);
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;
 
     try {
       const res = await axios.post(
-        'https://backend-youtube-zba1.onrender.com/api/v1/comments/writeComment',
+        'http://localhost:8001/api/v1/comments/writeComment',
         {
           text: newComment,
-          videoId: VideoInfo._id,
+          videoId: VideoId,
         },
         { withCredentials: true }
       );
@@ -57,7 +57,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoInfo }) => {
       <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Comments</h2>
       <CommentList
         comments={comments}
-        videoId={VideoInfo._id}
+        videoId={VideoId}
         refreshComments={fetchComments}
       />
     </div>

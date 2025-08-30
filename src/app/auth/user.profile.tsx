@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { UserApi } from '../../features/slice/fetchUser.slice';
 import { useNavigate } from 'react-router-dom';
+import { initNotificationsAfterLogin } from '../../features/slice/notificationFcm.slice';
 
 
 const UserProfile: React.FC = () => {
@@ -29,54 +30,67 @@ const UserProfile: React.FC = () => {
     e.preventDefault();
     try {
       const option = { password, username, email };
-      dispatch(UserApi({ url: `https://backend-youtube-zba1.onrender.com/api/v1/users/login`, option }));
+       const result = await dispatch(
+      UserApi({ url: `http://localhost:8001/api/v1/users/login`, option })
+    );
+    if (UserApi.fulfilled.match(result)) {
+      console.log("Login successful:", result.payload);
+      dispatch(initNotificationsAfterLogin());
+    } else {
+      console.warn("Login failed, skipping notification setup");
+    }
     } catch (error) {
       console.error('Error during login:', error);
     }
   };
 
 
-  return (
-<div className="w-full">
-
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login to Your Account</h2>
-        <form onSubmit={loginData} className="space-y-5">
-          <input
-            type="text"
-            value={username}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setUserName(e.target.value)}
-            placeholder="Username"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-          />
-          <div className="text-right">
-            <span className="text-sm text-blue-600 hover:underline cursor-pointer">
-              Forgot password?
-            </span>
-          </div>
+ return (
+    <div className="w-full">
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
+        Login to Your Account
+      </h2>
+      
+      <form onSubmit={loginData} className="space-y-4 sm:space-y-5">
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
+          placeholder="Username"
+          className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200"
+        />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200"
+        />
+        
+        <div className="text-right">
           <button
-            type="submit"
-            className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-900 transition duration-300"
+            type="button"
+            className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 hover:underline focus:outline-none focus:underline transition-colors duration-200"
           >
-            Login
+            Forgot password?
           </button>
-        </form>
-       
-      </div>
-
+        </div>
+        
+        <button
+          type="submit"
+          className="w-full py-2 sm:py-3 mt-4 sm:mt-6 bg-black text-white font-semibold text-sm sm:text-base rounded-lg hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 active:transform active:scale-98"
+        >
+          Login
+        </button>
+      </form>
+    </div>
   );
 };
 
