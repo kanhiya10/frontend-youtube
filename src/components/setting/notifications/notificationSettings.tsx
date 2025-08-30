@@ -39,8 +39,8 @@ const NotificationSettings = () => {
     const fetchTopicsAndSubs = async () => {
       try {
         const [allTopicsRes, myTopicsRes] = await Promise.all([
-          axios.get('http://localhost:8001/api/v1/notifications/all-topics', { withCredentials: true }),
-          axios.get('http://localhost:8001/api/v1/notifications/my-topics', { withCredentials: true }),
+          axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/all-topics', { withCredentials: true }),
+          axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/my-topics', { withCredentials: true }),
         ]);
 
         const allTopics: Topic[] = allTopicsRes.data.data.topics || [];
@@ -73,7 +73,7 @@ const NotificationSettings = () => {
   //       console.log('checking');
 
   //       await axios.post(
-  //         'http://localhost:8001/api/v1/notifications/save-token',
+  //         'https://backend-youtube-zba1.onrender.com/api/v1/notifications/save-token',
   //         { token: fcmToken, platform: 'web' },
   //         { withCredentials: true }
   //       );
@@ -110,13 +110,13 @@ const NotificationSettings = () => {
     try {
       if (isSubscribed) {
         await axios.post(
-          'http://localhost:8001/api/v1/notifications/unsubscribe',
+          'https://backend-youtube-zba1.onrender.com/api/v1/notifications/unsubscribe',
           { token, topic },
           { withCredentials: true }
         );
       } else {
         await axios.post(
-          'http://localhost:8001/api/v1/notifications/subscribe',
+          'https://backend-youtube-zba1.onrender.com/api/v1/notifications/subscribe',
           { token, topic },
           { withCredentials: true }
         );

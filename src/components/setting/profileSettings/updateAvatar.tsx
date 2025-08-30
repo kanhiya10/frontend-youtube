@@ -29,7 +29,7 @@ const UpdateAvatar = () => {
     formData.append("avatar", avatar);
 
     try {
-      await fetch("http://localhost:8001/api/v1/users/avatar", {
+      await fetch("https://backend-youtube-zba1.onrender.com/api/v1/users/avatar", {
         method: "PATCH",
         credentials: "include",
         body: formData,

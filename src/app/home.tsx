@@ -27,7 +27,7 @@ useEffect(() => {
   //  const handleSendNotification = async () => {
   //   try {
   //     const token = localStorage.getItem('fcmToken');
-  //     const response = await axios.post('${http://localhost:8001}/api/v1/notifications/send-notification', {
+  //     const response = await axios.post('${https://backend-youtube-zba1.onrender.com}/api/v1/notifications/send-notification', {
   //       token: token, // Replace with a valid client token
   //       title: 'Test Notification',
   //       body: 'This is a test notification from the frontend.',

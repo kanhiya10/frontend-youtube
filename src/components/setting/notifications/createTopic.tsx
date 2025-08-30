@@ -22,7 +22,7 @@ export const CreateTopicCard = ({ topics, setTopics }: { topics: Topic[], setTop
       if (iconFile) formData.append('icon', iconFile);
 
       const res = await axios.post(
-        "http://localhost:8001/api/v1/notifications/create-topic",
+        "https://backend-youtube-zba1.onrender.com/api/v1/notifications/create-topic",
         formData,
         { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
       );

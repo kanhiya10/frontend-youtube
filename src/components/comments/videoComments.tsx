@@ -15,7 +15,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoId }) => {
   const fetchComments = async () => {
     if (!VideoId) return;
     try {
-      const res = await axios.get(`http://localhost:8001/api/v1/comments/readComment/${VideoId}`);
+      const res = await axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/comments/readComment/${VideoId}`);
       console.log('Fetched comments:', res.data.data);
       setComments(res.data.data);
     } catch (err) {
@@ -32,7 +32,7 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoId }) => {
 
     try {
       const res = await axios.post(
-        'http://localhost:8001/api/v1/comments/writeComment',
+        'https://backend-youtube-zba1.onrender.com/api/v1/comments/writeComment',
         {
           text: newComment,
           videoId: VideoId,

@@ -22,7 +22,7 @@ const Video: React.FC = () => {
 
     try {
       const uploadResp = await axios.post(
-        'http://localhost:8001/api/v1/videos/uploadVideo',
+        'https://backend-youtube-zba1.onrender.com/api/v1/videos/uploadVideo',
         formData,
         {
           headers: {

@@ -20,7 +20,7 @@ console.log("query", query);
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await axios.get(`http://localhost:8001/api/v1/search?q=${query}`);
+        const res = await axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/search?q=${query}`);
         setResults(res.data);
       } catch (error) {
         console.error("Search failed", error);

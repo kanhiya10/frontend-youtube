@@ -23,7 +23,7 @@ export default function ChatLayout() {
 
 // useEffect(() => {
 //   axios
-//     .get<{ data: User }>("http://localhost:8001/api/v1/users/current-user", {
+//     .get<{ data: User }>("https://backend-youtube-zba1.onrender.com/api/v1/users/current-user", {
 //       withCredentials: true,
 //     })
 //     .then((res) => {

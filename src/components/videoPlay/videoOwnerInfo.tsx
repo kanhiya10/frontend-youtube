@@ -33,7 +33,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
     }
     try {
       const response = await axios.post(
-        `http://localhost:8001/api/v1/subscription/toggle/${VideoInfo.video.owner._id}`,
+        `https://backend-youtube-zba1.onrender.com/api/v1/subscription/toggle/${VideoInfo.video.owner._id}`,
         {},
         { withCredentials: true }
       );
@@ -49,7 +49,7 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
   const toggleReaction = async (type: 'like' | 'dislike') => {
     try {
       const res = await axios.post(
-        `http://localhost:8001/api/v1/videos/toggleReaction/${VideoInfo.video._id}`,
+        `https://backend-youtube-zba1.onrender.com/api/v1/videos/toggleReaction/${VideoInfo.video._id}`,
         { reaction: type },
         { withCredentials: true }
       );

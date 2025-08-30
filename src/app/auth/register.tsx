@@ -26,7 +26,7 @@ const RegisterProfile: React.FC = () => {
     if (coverImg) formData.append("coverImage", coverImg);
 
     try {
-      const registResp = await axios.post('http://localhost:8001/api/v1/users/register', formData, {
+      const registResp = await axios.post('https://backend-youtube-zba1.onrender.com/api/v1/users/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

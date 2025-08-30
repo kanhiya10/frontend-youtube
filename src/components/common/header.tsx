@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
     }
 
       await axios.post(
-        'http://localhost:8001/api/v1/users/logout',
+        'https://backend-youtube-zba1.onrender.com/api/v1/users/logout',
         {},
         {
           headers: {

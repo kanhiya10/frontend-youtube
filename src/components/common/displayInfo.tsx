@@ -30,7 +30,7 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
           console.log("username", username);
           // POST request for visiting another user's channel
           response = await axios.post<{ data: UserType }>(
-            `http://localhost:8001/api/v1/users/visitChannel/${username}`,
+            `https://backend-youtube-zba1.onrender.com/api/v1/users/visitChannel/${username}`,
             {}, // send an empty body
             {
               headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
           console.log("current user");
           // GET request for current user
           response = await axios.get<{ data: UserType }>(
-            "http://localhost:8001/api/v1/users/current-user",
+            "https://backend-youtube-zba1.onrender.com/api/v1/users/current-user",
             {
               headers: { 'Content-Type': 'application/json' },
               withCredentials: true

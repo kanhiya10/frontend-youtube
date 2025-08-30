@@ -40,7 +40,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
     if (!replyText.trim()) return;
 
     try {
-     await fetch(`http://localhost:8001/api/v1/comments/${activeParentId}/reply`, {
+     await fetch(`https://backend-youtube-zba1.onrender.com/api/v1/comments/${activeParentId}/reply`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   credentials: 'include',

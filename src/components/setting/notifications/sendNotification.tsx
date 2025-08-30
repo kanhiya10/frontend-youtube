@@ -50,7 +50,7 @@ export const SendNotificationCard = () => {
       }
 
       const res = await axios.post(
-        "http://localhost:8001/api/v1/notifications/send-topic-notification",
+        "https://backend-youtube-zba1.onrender.com/api/v1/notifications/send-topic-notification",
         payload,
         { withCredentials: true }
       );

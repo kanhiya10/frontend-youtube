@@ -32,7 +32,7 @@ const DisplayNotifications: React.FC = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get('http://localhost:8001/api/v1/notifications/fetchUserNotifications', {
+        const res = await axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/fetchUserNotifications', {
           withCredentials: true,
         });
         console.log("Fetched notifications:", res.data.data);
@@ -54,7 +54,7 @@ const DisplayNotifications: React.FC = () => {
 
    const fetchSubscriptions = async () => {
       try {
-        const res = await axios.get("http://localhost:8001/api/v1/subscription/user", {
+        const res = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/subscription/user", {
           withCredentials: true,
         });
         console.log("Fetched subscriptions:", res.data);
@@ -67,7 +67,7 @@ const DisplayNotifications: React.FC = () => {
 
     const dummyNotification = async () => {
       try {
-        const res = await axios.get("http://localhost:8001/api/v1/notifications/dummy-notification", {
+        const res = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/notifications/dummy-notification", {
           withCredentials: true,
         });
         console.log("Dummy notification response:", res.data);
@@ -78,7 +78,7 @@ const DisplayNotifications: React.FC = () => {
 
     const checkForeground = async () => {
       try {
-        const res = await axios.get("http://localhost:8001/api/v1/notifications/dummy-to-myself", {
+        const res = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/notifications/dummy-to-myself", {
           withCredentials: true,
         });
         console.log("Check foreground response:", res.data);

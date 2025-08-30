@@ -16,7 +16,7 @@ function RecommendedVideos() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          'http://localhost:8001/api/v1/recommendations/collection',
+          'https://backend-youtube-zba1.onrender.com/api/v1/recommendations/collection',
           {
             headers: {
               'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ function RecommendedVideos() {
   //   console.log("videoId in videoRecommendation", videoId);
 
   //   await axios.get(
-  //     `http://localhost:8001/api/v1/recommendations/recommend/${videoId}`,
+  //     `https://backend-youtube-zba1.onrender.com/api/v1/recommendations/recommend/${videoId}`,
   //     {
   //       headers: {
   //         'Content-Type': 'application/json',
