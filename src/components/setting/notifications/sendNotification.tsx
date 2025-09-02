@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
-
+import { useTheme } from '../../../context/themeContext';
+import { sendTopicNotification } from '../../../services/notification';
+import { AxiosError } from 'axios';
+import { useStyles } from '../../../utils/styleImports';
 
 export const SendNotificationCard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +14,8 @@ export const SendNotificationCard = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const { theme } = useTheme();
+   const { inputStylev2, button, hover } = useStyles();
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -49,15 +52,11 @@ export const SendNotificationCard = () => {
         }
       }
 
-      const res = await axios.post(
-        "https://backend-youtube-zba1.onrender.com/api/v1/notifications/send-topic-notification",
-        payload,
-        { withCredentials: true }
-      );
+      const res = await sendTopicNotification(payload);
 
       setMessage(`✅ ${res.data.message}`);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
+      if (err instanceof AxiosError) {
         setMessage(
           err.response?.data?.message || "❌ Failed to send notification"
         );
@@ -69,25 +68,43 @@ export const SendNotificationCard = () => {
     }
   };
 
+  // const inputStyle = {
+  //   backgroundColor: theme.inputBackground,
+  //   borderColor: theme.inputBorder,
+  //   color: theme.text,
+  // };
+  // const buttonStyle = {
+  //   backgroundColor: theme.info,
+  //   color: theme.text,
+  // };
+  // const hoverStyle = {
+  //   backgroundColor: theme.hover,
+  // };
+
   return (
-    <div className="mt-4 border rounded-lg overflow-hidden bg-white shadow-sm">
+    <div
+      className="mt-4 border rounded-lg overflow-hidden shadow-sm"
+      style={{ backgroundColor: theme.card, borderColor: theme.border }}
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between"
+        className="w-full px-4 py-3 text-left transition-colors flex items-center justify-between"
+        style={{ color: theme.text, ...hover, backgroundColor: theme.surface }}
       >
-        <span className="font-semibold text-gray-800">Send Topic Notification</span>
+        <span className="font-semibold" style={{ color: theme.secondary }}>Send Topic Notification</span>
         <svg
           className={`w-5 h-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          style={{ color: theme.textSecondary }}
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      
+
       {isOpen && (
-        <div className="p-4 border-t">
+        <div className="p-4 border-t" style={{ borderColor: theme.border }}>
           <form onSubmit={handleSubmit} className="space-y-3">
             <input
               type="text"
@@ -96,7 +113,8 @@ export const SendNotificationCard = () => {
               onChange={handleChange}
               placeholder="Topic name"
               required
-              className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-2 rounded focus:ring-2 focus:border-transparent"
+              style={{ ...inputStylev2, outlineColor: theme.inputFocus }}
             />
             <input
               type="text"
@@ -105,7 +123,8 @@ export const SendNotificationCard = () => {
               onChange={handleChange}
               placeholder="Notification title"
               required
-              className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-2 rounded focus:ring-2 focus:border-transparent"
+              style={{ ...inputStylev2, outlineColor: theme.inputFocus }}
             />
             <textarea
               name="body"
@@ -113,27 +132,32 @@ export const SendNotificationCard = () => {
               onChange={handleChange}
               placeholder="Notification body"
               required
-              className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-2 rounded focus:ring-2 focus:border-transparent"
               rows={3}
+              style={{ ...inputStylev2, outlineColor: theme.inputFocus }}
             />
             <textarea
               name="data"
               value={formData.data}
               onChange={handleChange}
               placeholder='Optional data (JSON format, e.g. {"screen":"profile"})'
-              className="w-full border border-gray-300 p-2 rounded font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-2 rounded font-mono text-sm focus:ring-2 focus:border-transparent"
               rows={2}
+              style={{ ...inputStylev2, outlineColor: theme.inputFocus }}
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-4 rounded transition-colors"
+              className="w-full py-2 px-4 rounded transition-colors"
+              style={{ ...button, opacity: loading ? 0.5 : 1 }}
             >
               {loading ? "Sending..." : "Send Notification"}
             </button>
           </form>
           {message && (
-            <p className="mt-3 text-center text-sm font-medium">{message}</p>
+            <p className="mt-3 text-center text-sm font-medium" style={{ color: message.startsWith('❌') ? theme.error : theme.success }}>
+              {message}
+            </p>
           )}
         </div>
       )}

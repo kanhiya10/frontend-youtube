@@ -4,79 +4,44 @@ import { useNavigate } from 'react-router-dom';
 import { HomeInfoType } from '../types/types';
 import { useTheme } from '../context/themeContext';
 import { getRandomVideos } from '../services/videos';
+import { useStyles } from '../utils/styleImports';
+import { useTime } from '../hooks/useTime';
+import {VideoCard} from '../components/common/videoCard';
+// import { containerStyle, videoCardStyle, videoCardHoverStyle, videoInfoStyle, videoTitleStyle, videoDateStyle, noVideosStyle } from '../utils/styleImports';
 
 export default function Home() {
   const [randomVideos, setRandomVideos] = useState<HomeInfoType[]>([]);
   const navigate = useNavigate();
-  const { theme, toggleTheme, mode } = useTheme();
+  const { theme } = useTheme();
+  const { containerStyle, videoCardStyle, videoCardHoverStyle, videoInfoStyle, videoTitleStyle, loadingStyle } = useStyles();
 
-useEffect(() => {
-  const fetchRandomVideos = async () => {
-    try {
-      const response = await getRandomVideos();
-      setRandomVideos(response.data.data);
-    } catch (error) {
-      console.error("Failed to fetch random videos:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchRandomVideos = async () => {
+      try {
+        const response = await getRandomVideos();
+        // console.log("Fetched random videos:", response.data.data);
+        setRandomVideos(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch random videos:", error);
+      }
+    };
 
-  fetchRandomVideos();
-}, []);
-
-
-  //  const handleSendNotification = async () => {
-  //   try {
-  //     const token = localStorage.getItem('fcmToken');
-  //     const response = await axios.post('${https://backend-youtube-zba1.onrender.com}/api/v1/notifications/send-notification', {
-  //       token: token, // Replace with a valid client token
-  //       title: 'Test Notification',
-  //       body: 'This is a test notification from the frontend.',
-  //     });
-  //     console.log('Notification sent:', response.data);
-  //     alert('Notification sent!');
-  //   } catch (err) {
-  //     console.error('Error sending notification:', err);
-  //     alert('Failed to send notification');
-  //   }
-  // };
+    fetchRandomVideos();
+  }, []);
 
 
   return (
-    <div className={`min-h-screen w-full  p-5`} style={{ backgroundColor: theme.background }} >
-
-      {/* <button
-        onClick={handleSendNotification}
-        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Send Test Notification
-      </button> */}
+    <div className="min-h-screen w-full p-5" style={containerStyle}>
 
       <div className="grid gap-y-10 gap-x-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {randomVideos.length > 0 ? (
-          randomVideos.map((video) => (
-            <div
-              key={video._id}
-              className="shadow-md rounded-md overflow-hidden cursor-pointer"
-              onClick={() => navigate(`/videoPlay/streaming/${video._id}`)}
-            >
-              <img
-                src={video.thumbnail}
-                alt={`Thumbnail for ${video.title}`}
-                className="w-full h-48 object-contain"
-              />
-              <div className="p-2" style={{ backgroundColor: theme.block }}>
-                <h1 className="text-sm font-bold mb-1">{video.title}</h1>
-                <p className="text-xs text-gray-500 mt-1">
-                  {new Date(video.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-          ))
+          randomVideos.map((video) => <VideoCard key={video._id} video={video} />)
         ) : (
-          <h1>No videos to display</h1>
+          <h1 className="text-lg col-span-full text-center" style={loadingStyle}>
+            No videos to display
+          </h1>
         )}
       </div>
-
     </div>
   );
 }

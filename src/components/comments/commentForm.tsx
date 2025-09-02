@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTheme } from '../../context/themeContext';
+import { useStyles } from '../../utils/styleImports';
 
 interface CommentFormProps {
   value: string;
@@ -8,18 +10,44 @@ interface CommentFormProps {
 }
 
 const CommentForm: React.FC<CommentFormProps> = ({ value, setValue, onSubmit, placeholder }) => {
+  const { theme } = useTheme();
+  const { cardStyle, inputStyle } = useStyles();
+  
+
+  const buttonStyle: React.CSSProperties = {
+    backgroundColor: theme.btn,
+    color: theme.background === 'black' ? theme.text : '#FFFFFF'
+  };
+
+
+
   return (
-    <div>
+    <div 
+      className="p-4 rounded-lg border"
+      style={cardStyle}
+    >
+      <style>{`
+        .comment-textarea::placeholder {
+          color: ${theme.placeholder} !important;
+        }
+        .comment-button:hover {
+          background-color: ${theme.hover} !important;
+        }
+      `}</style>
+      
       <textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder || "Write a comment..."}
-        className="w-full p-2 border rounded dark:bg-gray-800 dark:text-white"
+        className="comment-textarea w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 resize-none"
         rows={3}
+        style={inputStyle}
       />
+      
       <button
         onClick={onSubmit}
-        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        className="comment-button mt-3 px-6 py-2 rounded-lg font-medium transition-all duration-200"
+        style={buttonStyle}
       >
         Submit
       </button>

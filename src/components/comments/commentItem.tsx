@@ -3,7 +3,10 @@ import CommentForm from './commentForm';
 import { useCommentLike } from '../../hooks/useCommentLike';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import ReplyItem from './replyItem'; // import new component
+import ReplyItem from './replyItem';
+import { useTheme } from '../../context/themeContext';
+import { replyToComment } from '../../services/videos';
+import { useStyles } from '../../utils/styleImports';
 
 interface CommentItemProps {
   comment: any;
@@ -14,9 +17,10 @@ interface CommentItemProps {
 const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) => {
   const [replyBoxOpen, setReplyBoxOpen] = useState(false);
   const [replyText, setReplyText] = useState('');
-  const [activeParentId, setActiveParentId] = useState(comment._id); // default to main comment
+  const [activeParentId, setActiveParentId] = useState(comment._id);
 
-
+  const { theme } = useTheme();
+  const { cardStyle, headingStyle, labelStyle, replyButton, repliesSection } = useStyles();
   const { info } = useSelector((state: RootState) => state.User);
 
 
@@ -34,18 +38,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
     currentUserId: info?.id ?? '',
   });
 
-  console.log('activeParentId',activeParentId);
+  console.log('activeParentId', activeParentId);
 
   const handleReplySubmit = async () => {
     if (!replyText.trim()) return;
 
     try {
-     await fetch(`https://backend-youtube-zba1.onrender.com/api/v1/comments/${activeParentId}/reply`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  credentials: 'include',
-  body: JSON.stringify({ text: replyText, videoId }),
-});
+      await replyToComment(activeParentId, replyText, videoId);
 
       setReplyText('');
       setReplyBoxOpen(false);
@@ -61,17 +60,35 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
     setReplyText(username ? `@${username} ` : `@${comment.user.fullName.split(" ")[0]} `);
   };
 
+  
+
+  const likeButtonStyle: React.CSSProperties = {
+    color: userLiked ? theme.info : theme.textMuted
+  };
+
+  const dislikeButtonStyle: React.CSSProperties = {
+    color: userDisliked ? theme.error : theme.textMuted
+  };
+
+
+
   return (
-    <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+    <div className="mb-4 p-3 rounded-lg border" style={cardStyle}>
       <div className="flex items-center gap-2 mb-1">
         <img src={comment.user.avatar} className="w-8 h-8 rounded-full" />
-        <span className="font-medium text-gray-800 dark:text-white">{comment.user.fullName}</span>
+        <span className="font-medium" style={headingStyle}>
+          {comment.user.fullName}
+        </span>
       </div>
-      <p className="text-gray-700 dark:text-gray-300">{comment.text}</p>
+      
+      <p style={labelStyle}>
+        {comment.text}
+      </p>
 
       <button
         onClick={() => handleOpenReply()}
-        className="text-xs text-blue-500"
+        className="text-xs transition-colors duration-200 hover:opacity-75"
+        style={replyButton}
       >
         {replyBoxOpen ? 'Cancel' : 'Reply'}
       </button>
@@ -87,29 +104,33 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
         </div>
       )}
 
-     {comment.replies?.length > 0 && (
-  <div className="ml-6 mt-2 space-y-2">
-    {comment.replies.map((reply: any) => (
-      <ReplyItem
-        key={reply._id}
-        reply={reply}
-        onReplyToReply={(username, parentId) => handleOpenReply(username, parentId)}
-      />
-    ))}
-  </div>
-)}
-
+      {comment.replies?.length > 0 && (
+        <div 
+          className="ml-6 mt-2 space-y-2 pl-4 border-l-2" 
+          style={repliesSection}
+        >
+          {comment.replies.map((reply: any) => (
+            <ReplyItem
+              key={reply._id}
+              reply={reply}
+              onReplyToReply={(username, parentId) => handleOpenReply(username, parentId)}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-4 mt-2 text-sm">
         <button
           onClick={toggleLike}
-          className={`flex items-center gap-1 ${userLiked ? 'text-blue-500' : 'text-gray-500'}`}
+          className="flex items-center gap-1 transition-colors duration-200 hover:opacity-75"
+          style={likeButtonStyle}
         >
           👍 {likes}
         </button>
         <button
           onClick={toggleDislike}
-          className={`flex items-center gap-1 ${userDisliked ? 'text-red-500' : 'text-gray-500'}`}
+          className="flex items-center gap-1 transition-colors duration-200 hover:opacity-75"
+          style={dislikeButtonStyle}
         >
           👎 {dislikes}
         </button>

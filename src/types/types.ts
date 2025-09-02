@@ -73,3 +73,78 @@ export interface RegisterPayload {
   coverImage?: File;
 }
 
+export interface UserType {
+  _id: string;
+  username: string;
+  email: string;
+  fullName?: string;
+  avatar?: string;
+  coverImage?: string;
+  description?: string;
+}
+
+export interface ChatMessage {
+  from: string;
+  to: string;
+  text?: string;
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video' | 'file';
+}
+
+export interface Conversation {
+  _id: string;
+  participants: UserType[];
+  createdAt: string;
+  updatedAt: string;
+  lastMessage?: ChatMessage;
+}
+
+export interface SearchResultType {
+  videos: {
+    _id: string;
+    title: string;
+    thumbnail?: string;
+    createdAt: string;
+    views: number;
+    duration: number;
+  }[];
+  creators: {
+    _id: string;          // <- align with backend (not `id`, since you use `user._id` in map)
+    username: string;
+    fullName: string;
+    avatar: string;
+    subscribersCount: number;
+    isSubscribed: boolean;
+  }[];
+}
+
+
+export interface Notification {
+  _id: string;
+  title: string;
+  body: string;
+  createdAt: string;
+  isRead: boolean;
+  type: 'videoUpload' | 'like' | 'comment' | 'subscription';
+  actor?: {
+    _id: string;
+    username: string;
+  };
+  data?: {
+    video: VideoInfoType;
+  };
+}
+
+export interface SendTopicNotification {
+  topicName: string;
+  title: string;
+  body: string;
+  data?: any
+}
+
+export interface MessageProps {
+  text?: string;
+  isSender: boolean;
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video' | 'file';
+}

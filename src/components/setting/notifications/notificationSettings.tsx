@@ -1,162 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getToken } from 'firebase/messaging';
-import { messaging } from '../../../firebase'; // Adjust path
-// import EnableNotifications from "./enableNotification";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import { useTheme } from "../../../context/themeContext";
+import { Topic } from "../../../types/types";
+
 import TopicList from "./topicList";
-import {CreateTopicCard} from "./createTopic";
-import {SendNotificationCard} from './sendNotification';
-import { Topic } from '../../../types/types';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
-
-
-
-const VAPID_KEY = 'BF4TFslNWwWhxOeWb060JYTlx82keMX02npTdIaqlRfmUy2qfCJXd70_WJox3on_hoRxxgrbWccmzv0_WVhTjQI';
-
-
-
+import { CreateTopicCard } from "./createTopic";
+import { SendNotificationCard } from "./sendNotification";
+import {
+  getAllTopics,
+  getMyTopics,
+  subscribeToTopic,
+  unsubscribeFromTopic,
+} from "../../../services/notification";
 
 interface SubscriptionsMap {
   [topic: string]: boolean;
 }
 
 const NotificationSettings = () => {
-  const { permission, token } = useSelector((state: RootState) => state.notifications);
-  // const [token, setToken] = useState(localStorage.getItem('fcmToken') || '');
+  const { permission, token } = useSelector(
+    (state: RootState) => state.notifications
+  );
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [subscriptions, setSubscriptions] = useState<Record<string, boolean>>({});
-
-  //  const [newTopic, setNewTopic] = useState({
-  //   name: '',
-  //   displayName: '',
-  //   description: '',
-  //   icon: '',
-  // });
-
+  const [subscriptions, setSubscriptions] = useState<Record<string, boolean>>(
+    {}
+  );
+  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchTopicsAndSubs = async () => {
       try {
         const [allTopicsRes, myTopicsRes] = await Promise.all([
-          axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/all-topics', { withCredentials: true }),
-          axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/my-topics', { withCredentials: true }),
+          getAllTopics(),
+          getMyTopics(),
         ]);
 
         const allTopics: Topic[] = allTopicsRes.data.data.topics || [];
-        const myTopics: string[] = myTopicsRes.data.data.topics.map((t: any) => t.name);
+        const myTopics: string[] =
+          myTopicsRes.data.data.topics.map((t: any) => t.name) || [];
 
         setTopics(allTopics);
 
-        // build subscription map
         const subStatus: Record<string, boolean> = {};
         allTopics.forEach((t) => {
           subStatus[t.name] = myTopics.includes(t.name);
         });
         setSubscriptions(subStatus);
-
       } catch (err) {
-        console.error('Failed to load topics:', err);
+        console.error("Failed to load topics:", err);
       }
     };
-
     fetchTopicsAndSubs();
   }, []);
 
-  //  const generateAndSaveToken = async () => {
-  //   try {
-  //     const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY });
-  //     console.log('generatefn working', fcmToken);
-  //     if (fcmToken && fcmToken !== token) {
-  //       setToken(fcmToken);
-  //       localStorage.setItem('fcmToken', fcmToken);
-  //       console.log('checking');
-
-  //       await axios.post(
-  //         'https://backend-youtube-zba1.onrender.com/api/v1/notifications/save-token',
-  //         { token: fcmToken, platform: 'web' },
-  //         { withCredentials: true }
-  //       );
-  //     }
-  //   } catch (err) {
-  //     console.error("Failed to get FCM token:", err);
-  //   }
-  // };
-
-  //  useEffect(() => {
-  //   if (Notification.permission === 'granted' && !token) {
-  //     generateAndSaveToken();
-  //   }
-  // }, [token]);
-
-
-  //   const handleEnableNotifications = async () => {
-  //   const perm = await Notification.requestPermission();
-  //   setPermission(perm);
-  //   console.log('manual working', perm);
-
-  //   if (perm === 'granted') {
-  //     await generateAndSaveToken();
-  //   }
-  // };
-
-
-
   const handleTopicToggle = async (topic: string): Promise<void> => {
-    if (!token) return alert('Token not ready.');
-
+    if (!token) return console.error("Token not ready.");
     const isSubscribed: boolean = subscriptions[topic];
-
     try {
       if (isSubscribed) {
-        await axios.post(
-          'https://backend-youtube-zba1.onrender.com/api/v1/notifications/unsubscribe',
-          { token, topic },
-          { withCredentials: true }
-        );
+        await unsubscribeFromTopic({ token, topic });
       } else {
-        await axios.post(
-          'https://backend-youtube-zba1.onrender.com/api/v1/notifications/subscribe',
-          { token, topic },
-          { withCredentials: true }
-        );
+        await subscribeToTopic({ token, topic });
       }
-
       setSubscriptions((prev: SubscriptionsMap) => ({
         ...prev,
         [topic]: !isSubscribed,
       }));
     } catch (err) {
-      console.error('Subscription toggle failed:', err);
+      console.error("Subscription toggle failed:", err);
     }
   };
 
-return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded shadow mt-10">
-      <h1 className="text-xl font-bold mb-4">Notification Settings {token}</h1>
-{/* 
-      <EnableNotifications
-        permission={permission}
-        handleEnableNotifications={handleEnableNotifications}
-      /> */}
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
+      <div
+        className="max-w-md mx-auto p-6 rounded shadow mt-10"
+        style={{ backgroundColor: theme.card, color: theme.text }}
+      >
+        <h1 className="text-xl font-bold mb-4">Notification Settings {token}</h1>
+        <p className="mb-4" style={{ color: theme.textSecondary }}>
+          Notification permission:{" "}
+          <span className="font-medium" style={{ color: theme.text }}>
+            {permission}
+          </span>
+        </p>
 
-            <p className="mb-4 text-gray-700">
-        Notification permission:{" "}
-        <span className="font-medium">{permission}</span>
-      </p>
-
-      {token && (
-        <>
-          <TopicList
-            topics={topics}
-            subscriptions={subscriptions}
-            handleToggle={handleTopicToggle}
-          />
-
-         <CreateTopicCard topics={topics} setTopics={setTopics} />
-          <SendNotificationCard />
-        </>
-      )}
+        {token && (
+          <>
+            <TopicList
+              topics={topics}
+              subscriptions={subscriptions}
+              handleToggle={handleTopicToggle}
+            />
+            <CreateTopicCard topics={topics} setTopics={setTopics} />
+            <SendNotificationCard />
+          </>
+        )}
+      </div>
     </div>
   );
 };

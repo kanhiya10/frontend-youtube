@@ -1,41 +1,27 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/themeContext";
-import { VideoInfoType } from "../../types/types";
-
-interface Notification {
-  _id: string;
-  title: string;
-  body: string;
-  createdAt: string;
-  isRead: boolean;
-  type: 'videoUpload' | 'like' | 'comment' | 'subscription';
-  actor?: {
-    _id: string;
-    username: string;
-  };
-  data?: {
-    video:VideoInfoType;
-  };
-}
-
+import { Notification } from "../../types/types";
+import {
+  fetchUserNotifications,
+  markNotificationAsRead,
+  deleteNotification,
+  deleteAllNotifications,
+} from "../../services/notification";
+import { useStyles } from "../../utils/styleImports";
 
 const DisplayNotifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { theme } = useTheme();
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { notFoundCardStyle,containerStylev2,headingStyle,labelStyle,noVideosText,errorText } = useStyles();
 
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const getNotifications = async () => {
       try {
-        const res = await axios.get('https://backend-youtube-zba1.onrender.com/api/v1/notifications/fetchUserNotifications', {
-          withCredentials: true,
-        });
-        console.log("Fetched notifications:", res.data.data);
+        const res = await fetchUserNotifications();
         setNotifications(res.data.data);
       } catch (err) {
         console.error("Failed to load notifications", err);
@@ -43,96 +29,184 @@ const DisplayNotifications: React.FC = () => {
         setLoading(false);
       }
     };
-
-    fetchNotifications();
+    getNotifications();
   }, []);
 
-  if (loading) return <p>Loading notifications...</p>;
-  // if (notifications.length === 0) return <p>No notifications yet.</p>;
-  // dummy-notification
-
-
-   const fetchSubscriptions = async () => {
-      try {
-        const res = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/subscription/user", {
-          withCredentials: true,
-        });
-        console.log("Fetched subscriptions:", res.data);
-      } catch (error) {
-        console.error("Failed to fetch subscriptions", error);
-      } finally {
-        setLoading(false);
+  const handleNotificationClick = async (notification: Notification) => {
+    try {
+      if (!notification.isRead) {
+        await markNotificationAsRead(notification._id);
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n._id === notification._id ? { ...n, isRead: true } : n
+          )
+        );
       }
-    };
-
-    const dummyNotification = async () => {
-      try {
-        const res = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/notifications/dummy-notification", {
-          withCredentials: true,
+      if (notification.type === "videoUpload" && notification.data?.video) {
+        navigate("/videoPlay/streaming", {
+          state: { VideoInfo: notification.data.video },
         });
-        console.log("Dummy notification response:", res.data);
-      } catch (error) {
-        console.error("Failed to send dummy notification", error);
       }
-    } 
-
-    const checkForeground = async () => {
-      try {
-        const res = await axios.get("https://backend-youtube-zba1.onrender.com/api/v1/notifications/dummy-to-myself", {
-          withCredentials: true,
-        });
-        console.log("Check foreground response:", res.data);
-      } catch (error) { 
-        console.error("Failed to check foreground", error);
-      }
+    } catch (err) {
+      console.error("Failed to mark notification as read", err);
     }
+  };
+
+  const handleDeleteNotification = async (notificationId: string) => {
+    try {
+      await deleteNotification(notificationId);
+      setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
+    } catch (err) {
+      console.error("Failed to delete notification", err);
+    }
+  };
+
+  const handleDeleteAllNotifications = async () => {
+    try {
+      await deleteAllNotifications();
+      setNotifications([]);
+    } catch (err) {
+      console.error("Failed to delete all notifications", err);
+    }
+  };
+
+  const headerTheme = {
+    borderBottom: `1px solid ${theme.divider}`,
+  };
+
+  const deleteAllButtonTheme = {
+    backgroundColor: theme.error,
+    color: "white",
+    boxShadow: `0 1px 3px ${theme.shadow}`,
+  };
+
+
+  const notificationItemTheme = (notification: Notification) => ({
+    backgroundColor: notification.isRead ? theme.card : theme.surface,
+    border: `1px solid ${theme.border}`,
+    boxShadow: `0 1px 3px ${theme.shadow}`,
+  });
+
+  const emptyCardTheme = {
+    ...notFoundCardStyle,
+    backgroundColor: theme.card,
+    border: `1px solid ${theme.border}`,
+    boxShadow: `0 4px 6px ${theme.shadow}`,
+  };
+
+  
+
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen w-full p-5"
+        style={containerStylev2}
+      >
+        <p
+          className="text-center p-8 text-base"
+          style={labelStyle}
+        >
+          Loading notifications...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full min-h-screen p-5" style={{ background: theme.background }}>
-      <h2>Notifications</h2>
-      <ul>
-        {notifications.map((n) => (
-          <li
-            key={n._id}
-            style={{
-              marginBottom: "1rem",
-              padding: "1rem",
-              border: "1px solid #ccc",
-              backgroundColor: n.isRead ? "#f9f9f9" : "#e6f7ff",
-            }}
+    <div className="min-h-screen w-full p-5" style={containerStylev2}>
+      {/* Header */}
+      <div
+        className="flex justify-between items-center mb-4 pb-3"
+        style={headerTheme}
+      >
+        <h2
+          className="text-xl font-semibold m-0"
+          style={labelStyle}
+        >
+          Notifications
+        </h2>
+        {notifications.length > 0 && (
+          <button
+            onClick={handleDeleteAllNotifications}
+            className="rounded-md px-4 py-2 text-sm font-medium cursor-pointer transition"
+            style={deleteAllButtonTheme}
           >
-            <strong>{n.title}</strong>
-            <p>{n.body}</p>
-            {n.actor && <p><em>By: {n.actor.username}</em></p>}
+            Delete All
+          </button>
+        )}
+      </div>
 
-            {n.type === "videoUpload" && n.data?.video && (
-              <button
-                onClick={() => navigate('/videoPlay/streaming', { state: { VideoInfo: n.data!.video } })}
-                className="text-blue-500 hover:underline"
+      {/* Empty State */}
+      {notifications.length === 0 ? (
+        <div className="flex items-center justify-center min-h-[60vh] p-4">
+          <div
+            className="rounded-md p-8 max-w-md w-full text-center"
+            style={emptyCardTheme}
+          >
+            <h2
+              className="text-lg font-semibold mb-2"
+              style={headingStyle}
+            >
+              No Notifications Yet
+            </h2>
+            <p className="m-0" style={{ color: theme.textMuted }}>
+              When you receive notifications, they'll appear here.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <ul className="list-none p-0 m-0">
+          {notifications.map((n) => (
+            <li key={n._id}>
+              <div
+                className="rounded-md mb-3 p-4 relative cursor-pointer transition"
+                style={notificationItemTheme(n)}
+                onClick={() => handleNotificationClick(n)}
               >
-                Watch Video
-              </button>
-            )}
-
-            <br />
-            <small>{new Date(n.createdAt).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={fetchSubscriptions}
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" 
-        >Check Subscribers</button>
-
-      <button
-        onClick={dummyNotification}
-        className="mt-4 ml-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-      >Send Dummy Notification</button> 
-      <button
-      onClick={checkForeground}
-      className="mt-4 ml-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-      >checkForegroundNotification
-      </button>
+                <div className="pr-8">
+                  <strong
+                    className="text-lg font-semibold mb-1 block"
+                    style={headingStyle}
+                  >
+                    {n.title}
+                  </strong>
+                  <p
+                    className="my-1 leading-relaxed"
+                    style={labelStyle}
+                  >
+                    {n.body}
+                  </p>
+                  {n.actor && (
+                    <p
+                      className="italic text-sm"
+                      style={noVideosText}
+                    >
+                      By: {n.actor.username}
+                    </p>
+                  )}
+                  <small
+                    className="text-xs mt-2 block"
+                    style={noVideosText}
+                  >
+                    {new Date(n.createdAt).toLocaleString()}
+                  </small>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteNotification(n._id);
+                  }}
+                  className="absolute top-2 right-2 bg-transparent border-none text-xl font-bold cursor-pointer p-1 rounded w-7 h-7 flex items-center justify-center leading-none"
+                  style={errorText}
+                  title="Delete notification"
+                >
+                  ✕
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
