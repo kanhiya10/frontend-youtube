@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import socket from "../../socket";
 import MessageItem from "./MessageItem";
-import axios from "axios";
 import chat from "../../assets/images/chat.jpg";
+import { useTheme } from "../../context/themeContext";
+import { 
+  getConversationBetween, 
+  getConversationMessages, 
+  uploadMediaFile 
+} from "../../services/chats"; // Import the API services
+import { ChatMessage } from "../../types/types";
+import { useStyles } from "../../utils/styleImports";
 
 interface Props {
   selectedUser: string | null;
@@ -10,52 +17,51 @@ interface Props {
 }
 
 
-interface ChatMessage {
-  from: string;
-  to: string;
-  text?: string;
-  mediaUrl?: string;
-  mediaType?: 'image' | 'video' | 'file';
-}
-
-interface UserType {
-  _id: string;
-  username: string;
-  email: string;
-  fullName?: string;
-  avatar?: string;
-}
 
 export default function ChatWindow({ selectedUser, currentUserId }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isUploadingMedia, setIsUploadingMedia] = useState<boolean>(false);
+
+  // Use the theme context
+  const { theme } = useTheme();
+  const { loadingStyle, windowStyle, headerStyle, messageListStyle, inputStylev1, fileInputStylev1 } = useStyles();
 
   useEffect(() => {
-    setMessages([]);
-    if (!selectedUser) {
-      setConversationId(null);
-      return;
-    }
+    const loadConversationHistory = async () => {
+      setMessages([]);
+      if (!selectedUser) {
+        setConversationId(null);
+        return;
+      }
 
-    axios
-      .get(`http://localhost:8001/api/v1/conversations/between/${selectedUser}`, { withCredentials: true })
-      .then(res => {
-        const conv = res.data.data;
-        setConversationId(conv._id);
-        return axios.get(`http://localhost:8001/api/v1/conversations/${conv._id}/messages`, { withCredentials: true });
-      })
-      .then(res => setMessages(res?.data?.data || []))
-      .catch(err => {
-        if (err.response?.status === 404) {
+      setIsLoading(true);
+      try {
+        // Get conversation between users
+        const conversationResponse = await getConversationBetween(selectedUser);
+        const conversation = conversationResponse.data.data;
+        console.log("Fetched conversation:", conversation);
+        setConversationId(conversation._id);
+        
+        // Get messages for this conversation
+        const messagesResponse = await getConversationMessages(conversation._id);
+        setMessages(messagesResponse.data.data || []);
+      } catch (error: any) {
+        if (error.response?.status === 404) {
           console.log("No previous conversation");
           setConversationId(null);
         } else {
-          console.error("Failed fetching chat history", err);
+          console.error("Failed fetching chat history", error);
         }
-      });
-  }, [selectedUser]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    loadConversationHistory();
+  }, [selectedUser]);
 
   useEffect(() => {
     socket.emit("register", currentUserId);
@@ -65,17 +71,12 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     setMessages([]);
   }, [selectedUser]);
 
-
   if (!conversationId) {
     console.log("Conversation will be created after sending first message.");
   }
 
-
-
-
   console.log("Current user ID:", currentUserId);
 
-  // ✅ Listen for incoming messages
   useEffect(() => {
     const handleMessage = (msg: ChatMessage) => {
       if (
@@ -87,93 +88,103 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       ) {
         setMessages((prev) => [...prev, msg]);
       }
-
       console.log("Received message:", msg);
     };
 
     socket.on("message", handleMessage);
-    return () => socket.off("message", handleMessage);
+    return () => {
+      socket.off("message", handleMessage);
+    };
   }, [selectedUser, currentUserId]);
 
-  // ✅ Send message
   const sendMessage = () => {
     if (!input.trim() || !selectedUser || !currentUserId) return;
-
     const newMsg: ChatMessage = {
       from: currentUserId,
       to: selectedUser,
       text: input,
     };
-
     console.log("Sending message:", newMsg);
-
     socket.emit("sendMessage", newMsg);
-    setMessages((prev) => [...prev, newMsg]); // optimistic update
+    setMessages((prev) => [...prev, newMsg]);
     setInput("");
   };
 
   const sendMedia = async (file: File) => {
     if (!file || !selectedUser || !currentUserId) return;
-
-    const formData = new FormData();
-    formData.append('mediaFile', file);
-
+    
+    setIsUploadingMedia(true);
     try {
-      const res = await axios.post('http://localhost:8001/api/v1/conversations/uploadMedia', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
-      });
-
-      console.log("Media uploaded:", res.data);
-
+      const formData = new FormData();
+      formData.append('mediaFile', file);
+      
+      const response = await uploadMediaFile(formData);
+      console.log("Media uploaded:", response.data);
+      
       const newMsg: ChatMessage = {
         from: currentUserId,
         to: selectedUser,
-        mediaUrl: res.data.url,
+        mediaUrl: response.data.url,
         mediaType: file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : 'file',
       };
-
+      
       console.log("Sending media message to kafka:", newMsg);
-
       socket.emit("sendMessage", newMsg);
       setMessages((prev) => [...prev, newMsg]);
     } catch (error) {
       console.error("Failed to upload file:", error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsUploadingMedia(false);
     }
   };
 
+
+  const buttonStyle = {
+    backgroundColor: theme.primary,
+    color: theme.btn,
+    opacity: isUploadingMedia ? 0.7 : 1
+  };
+
+
   if (!selectedUser) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+      <div className="flex-1 flex flex-col items-center justify-center" style={windowStyle}>
         <img
           src={chat}
           alt="Chat placeholder"
           className="w-1/3 max-w-[200px] mb-4 opacity-80 drop-shadow-lg transition-transform duration-300 hover:scale-105"
         />
-        <p className="text-sm text-center text-gray-400">Start a conversation!</p>
+        <p className="text-sm text-center" style={loadingStyle}>Start a conversation!</p>
       </div>
-
     );
   }
 
   return (
-    <div className="flex-1 p-4 flex flex-col">
-      <h2 className="text-lg font-semibold mb-2 border-b pb-2">
+    <div className="flex-1 p-4 flex flex-col" style={windowStyle}>
+      <h2 className="text-lg font-semibold mb-2 border-b pb-2" style={headerStyle}>
         Chat with {selectedUser}
       </h2>
-
-      <div className="flex-1 overflow-y-auto space-y-2 p-2 border rounded bg-gray-50">
-        {messages.map((msg, i) => (
-          <MessageItem
-            key={i}
-            text={msg.text}
-            isSender={msg.from === currentUserId}
-            mediaUrl={msg.mediaUrl}
-            mediaType={msg.mediaType}
-          />
-        ))}
+      
+      <div className="flex-1 overflow-y-auto space-y-2 p-2 border rounded" style={messageListStyle}>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <span className="ml-2" style={{ color: theme.textMuted }}>Loading messages...</span>
+          </div>
+        ) : (
+          messages.map((msg, i) => (
+            <MessageItem
+              key={i}
+              text={msg.text}
+              isSender={msg.from === currentUserId}
+              mediaUrl={msg.mediaUrl}
+              mediaType={msg.mediaType}
+            />
+          ))
+        )}
       </div>
-
+      
       <div className="flex mt-4 gap-2">
         <input
           className="flex-1 border rounded px-3 py-2"
@@ -181,20 +192,33 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Type your message..."
+          style={inputStylev1}
+          disabled={isUploadingMedia}
         />
         <input
           className="border rounded px-3 py-2"
-         type="file"  onChange={(e) => {
-          if (e.target.files?.[0]) sendMedia(e.target.files[0]);
-        }} />
-
+          type="file"
+          onChange={(e) => {
+            if (e.target.files?.[0]) sendMedia(e.target.files[0]);
+          }}
+          style={fileInputStylev1}
+          disabled={isUploadingMedia}
+        />
         <button
-          className="bg-purple-600 text-white px-4 rounded hover:bg-purple-700"
+          className="text-white px-4 rounded transition-opacity duration-200 disabled:cursor-not-allowed"
           onClick={sendMessage}
+          style={buttonStyle}
+          disabled={isUploadingMedia || (!input.trim())}
         >
-          Send
+          {isUploadingMedia ? 'Uploading...' : 'Send'}
         </button>
       </div>
+      
+      {isUploadingMedia && (
+        <p className="text-xs mt-2 text-center" style={{ color: theme.textMuted }}>
+          Uploading media file...
+        </p>
+      )}
     </div>
   );
 }

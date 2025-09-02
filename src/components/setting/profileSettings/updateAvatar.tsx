@@ -2,16 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
+import { useTheme } from '../../../context/themeContext';
+import { updateAvatar } from '../../../services/users';
 
 const UpdateAvatar = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (avatar) {
       const objectUrl = URL.createObjectURL(avatar);
       setPreview(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl); // Clean up preview URL
+      return () => URL.revokeObjectURL(objectUrl);
     }
   }, [avatar]);
 
@@ -24,31 +28,34 @@ const UpdateAvatar = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!avatar) return;
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("avatar", avatar);
 
     try {
-      await fetch("http://localhost:8001/api/v1/users/avatar", {
-        method: "PATCH",
-        credentials: "include",
-        body: formData,
-      });
-      // Optional: show toast or success message here
+      await updateAvatar(formData);
     } catch (error) {
       console.error("Failed to update avatar:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="avatarUpload">Upload New Avatar</Label>
+        <Label htmlFor="avatarUpload" style={{ color: theme.textSecondary }}>Upload New Avatar</Label>
         <Input
           id="avatarUpload"
           type="file"
           accept="image/*"
           onChange={handleAvatarChange}
+          style={{
+            backgroundColor: theme.inputBackground,
+            borderColor: theme.inputBorder,
+            color: theme.text,
+          }}
         />
       </div>
 
@@ -60,8 +67,17 @@ const UpdateAvatar = () => {
         />
       )}
 
-      <Button type="submit" className="w-full">
-        Update Avatar
+      <Button
+        type="submit"
+        disabled={loading}
+        className="w-full"
+        style={{
+          backgroundColor: theme.btn,
+          color: theme.text,
+          opacity: loading ? 0.5 : 1,
+        }}
+      >
+        {loading ? "Updating..." : "Update Avatar"}
       </Button>
     </form>
   );

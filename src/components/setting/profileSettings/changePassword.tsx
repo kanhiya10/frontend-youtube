@@ -1,9 +1,10 @@
 import React from 'react';
-import {useState } from 'react';
+import { useState } from 'react';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
 import { Label } from '../../ui/label';
-import axios from 'axios';
+import { useTheme } from '../../../context/themeContext';
+import { changePassword } from '../../../services/users';
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -11,6 +12,7 @@ const ChangePassword = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
+  const { theme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,14 +21,11 @@ const ChangePassword = () => {
     setError(false);
 
     try {
-        const res = await axios.post(
-            'http://localhost:8001/api/v1/users/change-password',
-            { currentPassword, newPassword },
-            { withCredentials: true } // This includes cookies (like auth tokens)
-          );
+      const res = await changePassword({ currentPassword, newPassword });
       
-          console.log('Password changed successfully:', res.data);
-     
+      console.log('Password changed successfully:', res.data);
+      setMessage('Password changed successfully!');
+      
     } catch (err) {
       setError(true);
       setMessage('Something went wrong');
@@ -36,25 +35,47 @@ const ChangePassword = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <Label htmlFor="currentPassword">Current Password</Label>
+    <form onSubmit={handleSubmit} className="space-y-3" style={{ color: theme.text }}>
+      <Label htmlFor="currentPassword" style={{ color: theme.textSecondary }}>Current Password</Label>
       <Input
         id="currentPassword"
         type="password"
         value={currentPassword}
         onChange={(e:any) => setCurrentPassword(e.target.value)}
+        style={{
+          backgroundColor: theme.inputBackground,
+          borderColor: theme.inputBorder,
+          color: theme.text,
+        }}
       />
-      <Label htmlFor="newPassword">New Password</Label>
+      <Label htmlFor="newPassword" style={{ color: theme.textSecondary }}>New Password</Label>
       <Input
         id="newPassword"
         type="password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
+        style={{
+          backgroundColor: theme.inputBackground,
+          borderColor: theme.inputBorder,
+          color: theme.text,
+        }}
       />
-      <Button type="submit" disabled={loading}>
+      <Button
+        type="submit"
+        disabled={loading}
+        style={{
+          backgroundColor: theme.btn,
+          color: theme.text,
+          opacity: loading ? 0.5 : 1,
+        }}
+      >
         {loading ? 'Updating...' : 'Change Password'}
       </Button>
-      {message && <p className={`text-sm ${error ? 'text-red-500' : 'text-green-600'}`}>{message}</p>}
+      {message && (
+        <p className="text-sm" style={{ color: error ? theme.error : theme.success }}>
+          {message}
+        </p>
+      )}
     </form>
   );
 };

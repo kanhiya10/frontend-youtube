@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
 interface Video {
@@ -13,21 +13,22 @@ export const useUserVideos = (username?: string) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const endpoint = `http://localhost:8001/api/v1/videos/user${username ? `/${username}` : ""}`;
-        const response = await axios.get<{ data: Video[] }>(endpoint, { withCredentials: true });
-        setVideos(response.data.data);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVideos();
+  const fetchVideos = useCallback(async () => {
+    setLoading(true);
+    try {
+      const endpoint = `http://localhost:8001/api/v1/videos/user${username ? `/${username}` : ""}`;
+      const response = await axios.get<{ data: Video[] }>(endpoint, { withCredentials: true });
+      setVideos(response.data.data);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [username]);
 
-  return { videos, loading };
+  useEffect(() => {
+    fetchVideos();
+  }, [fetchVideos]);
+
+  return { videos, loading, refetch: fetchVideos };
 };

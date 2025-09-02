@@ -7,14 +7,15 @@ import RecommendedVideos from '../../components/videoPlay/videoRecommendation';
 import { useTheme } from '../../context/themeContext';
 import { getVideoOwnerInfo } from '../../services/videos';
 import axios from 'axios';
+import { useStyles } from '../../utils/styleImports';
 
 const Streaming: React.FC = () => {
   const { theme } = useTheme();
   const { id } = useParams();
   const [VideoInfo, setVideoInfo] = useState<VideoInfoType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  console.log("VideoInfo in streaming");
+  console.log('param id:', id);
+  const { containerStylev2, loadingSpinner, containerStyle, notFoundCardStyle, buttonStyleCss } = useStyles();
 
   useEffect(() => {
     const fetchVideoOwnerInfo = async () => {
@@ -36,12 +37,13 @@ const Streaming: React.FC = () => {
     }
   }, [id]);
 
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={containerStylev2}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-lg font-medium text-gray-700 dark:text-gray-300">Loading video...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={loadingSpinner}></div>
+          <p className="text-lg font-medium">Loading video...</p>
         </div>
       </div>
     );
@@ -49,16 +51,17 @@ const Streaming: React.FC = () => {
 
   if (!VideoInfo) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4" >
-        <div className="text-center bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-4" style={containerStyle}>
+        <div className="rounded-lg p-8 max-w-md w-full text-center" style={notFoundCardStyle}>
           <div className="text-6xl mb-4">🎥</div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Video Not Found</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
+          <h2 className="text-xl font-semibold mb-2">Video Not Found</h2>
+          <p className="mb-4" style={{ color: theme.textSecondary }}>
             No video selected. Please go back and choose a video.
           </p>
           <button
             onClick={() => window.history.back()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 rounded-lg hover:opacity-80 transition-colors"
+            style={buttonStyleCss}
           >
             Go Back
           </button>
@@ -68,7 +71,7 @@ const Streaming: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300" style={{ backgroundColor: theme.background }}>
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: theme.background }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
         {/* Desktop Layout */}
         <div className="hidden lg:flex gap-6 xl:gap-8">
