@@ -116,7 +116,7 @@ function App() {
 
             <Route
               path="/auth/index"
-              element={isLoggedIn ? <AuthIndex /> : <Home />}
+              element={!isLoggedIn ? <AuthIndex /> : <Home />}
             />
 
             <Route path="/search" element={<SearchResult />} />
