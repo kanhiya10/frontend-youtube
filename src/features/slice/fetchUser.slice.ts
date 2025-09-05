@@ -55,6 +55,9 @@ const UserSlice = createSlice({
     resetInfo: (state) => {
       state.info = null;
     },
+    setUserFromAuth: (state, action: PayloadAction<User>) => {
+      state.info = action.payload; // ✅ set user manually (Google login)
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(UserApi.pending, (state) => {
@@ -72,5 +75,5 @@ const UserSlice = createSlice({
   },
 });
 
-export const { resetInfo } = UserSlice.actions;
+export const { resetInfo,setUserFromAuth } = UserSlice.actions;
 export default UserSlice.reducer;

@@ -8,6 +8,9 @@ import { jwtDecode } from 'jwt-decode';
 import { useTheme } from '../../context/themeContext';
 import { googleLogin } from '../../services/users'; // Import the API service
 import { useStyles } from '../../utils/styleImports';
+import {AppDispatch} from '../../store';
+import { useDispatch } from 'react-redux';
+import { setUserFromAuth } from '../../features/slice/fetchUser.slice';
 // import { mainContainerStyle, cardStyle, leftPanelStyle, mobileToggleStyle, toggleButtonStyle } from '../../utils/styleImports';
 
 
@@ -16,6 +19,7 @@ const AuthIndex: React.FC = () => {
   const { theme } = useTheme();
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
   const { containerStyle, cardStyle, leftPanelStyle, mobileToggleStyle, toggleButtonStyle } = useStyles();
+  const dispatch = useDispatch<AppDispatch>();
 
   type UserProfileType = {
     name?: string;
@@ -41,6 +45,7 @@ const AuthIndex: React.FC = () => {
       }
 
       console.log('Backend Google Login Response:', user);
+      dispatch(setUserFromAuth(user)); // ✅ set user in Redux store
 
       // Handle successful login (e.g., redirect, update state, etc.)
       // You might want to navigate to a different page or update global auth state here
