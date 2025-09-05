@@ -27,6 +27,8 @@ import SearchResult from './app/search/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPermission, registerFcmToken, removeFcmToken } from './features/slice/notificationFcm.slice';
 import Loader from './components/common/loader';
+import PrivateRoute from './utils/privateRoute';
+import PublicRoute from './utils/publicRoute';
 
 function App() {
   const [sidebarData, setSidebarData] = useState(false);
@@ -113,14 +115,9 @@ function App() {
             <Route path="/manageSecurity" element={<SecuritySettings />} />
             <Route path="/manageNotifications" element={<NotificationSettings />} />
             <Route path="/videoPlay/streaming/:id" element={<Streaming />} />
-
-            <Route
-              path="/auth/index"
-              element={!isLoggedIn ? <AuthIndex /> : <Home />}
-            />
-
+            <Route path="/auth/index" element={<PublicRoute><AuthIndex /></PublicRoute>}/>
             <Route path="/search" element={<SearchResult />} />
-            <Route path="/profile/index" element={<ProfileIndex />} >
+            <Route path="/profile/index" element={<PrivateRoute><ProfileIndex/></PrivateRoute>} >
               <Route index element={<HomeProfile />} />
               <Route path="live" element={<LiveStreaming />} />
               <Route path="home" element={<HomeProfile />} />
@@ -134,7 +131,7 @@ function App() {
               <Route path="home" element={<HomeProfile />} />
               <Route path="getVideo" element={<VideosTab />} />
             </Route>
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat" element={ <PrivateRoute><Chat /></PrivateRoute>} />
           </Routes>
         </Suspense>
 

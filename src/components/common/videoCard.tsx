@@ -4,6 +4,7 @@ import { useStyles } from '../../utils/styleImports';
 import { HomeInfoType } from '../../types/types';
 import { useNavigate } from 'react-router-dom';
 import { useTime } from '../../hooks/useTime';
+import { formatDuration } from '../../utils/durationFormattor';
 
 export function VideoCard({ video }: { video: HomeInfoType }) {
   const uploadedAgo = useTime(video.createdAt);
@@ -22,14 +23,31 @@ export function VideoCard({ video }: { video: HomeInfoType }) {
         e.currentTarget.style.boxShadow = videoCardStyle.boxShadow || '';
       }}
     >
-      <img src={video.thumbnail} alt={`Thumbnail for ${video.title}`} className="w-full h-36 object-contain" />
+      {/* Thumbnail with duration overlay */}
+      <div className="relative">
+        <img
+          src={video.thumbnail}
+          alt={`Thumbnail for ${video.title}`}
+          className="w-full h-36 object-cover"
+        />
+        {video.duration && (
+          <span className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1.5 py-0.5 rounded">
+            {formatDuration(video.duration)}
+          </span>
+        )}
+      </div>
+
+      {/* Info section */}
       <div className="p-2" style={videoInfoStyle}>
-        <h1 className="text-sm font-bold mb-1" style={videoTitleStyle}>
+        <h1 className="text-sm font-bold mb-1 line-clamp-2" style={videoTitleStyle}>
           {video.title}
         </h1>
-        <p className="text-xs mt-1" style={loadingStyle}>
-          {uploadedAgo}
-        </p>
+
+        <div className="flex items-center gap-2 text-xs mt-1" style={loadingStyle}>
+          <span>{video.views} views</span>
+          <span>•</span>
+          <span>{uploadedAgo}</span>
+        </div>
       </div>
     </div>
   );

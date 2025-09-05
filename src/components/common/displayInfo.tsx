@@ -33,7 +33,7 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
 
   if (!userVal) {
     return (
-      <h1 className="text-center mt-10 text-xl" style={{ color: theme.textMuted }}>
+      <h1 className="text-center mt-10 text-xl" style={{ color: theme.textMuted , backgroundColor: theme.background}}>
         User details not fetched successfully
       </h1>
     );

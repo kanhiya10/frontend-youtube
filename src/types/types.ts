@@ -24,14 +24,13 @@ export interface HomeInfoType {
   _id: string;
   title: string;
   videoFile: string;
-  description?: string;
   thumbnail?: string;
   createdAt: string;
 //   owner:string;
 //   isPublished:boolean;
-  // views:number;
+  views:number;
   // likes:number;
-//   duration:number;
+  duration:number;
 
 }
 
