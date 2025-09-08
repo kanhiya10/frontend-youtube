@@ -30,7 +30,6 @@ export default function SearchResults() {
       
       try {
         const response = await searchAll(query);
-        console.log("Search results:", response.data);
         setResults(response.data);
       } catch (error: any) {
         console.error("Search failed", error);

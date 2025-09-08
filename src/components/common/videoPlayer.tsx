@@ -84,7 +84,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   //     backgroundColor: 'red'
   //   },
   //   onMarkerReached(marker) {
-  //     console.log("Reached marker:", marker.text);
   //   },
   //   tooltip: {
   //     display: true,

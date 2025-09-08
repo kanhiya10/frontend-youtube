@@ -51,7 +51,6 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
       // 1️⃣ If token exists, remove via thunk (this already calls backend + clears Redux/localStorage)
       if (token) {
         dispatch(removeFcmToken(token));
-        console.log("🔴 FCM token removed:", token);
       }
 
       await axios.post(
@@ -64,7 +63,6 @@ const Header: React.FC<HeaderProps> = ({ handleSideBar }) => {
           withCredentials: true,
         }
       );
-      console.log('LoggedOut');
       dispatch(resetInfo());
       navigate('/');
     } catch (error) {

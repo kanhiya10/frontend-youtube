@@ -81,12 +81,12 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
               { to: "home", label: "Home" },
               { to: "uploadVideo", label: "Upload Video" },
               { to: "getVideo", label: "Videos" },
-              { to: "live", label: "Live" },
+              // { to: "live", label: "Live" },
               { to: "watchHistory", label: "Watch History" },
             ] : [
               { to: "home", label: "Home" },
               { to: "getVideo", label: "Videos" },
-              { to: "live", label: "Live" },
+              // { to: "live", label: "Live" },
             ]).map(({ to, label }) => (
               <li key={to}>
                 <NavLink
@@ -110,12 +110,12 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
                 { to: "home", label: "Home" },
                 { to: "uploadVideo", label: "Upload" },
                 { to: "getVideo", label: "Videos" },
-                { to: "live", label: "Live" },
+                // { to: "live", label: "Live" },
                 { to: "watchHistory", label: "History" },
               ] : [
                 { to: "home", label: "Home" },
                 { to: "getVideo", label: "Videos" },
-                { to: "live", label: "Live" },
+                // { to: "live", label: "Live" },
               ]).map(({ to, label }) => (
                 <li key={to} className="flex-shrink-0">
                   <NavLink

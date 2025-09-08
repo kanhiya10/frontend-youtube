@@ -7,7 +7,6 @@ const socket = io("https://backend-youtube-zba1.onrender.com", {
 // Replace with correct internal or proxied address if needed
 
 socket.on("connect", () => {
-  console.log("Socket connected successfully:", socket.id);
 });
 
 socket.on("connect_error", (err) => {

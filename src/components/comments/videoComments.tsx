@@ -18,7 +18,6 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoId }) => {
     if (!VideoId) return;
     try {
       const res = await getVideoComments(VideoId);
-      console.log('Fetched comments:', res.data.data);
       setComments(res.data.data);
     } catch (err) {
       console.error('Error fetching comments', err);

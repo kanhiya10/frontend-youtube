@@ -26,7 +26,6 @@ export const initNotificationsAfterLogin = () => async (dispatch: AppDispatch) =
   if (Notification.permission === "granted") {
     await dispatch(registerFcmToken());
   } else {
-    console.log("Notification permission not granted yet, skipping token registration.");
   }
 };
 
@@ -36,7 +35,6 @@ export const registerFcmToken = createAsyncThunk<string | null>(
   async (_, { rejectWithValue }) => {
     try {
         const registration = await navigator.serviceWorker.ready;
-        console.log("Registering FCM token...");
       const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: registration });
       if (fcmToken) {
         await axios.post(

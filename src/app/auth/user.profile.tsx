@@ -34,7 +34,6 @@ const UserProfile: React.FC = () => {
       UserApi({ url: `https://backend-youtube-zba1.onrender.com/api/v1/users/login`, option })
     );
     if (UserApi.fulfilled.match(result)) {
-      console.log("Login successful:", result.payload);
       dispatch(initNotificationsAfterLogin());
     } else {
       console.warn("Login failed, skipping notification setup");
@@ -77,7 +76,7 @@ const UserProfile: React.FC = () => {
           style={inputStyle}
         />
         
-        <div className="text-right">
+        {/* <div className="text-right">
           <button
             type="button"
             className="text-xs sm:text-sm hover:underline focus:outline-none focus:underline transition-colors duration-200"
@@ -85,7 +84,7 @@ const UserProfile: React.FC = () => {
           >
             Forgot password?
           </button>
-        </div>
+        </div> */}
         
         <button
           type="submit"

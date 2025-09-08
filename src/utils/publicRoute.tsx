@@ -9,7 +9,6 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const isLoggedIn = !!info;
   const navigate=useNavigate();
 
-  console.log("PublicRoute - isLoggedIn:", isLoggedIn);
 
  if (isLoggedIn) {
   return <Home/>;

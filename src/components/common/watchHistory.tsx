@@ -33,7 +33,6 @@ const WatchHistory = () => {
     try {
       await clearWatchHistory();
       setHistory([]);
-      console.log('History cleared successfully');
     } catch (error) {
       console.error('Error clearing history', error);
     }

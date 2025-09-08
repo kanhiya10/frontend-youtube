@@ -31,7 +31,6 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
   const { containerStylev1, inputStyle, listItemSelectedStyle, listItemDefaultStyle, listItemHoverStyle, errorStyle, loadingStyle } = useStyles();
 
   const fetchConversations = async () => {
-    console.log("Fetching conversations...");
     setIsLoadingConversations(true);
     setError("");
 
@@ -50,7 +49,6 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
     fetchConversations();
 
     const handleNewMessage = () => {
-      console.log("New message received, fetching conversations again.");
       fetchConversations();
     };
 
@@ -75,7 +73,6 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
     const timeout = setTimeout(async () => {
       try {
         const response = await searchUsers(search);
-        console.log("Search results:", response.data);
         setSearchResults(response.data);
         setError("");
       } catch (err: any) {

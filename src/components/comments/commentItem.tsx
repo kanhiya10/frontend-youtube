@@ -38,7 +38,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, onReply }) 
     currentUserId: info?.id ?? '',
   });
 
-  console.log('activeParentId', activeParentId);
 
   const handleReplySubmit = async () => {
     if (!replyText.trim()) return;
