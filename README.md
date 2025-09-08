@@ -61,7 +61,7 @@ src/
 
 1. Clone the repo  
    ```bash
-   git clone https://github.com/your-username/videotube-frontend.git
+   git clone https://github.com/kanhiya10/frontend-youtube.git
    cd videotube-frontend
    npm install
    VITE_API_URL=http://localhost:8001/api/v1
