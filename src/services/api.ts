@@ -60,7 +60,6 @@ api.interceptors.response.use(
           { withCredentials: true }
         );
 
-        console.log("Access token refreshed ✅");
 
         const newToken = data?.accessToken; // depends on backend implementation
 

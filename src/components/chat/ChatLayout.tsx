@@ -20,7 +20,6 @@ export default function ChatLayout() {
         
         const response = await getCurrentUser();
         setCurrentUser(response.data.data);
-        console.log("Current user fetched in chatLayout:", response.data.data);
         
         // Uncomment if you want to register with socket
         // socket.emit("register", response.data.data._id);
@@ -77,7 +76,6 @@ export default function ChatLayout() {
     );
   }
 
-  console.log("Current userId in parent :", currentUser);
 
   return (
     <div className="flex h-screen">

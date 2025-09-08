@@ -29,12 +29,10 @@ if ('serviceWorker' in navigator) {
     updateViaCache: 'none'
   })
   .then((registration) => {
-    console.log('✅ Service Worker registered');
     registration.update(); // Force update
   });
 }
 
-console.log(navigator.serviceWorker);
 
 
 

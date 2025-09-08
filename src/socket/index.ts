@@ -7,7 +7,6 @@ const socket = io("http://localhost:8001", {
 // Replace with correct internal or proxied address if needed
 
 socket.on("connect", () => {
-  console.log("Socket connected successfully:", socket.id);
 });
 
 socket.on("connect_error", (err) => {

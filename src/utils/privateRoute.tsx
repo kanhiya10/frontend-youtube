@@ -8,7 +8,6 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const isLoggedIn = !!info;
   const navigate=useNavigate();
 
-  console.log("PrivateRoute - isLoggedIn:", isLoggedIn);
 
  if (!isLoggedIn) {
   return <LoginModal onClose={() => navigate(-1)} />;

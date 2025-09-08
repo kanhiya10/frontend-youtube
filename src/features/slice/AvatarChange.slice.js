@@ -18,9 +18,7 @@
 //         });
 //         builder.addCase(AvatarApi.fulfilled,(state,action)=>{
 //             state.AvatarLoading=false;
-//             console.log("action payload.data",action.payload);
 //             state.avatar=action.payload;
-//             console.log("state.info",state.avatar);
 //         })
 //         builder.addCase(AvatarApi.rejected,(state)=>{
 //             state.AvatarLoading=false

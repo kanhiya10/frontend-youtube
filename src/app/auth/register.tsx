@@ -34,7 +34,6 @@ const RegisterProfile: React.FC = () => {
 
     try {
       const response = await registerUser(formData);
-      console.log("Registration successful:", response.data);
       // Navigate to success page or login page
       navigate("/");
     } catch (error) {

@@ -36,8 +36,6 @@ const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
           }
         }
       } catch (error) {
-        console.log('Error loading stream:', error);
-        console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
         if (retryCount < maxRetries) {
           retryCount++;
           setTimeout(loadStream, retryDelay);

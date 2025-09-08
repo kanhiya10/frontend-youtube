@@ -20,7 +20,6 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
         { withCredentials: true }
       );
       const data = res.data;
-      console.log("Like response data:", data);
 
       setLikes(data.data.totalLikes);
       setDislikes(data.data.totalDislikes);

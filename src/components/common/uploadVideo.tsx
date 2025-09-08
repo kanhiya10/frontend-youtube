@@ -30,7 +30,6 @@ const UploadVideo: React.FC = () => {
 
     try {
       await uploadVideo(formData); // Use the new service function
-      console.log("Upload success");
       alert("Video uploaded successfully!");
       setTitle("");
       setDescription("");

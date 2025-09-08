@@ -19,7 +19,6 @@ export default function Home() {
     const fetchRandomVideos = async () => {
       try {
         const response = await getRandomVideos();
-        // console.log("Fetched random videos:", response.data.data);
         setRandomVideos(response.data.data);
       } catch (error) {
         console.error("Failed to fetch random videos:", error);

@@ -38,7 +38,6 @@ function App() {
   const { info } = useSelector((state) => state.User);
   const isLoggedIn = !!info; // true if user is logged in
 
-  console.log('User info in App.jsx:', isLoggedIn);
 
   const { token } = useSelector((state) => state.notifications);
 
@@ -47,7 +46,6 @@ function App() {
   useEffect(() => {
     // Foreground message listener
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('Message received in foreground: ', payload);
       setNotification({
         title: payload.notification.title,
         body: payload.notification.body,
@@ -68,15 +66,12 @@ function App() {
 
       permissionStatus.onchange = () => {
         const newPermission = permissionStatus.state;
-        console.log('Notification permission changed to:', newPermission);
         dispatch(setPermission(newPermission));
 
         if (isLoggedIn) {
           if (newPermission === "granted" && !token) {
-            console.log('Permission granted, registering token in app.jsx');
             dispatch(registerFcmToken());
           } else if (newPermission === "denied" && token) {
-            console.log('Permission denied, removing token in app.jsx');
             dispatch(removeFcmToken(token));
           }
         }
@@ -119,7 +114,7 @@ function App() {
             <Route path="/search" element={<SearchResult />} />
             <Route path="/profile/index" element={<PrivateRoute><ProfileIndex/></PrivateRoute>} >
               <Route index element={<HomeProfile />} />
-              <Route path="live" element={<LiveStreaming />} />
+              {/* <Route path="live" element={<LiveStreaming />} /> */}
               <Route path="home" element={<HomeProfile />} />
               <Route path="getVideo" element={<VideosTab />} />
               <Route path="watchHistory" element={<WatchHistory />} />
@@ -127,7 +122,7 @@ function App() {
             </Route>
             <Route path="/videoPlay/ownerProfile/:username" element={<OwnerProfile />} >
               <Route index element={<HomeProfile />} />
-              <Route path="live" element={<LiveStreaming />} />
+              {/* <Route path="live" element={<LiveStreaming />} /> */}
               <Route path="home" element={<HomeProfile />} />
               <Route path="getVideo" element={<VideosTab />} />
             </Route>

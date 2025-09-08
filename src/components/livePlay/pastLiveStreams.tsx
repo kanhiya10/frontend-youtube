@@ -19,7 +19,6 @@ const PastLiveStreams = ({ username }: { username: string }) => {
         const res = await axios.get(
           `http://localhost:8001/api/v1/stream/history/${username}`
         );
-        console.log("res",res.data);
         setPastStreams(res.data.data);
       } catch (err) {
         console.error("Error fetching past streams", err);

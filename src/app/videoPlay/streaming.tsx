@@ -14,7 +14,6 @@ const Streaming: React.FC = () => {
   const { id } = useParams();
   const [VideoInfo, setVideoInfo] = useState<VideoInfoType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  console.log('param id:', id);
   const { containerStylev2, loadingSpinner, containerStyle, notFoundCardStyle, buttonStyleCss } = useStyles();
 
   useEffect(() => {
@@ -23,7 +22,6 @@ const Streaming: React.FC = () => {
         setIsLoading(true);
         const response = await getVideoOwnerInfo(id!);
         const res = response.data.data;
-        console.log("Fetched video info:", res);
         setVideoInfo(res);
       } catch (error) {
         console.error("Error fetching owner info:", error);

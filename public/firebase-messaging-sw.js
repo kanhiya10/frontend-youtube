@@ -19,9 +19,6 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message', payload);
-  console.log('🔍 Notification permission:', Notification.permission);
-  console.log('🔍 Registration exists:', !!self.registration);
   
   // Use actual notification data from payload
   const notificationTitle = payload.notification?.title || 'New Notification';
@@ -30,11 +27,9 @@ messaging.onBackgroundMessage((payload) => {
     icon: '/firebase-logo.png'
   };
   
-  console.log('📢 About to show notification:', notificationTitle);
   
   return self.registration.showNotification(notificationTitle, notificationOptions)
     .then(() => {
-      console.log('✅ Notification displayed successfully');
     })
     .catch((error) => {
       console.error('❌ Error displaying notification:', error);

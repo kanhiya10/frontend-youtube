@@ -56,7 +56,6 @@ const VideoOwnerInfo: React.FC<VideoOwnerInfoProps> = ({ VideoInfo }) => {
           text: `Check out this video: ${VideoInfo.video.title}`,
           url: `${window.location.origin}/videoPlay/streaming/${VideoInfo.video._id}`,
         })
-        .then(() => console.log('Shared successfully'))
         .catch((error) => console.error('Error sharing:', error));
     } else {
       alert('Your browser does not support direct sharing. You can share via these options below.');

@@ -42,7 +42,6 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
         // Get conversation between users
         const conversationResponse = await getConversationBetween(selectedUser);
         const conversation = conversationResponse.data.data;
-        console.log("Fetched conversation:", conversation);
         setConversationId(conversation._id);
         
         // Get messages for this conversation
@@ -50,7 +49,6 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
         setMessages(messagesResponse.data.data || []);
       } catch (error: any) {
         if (error.response?.status === 404) {
-          console.log("No previous conversation");
           setConversationId(null);
         } else {
           console.error("Failed fetching chat history", error);
@@ -72,10 +70,8 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
   }, [selectedUser]);
 
   if (!conversationId) {
-    console.log("Conversation will be created after sending first message.");
   }
 
-  console.log("Current user ID:", currentUserId);
 
   useEffect(() => {
     const handleMessage = (msg: ChatMessage) => {
@@ -88,7 +84,6 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       ) {
         setMessages((prev) => [...prev, msg]);
       }
-      console.log("Received message:", msg);
     };
 
     socket.on("message", handleMessage);
@@ -104,7 +99,6 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       to: selectedUser,
       text: input,
     };
-    console.log("Sending message:", newMsg);
     socket.emit("sendMessage", newMsg);
     setMessages((prev) => [...prev, newMsg]);
     setInput("");
@@ -119,7 +113,6 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       formData.append('mediaFile', file);
       
       const response = await uploadMediaFile(formData);
-      console.log("Media uploaded:", response.data);
       
       const newMsg: ChatMessage = {
         from: currentUserId,
@@ -128,7 +121,6 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
         mediaType: file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : 'file',
       };
       
-      console.log("Sending media message to kafka:", newMsg);
       socket.emit("sendMessage", newMsg);
       setMessages((prev) => [...prev, newMsg]);
     } catch (error) {

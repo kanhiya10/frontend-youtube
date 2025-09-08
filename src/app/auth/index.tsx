@@ -34,9 +34,7 @@ const AuthIndex: React.FC = () => {
     setIsGoogleLoginLoading(true);
     try {
       const response = await googleLogin(credential);
-      console.log('Google Login Response:', response);
       const data = response.data;
-      console.log('Google Login Response:', data);
 
       const user = response.data?.data?.user;
 
@@ -44,7 +42,6 @@ const AuthIndex: React.FC = () => {
         throw new Error('Invalid response from backend');
       }
 
-      console.log('Backend Google Login Response:', user);
       dispatch(setUserFromAuth(user)); // ✅ set user in Redux store
 
       // Handle successful login (e.g., redirect, update state, etc.)
@@ -63,7 +60,6 @@ const AuthIndex: React.FC = () => {
       handleGoogleLogin(credentialResponse.credential);
     },
     onError: () => {
-      console.log('One Tap Login failed');
     },
     use_fedcm_for_prompt: true,
   });
@@ -108,7 +104,6 @@ const AuthIndex: React.FC = () => {
           <div className={isGoogleLoginLoading ? "opacity-50 pointer-events-none" : ""}>
             <GoogleLogin
               onSuccess={(credentialResponse) => handleGoogleLogin(credentialResponse.credential)}
-              onError={() => console.log('Google Login Failed')}
             />
           </div>
 

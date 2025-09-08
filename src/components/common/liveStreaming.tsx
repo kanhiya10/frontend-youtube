@@ -31,7 +31,6 @@ const Live = () => {
     const fetchLiveAndPast = async () => {
       try {
         if (!isCurrentUser) {
-            console.log("username in fetchLiveAndPast",username);
           const liveRes = await axios.get(`http://localhost:8001/api/v1/stream/fetchLive/${username}`, {
             withCredentials: true,
           });
@@ -43,7 +42,6 @@ const Live = () => {
             { withCredentials: true }
           );
           
-        console.log("historyRes",historyRes.data.data);
         setPastStreams(historyRes.data.data);
       } catch (err) {
         console.error('Error fetching stream data:', err);

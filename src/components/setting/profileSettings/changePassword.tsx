@@ -23,7 +23,6 @@ const ChangePassword = () => {
     try {
       const res = await changePassword({ currentPassword, newPassword });
       
-      console.log('Password changed successfully:', res.data);
       setMessage('Password changed successfully!');
       
     } catch (err) {

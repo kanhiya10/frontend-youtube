@@ -9,14 +9,12 @@ const GoLiveForm: React.FC = () => {
   const [category, setCategory] = useState('');
   const [streamKey, setStreamKey] = useState('');
 
-  console.log("streamKey",streamKey);
 
   const handleGoLive = async () => {
     try {
       const res = await axios.post('http://localhost:8001/api/v1/stream/start', { title, category }, {
         withCredentials: true, // if using cookies for auth
       });
-      console.log("res",res);
       setStreamKey(res.data.data.streamKey);
     } catch (err) {
       console.error('Failed to start stream:', err);
@@ -28,7 +26,6 @@ const GoLiveForm: React.FC = () => {
       const res = await axios.post('http://localhost:8001/api/v1/stream/stop', {}, {
         withCredentials: true,
       });
-      console.log("Stream stopped:", res.data);
       setStreamKey('');
     } catch (err) {
       console.error('Failed to stop stream:', err);

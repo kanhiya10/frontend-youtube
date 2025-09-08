@@ -78,7 +78,7 @@ const NotificationSettings = () => {
         className="max-w-md mx-auto p-6 rounded shadow mt-10"
         style={{ backgroundColor: theme.card, color: theme.text }}
       >
-        <h1 className="text-xl font-bold mb-4">Notification Settings {token}</h1>
+        <h1 className="text-xl font-bold mb-4">Notification Settings </h1>
         <p className="mb-4" style={{ color: theme.textSecondary }}>
           Notification permission:{" "}
           <span className="font-medium" style={{ color: theme.text }}>
