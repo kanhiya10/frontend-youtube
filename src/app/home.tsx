@@ -73,6 +73,7 @@ export default function Home() {
                 <p className="text-xs text-gray-500 mt-1">
                   {new Date(video.createdAt).toLocaleDateString()}
                 </p>
+                <p>This is the new docker image created using ci/cd pipeline</p>
               </div>
             </div>
           ))

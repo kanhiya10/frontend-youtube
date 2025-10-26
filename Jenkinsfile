@@ -34,6 +34,7 @@ pipeline {
         dir("$DEPLOY_DIR") {
           sh '''
             docker-compose pull nginx-rtmp
+            docker rm -f nginx-rtmp || true
             docker-compose up -d --force-recreate nginx-rtmp
           '''
         }
