@@ -12,7 +12,7 @@ pipeline {
     stage('Checkout') {
       steps {
         dir('/workspace/frontend-youtube') {
-          git branch: 'frontend', url: 'https://github.com/kanhiya10/frontend-youtube.git'
+          git branch: 'deploy-frontend', url: 'https://github.com/kanhiya10/frontend-youtube.git'
         }
       }
     }
