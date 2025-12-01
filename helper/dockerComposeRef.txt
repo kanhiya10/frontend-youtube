@@ -1,0 +1,89 @@
+version: "3.8"
+
+services:
+  nginx-rtmp:
+    build:
+      context: ./frontend-youtube                 # So Docker can access both ./frontend-youtube and ./nginx
+      dockerfile: ./nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "1935:1935"
+      - "9000:80"
+    volumes:
+      - ./hls:/tmp/hls           # Keep HLS output mounted if you want persistence
+    restart: unless-stopped
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "nginx -t || exit 1"]
+      interval: 10s
+      retries: 5
+
+  backend:
+    build: ./backend-youtube
+    ports:
+      - "8000:8000"
+    container_name: backend
+    restart: on-failure
+
+  jenkins:
+    build:
+      context: ./jenkins   # folder containing Dockerfile
+      dockerfile: Dockerfile
+    container_name: jenkins
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - .:/workspace
+      - ./jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  agent:
+    image: jenkins/ssh-agent:jdk17
+    container_name: agent
+    restart: unless-stopped
+    privileged: true
+    user: root
+    expose:
+      - "22"   # SSH port inside Docker network
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEkRrdAG7tTd+uull08xUHw649fNcd8bt6Tfep8u0LmP7Q8iFKT5rUef6Ilbix1RTjVFfy63IrPoVQcR9bNrpO8YCcA3drwGjIlnUZe8Inww9cZWj4/xDWRIkrYyq4Gp+gGkO83XFLPhu7YhOuorBw1mJlsYBKoSwE/yP/b5hY3ZrRyNk0F/sSJ9wE6wftzbGphnt5WbHRI/rOZDCPl7wIpY3YLd7PqjkAc+Cw+0ZPMVLPAKKjQBbP+oHycDTqQa44+z0yTF161e1rTFIENxyleM+1AqgxLV6wlf3zy6AkL4NW+RsxkWlZTqfYb/EKxPJrPaZwOtGwRvbJ3aSQxDOIxXEF5QzvDW1rkSUOyQW7E02XqSYD+SNsFkFPFmQAHt0g5F9zXeUoFWm+7fVwuNdvEW/M290NHrOe4wf14mF7oSp6mrgUVcxOjJuzN27+hWMpZHxoRGKHzAfAHySDaNxqbwy0oyF7rOtMIB1P2xaRxBf3E9m0OIqtDLtSoDJU5vU= hp@DESKTOP-S8GKAEK
+
+
+
+  # kafka:
+  #   image: confluentinc/cp-kafka:latest
+  #   container_name: kafka
+  #   ports:
+  #     - "9092:9092"
+  #     - "29092:29092"
+  #     - "9093:9093"
+  #   environment:
+  #     KAFKA_KRAFT_MODE: "true"
+  #     KAFKA_PROCESS_ROLES: "broker,controller"
+  #     KAFKA_NODE_ID: 1
+  #     KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:9092,PLAINTEXT_EXTERNAL://localhost:29092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+  #     KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:9092,PLAINTEXT_EXTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+  #     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+  #     KAFKA_LOG_DIRS: /var/lib/kafka/data
+  #     KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"
+      
+  #   volumes:
+  #     - ./data:/var/lib/kafka/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 1"]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 10
+
+volumes:
+  hls:

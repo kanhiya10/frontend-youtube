@@ -24,7 +24,7 @@ export default function SearchBar() {
         placeholder="Search creators or videos..."
       />
       <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded">
-        Search
+        Searching
       </button>
     </form>
   );
