@@ -16,11 +16,11 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
     try {
       const res = await axios.post(
         `/target/api/v1/comments/like/${commentId}`,
+        // `https://backend-youtube-zba1.onrender.com/api/v1/comments/like/${commentId}`,
         {},
         { withCredentials: true }
       );
       const data = res.data;
-      console.log("Like response data:", data);
 
       setLikes(data.data.totalLikes);
       setDislikes(data.data.totalDislikes);
@@ -35,6 +35,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
     try {
       const res = await axios.post(
         `/target/api/v1/comments/dislike/${commentId}`,
+        // `https://backend-youtube-zba1.onrender.com/api/v1/comments/dislike/${commentId}`,
         {},
         { withCredentials: true }
       );

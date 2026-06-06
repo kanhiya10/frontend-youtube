@@ -6,7 +6,9 @@ const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
 
   useEffect(() => {
     const video = videoRef.current;
-    const streamUrl = `http://localhost:9000/hls/${streamKey}/index.m3u8`;
+
+    const streamUrl = `http://localhost:9000/target/hls/${streamKey}/index.m3u8`;
+
 
     let hls: Hls | null = null;
     let retryCount = 0;
@@ -34,8 +36,6 @@ const LiveStreamPlayer: React.FC<{ streamKey: string }> = ({ streamKey }) => {
           }
         }
       } catch (error) {
-        console.log('Error loading stream:', error);
-        console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
         if (retryCount < maxRetries) {
           retryCount++;
           setTimeout(loadStream, retryDelay);

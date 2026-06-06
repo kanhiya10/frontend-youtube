@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import videojs from 'video.js';
-import TimeDisplay from 'videojs-time-display';
 import 'video.js/dist/video-js.css';
 import 'videojs-markers';
 import "videojs-contrib-quality-levels";
@@ -85,7 +84,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   //     backgroundColor: 'red'
   //   },
   //   onMarkerReached(marker) {
-  //     console.log("Reached marker:", marker.text);
   //   },
   //   tooltip: {
   //     display: true,
@@ -101,26 +99,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   };
 }, [src, poster, onPlay, timestamps]);
 
-  // Format seconds to MM:SS or HH:MM:SS
-  // const formatTime = (seconds: number): string => {
-  //   const hours = Math.floor(seconds / 3600);
-  //   const minutes = Math.floor((seconds % 3600) / 60);
-  //   const secs = Math.floor(seconds % 60);
-    
-  //   if (hours > 0) {
-  //     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  //   } else {
-  //     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  //   }
-  // };
-
-  // Jump to specific timestamp
-  // const jumpToTimestamp = (time: number) => {
-  //   if (playerRef.current) {
-  //     playerRef.current.currentTime(time);
-  //     playerRef.current.play();
-  //   }
-  // };
 
   return (
     <div className="video-player-container">

@@ -22,5 +22,13 @@ socket.on("connect_error", (err) => {
 socket.on("disconnect", (reason) => {
   console.warn("⚠️ Disconnected:", reason);
 });
+// Replace with correct internal or proxied address if needed
+
+socket.on("connect", () => {
+});
+
+socket.on("connect_error", (err) => {
+  console.error("Socket connection error:", err.message);
+});
 
 export default socket;

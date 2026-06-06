@@ -1,60 +1,99 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PlayVideo from '../../components/videoPlay/playVideo';
 import { VideoInfoType } from '../../types/types';
 import VideoOwnerInfo from '../../components/videoPlay/videoOwnerInfo';
 import RecommendedVideos from '../../components/videoPlay/videoRecommendation';
 import { useTheme } from '../../context/themeContext';
+import { getVideoOwnerInfo } from '../../services/videos';
 import axios from 'axios';
-
+import { useStyles } from '../../utils/styleImports';
 
 const Streaming: React.FC = () => {
   const { theme } = useTheme();
   const { id } = useParams();
   const [VideoInfo, setVideoInfo] = useState<VideoInfoType | null>(null);
-
-  console.log("VideoInfo in streaming");
+  const [isLoading, setIsLoading] = useState(true);
+  const { containerStylev2, loadingSpinner, containerStyle, notFoundCardStyle, buttonStyleCss } = useStyles();
 
   useEffect(() => {
-    async function fetchVideo() {
-      const res = await axios.get(`/target/api/v1/videos/getSingleVideo/${id}`);
-      console.log("Fetched video info:", res.data.data);
-      setVideoInfo(res.data.data);
+    const fetchVideoOwnerInfo = async () => {
+      console.log("Fetching video owner info for video ID:", id);
+      try {
+        setIsLoading(true);
+        const response = await getVideoOwnerInfo(id!);
+        const res = response.data.data;
+        setVideoInfo(res);
+      } catch (error) {
+        console.error("Error fetching owner info:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchVideoOwnerInfo();
     }
-    fetchVideo();
   }, [id]);
 
 
-  if (!VideoInfo) {
+  if (isLoading) {
     return (
-      <div className="text-center text-lg font-semibold text-red-500 mt-10">
-        No video selected. Please go back and choose a video.
+      <div className="min-h-screen flex items-center justify-center" style={containerStylev2}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={loadingSpinner}></div>
+          <p className="text-lg font-medium">Loading video...</p>
+        </div>
       </div>
     );
   }
 
+  if (!VideoInfo) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={containerStyle}>
+        <div className="rounded-lg p-8 max-w-md w-full text-center" style={notFoundCardStyle}>
+          <div className="text-6xl mb-4">🎥</div>
+          <h2 className="text-xl font-semibold mb-2">Video Not Found</h2>
+          <p className="mb-4" style={{ color: theme.textSecondary }}>
+            No video selected. Please go back and choose a video.
+          </p>
+          <button
+            onClick={() => window.history.back()}
+            className="px-4 py-2 rounded-lg hover:opacity-80 transition-colors"
+            style={buttonStyleCss}
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ backgroundColor: theme.background }}>
-      <div className="max-w-7xl mx-auto mt-10 mb-10  shadow-lg">
-        <div className="flex flex-row justify-start w-full p-4 gap-4 ">
-
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: theme.background }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex gap-6 xl:gap-8">
           {/* Left Section */}
-          <div className="w-[70%] flex flex-col gap-4 ">
+          <div className="flex-1 space-y-6">
             <PlayVideo VideoInfo={VideoInfo} />
             <VideoOwnerInfo VideoInfo={VideoInfo} />
           </div>
 
           {/* Right Section */}
-          <div className="w-[30%] min-w-[250px]">
+          <div className="w-80 xl:w-96 flex-shrink-0">
             <RecommendedVideos />
           </div>
+        </div>
 
+        {/* Mobile and Tablet Layout */}
+        <div className="lg:hidden space-y-6">
+          <PlayVideo VideoInfo={VideoInfo} />
+          <VideoOwnerInfo VideoInfo={VideoInfo} />
+          <RecommendedVideos />
         </div>
       </div>
     </div>
-
-
   );
 };
 

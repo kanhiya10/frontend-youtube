@@ -8,14 +8,11 @@
 // },
 //   reducers: {
 //     Add(state,action) {
-//       console.log('line 11 : ',action.payload);
 //       state.FetchVideodata=action.payload;
 //       state.isLoading=false,
-//       console.log("fetchVideos.slice data : ",state.FetchVideodata);
 //     },
 //     // Remove(state,action) {
 //     //     state.Favdata = state.Favdata.filter(item => item.name !== action.payload.name);
-//     //   console.log(state.Favdata);
 //     // },
 //   },
 // });
@@ -52,10 +49,8 @@ const FetchVidUserSlice = createSlice({
   initialState,
   reducers: {
     Add(state, action: PayloadAction<Video[]>) {
-      console.log('line 11 : ', action.payload);
       state.FetchVideodata = action.payload;
       state.isLoading = false;
-      console.log('fetchVideos.slice data : ', state.FetchVideodata);
     },
     // Add other reducers here like Remove, Update, etc.
   },

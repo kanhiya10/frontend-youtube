@@ -34,7 +34,6 @@ const unreadSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(fetchUnreadCount.fulfilled, (state, action: PayloadAction<number>) => {
-        console.log("Fetched unread count:", action.payload);
       state.count = action.payload;
       state.isLoading = false;
     });

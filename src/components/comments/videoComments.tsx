@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import CommentForm from './commentForm';
 import CommentList from './commentList';
 import { VideoInfoType } from '../../types/types';
+import { useTheme } from '../../context/themeContext';
+import { getVideoComments, writeComment } from '../../services/videos';
 
 interface VideoCommentsProps {
-  VideoInfo: VideoInfoType;
+  VideoId: string;
 }
 
-const VideoComments: React.FC<VideoCommentsProps> = ({ VideoInfo }) => {
+const VideoComments: React.FC<VideoCommentsProps> = ({ VideoId }) => {
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
+  const { theme } = useTheme();
 
   const fetchComments = async () => {
-    if (!VideoInfo._id) return;
+    if (!VideoId) return;
     try {
-      const res = await axios.get(`/target/api/v1/comments/readComment/${VideoInfo._id}`);
-      console.log('Fetched comments:', res.data.data);
+      const res = await getVideoComments(VideoId);
       setComments(res.data.data);
     } catch (err) {
       console.error('Error fetching comments', err);
@@ -25,20 +26,13 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoInfo }) => {
 
   useEffect(() => {
     fetchComments();
-  }, [VideoInfo._id]);
+  }, [VideoId]);
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;
 
     try {
-      const res = await axios.post(
-        `/target/api/v1/comments/writeComment`,
-        {
-          text: newComment,
-          videoId: VideoInfo._id,
-        },
-        { withCredentials: true }
-      );
+      const res = await writeComment(newComment, VideoId);
       setNewComment('');
       fetchComments(); // refresh list
     } catch (err) {
@@ -54,10 +48,10 @@ const VideoComments: React.FC<VideoCommentsProps> = ({ VideoInfo }) => {
         onSubmit={handleCommentSubmit}
         placeholder="Write your comment..."
       />
-      <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Comments</h2>
+      <h2 className="text-lg font-semibold mb-2 " style={{color:theme.secondary}}>Comments</h2>
       <CommentList
         comments={comments}
-        videoId={VideoInfo._id}
+        videoId={VideoId}
         refreshComments={fetchComments}
       />
     </div>
