@@ -1,21 +1,32 @@
-interface Props {
-  text?: string;
-  isSender: boolean;
-  mediaUrl?: string;
-  mediaType?: 'image' | 'video' | 'file';
-}
+import { useTheme } from "../../context/themeContext"; // Import useTheme
+import React from "react";
+import { MessageProps } from "../../types/types";
 
-export default function MessageItem({ text, isSender, mediaUrl, mediaType }: Props) {
+
+
+export default function MessageItem({ text, isSender, mediaUrl, mediaType }: MessageProps) {
+  // Use the theme context
+  const { theme } = useTheme();
+
+  // Define dynamic styles based on sender/receiver status
+  const messageStyle = {
+    backgroundColor: isSender ? theme.primary : theme.borderLight, // Using 'primary' for sender and 'borderLight' for receiver
+    color: isSender ? theme.btn : theme.text, // Using 'btn' for sender text and 'text' for receiver text
+  };
+
+  const fileLinkStyle = {
+    color: isSender ? theme.background : theme.info, // Using 'background' for sender link and 'info' for receiver link
+  };
+
   return (
     <div
       className={`flex ${isSender ? "justify-end" : "justify-start"} my-1`}
     >
       <div
-        className={`p-3 rounded-lg text-sm max-w-[70%] ${
-          isSender
-            ? "bg-purple-500 text-white rounded-br-none"
-            : "bg-gray-200 text-gray-900 rounded-bl-none"
-        } shadow-md space-y-2`}
+        className={`p-3 rounded-lg text-sm max-w-[70%] shadow-md space-y-2 ${
+          isSender ? "rounded-br-none" : "rounded-bl-none"
+        }`}
+        style={messageStyle}
       >
         {/* 📸 Render image */}
         {mediaType === "image" && mediaUrl && (
@@ -40,7 +51,8 @@ export default function MessageItem({ text, isSender, mediaUrl, mediaType }: Pro
             href={mediaUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-blue-700 break-words"
+            className="underline break-words"
+            style={fileLinkStyle}
           >
             📎 Download File
           </a>

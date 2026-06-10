@@ -21,7 +21,6 @@
 //         builder.addCase(ChannelApi.fulfilled,(state,action)=>{
 //             state.isLoading=false;
 //             state.channelUser=action.payload.data.data;
-//             console.log("state.channelUser",state.channelUser);
 //         })
 //         builder.addCase(ChannelApi.rejected,(state)=>{
 //             state.isLoading=false
@@ -76,7 +75,6 @@ const ChannelSlice = createSlice({
     builder.addCase(ChannelApi.fulfilled, (state, action: PayloadAction<any>) => {
       state.isLoading = false;
       state.channelUser = action.payload.data.data;
-      console.log('state.channelUser', state.channelUser);
     });
     builder.addCase(ChannelApi.rejected, (state) => {
       state.isLoading = false;

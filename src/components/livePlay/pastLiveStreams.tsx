@@ -18,8 +18,8 @@ const PastLiveStreams = ({ username }: { username: string }) => {
       try {
         const res = await axios.get(
           `/target/api/v1/stream/history/${username}`
+          // `https://backend-youtube-zba1.onrender.com/api/v1/stream/history/${username}`
         );
-        console.log("res",res.data);
         setPastStreams(res.data.data);
       } catch (err) {
         console.error("Error fetching past streams", err);

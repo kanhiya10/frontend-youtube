@@ -14,20 +14,24 @@ firebase.initializeApp({
   measurementId: "G-XGR7QTZR02"
 });
 
+
 // Retrieve Firebase Messaging
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log(
-    '[firebase-messaging-sw.js] Received background message ',
-    payload
-  );
-  // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  
+  // Use actual notification data from payload
+  const notificationTitle = payload.notification?.title || 'New Notification';
   const notificationOptions = {
-    body: 'Background Message body.',
+    body: payload.notification?.body || 'You have a new message',
     icon: '/firebase-logo.png'
   };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  
+  
+  return self.registration.showNotification(notificationTitle, notificationOptions)
+    .then(() => {
+    })
+    .catch((error) => {
+      console.error('❌ Error displaying notification:', error);
+    });
 });

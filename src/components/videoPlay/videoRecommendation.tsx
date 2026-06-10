@@ -1,68 +1,109 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import VideoPlayer from '../common/videoPlayer'; // Adjust the import path as necessary
-import { VideoInfoType } from '@/types/types';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../../context/themeContext';
-
-
-
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/themeContext";
+import { useStyles } from "../../utils/styleImports";
+import { getVideoRecommendations, getRandomVideos } from "../../services/videos";
+import { HomeInfoType } from "../../types/types";
+import { VideoCard } from "../common/videoCard";
 
 function RecommendedVideos() {
-  const [videos, setVideos] = useState<VideoInfoType[]>([]);
-//   const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    const { theme } = useTheme();
+  const [videos, setVideos] = useState<HomeInfoType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const { theme } = useTheme();
+  const { info } = useSelector((state: any) => state.User);
+  const isLoggedIn = !!info;
+
+  const {
+    containerStyle,
+    cardStyle,
+    navBorderStyle,
+    headingStyle,
+    videoItemStyle,
+    loadingStyle,
+    skeletonStyle,
+  } = useStyles();
 
   useEffect(() => {
-    async function fetchRecommendations() {
+    async function fetchVideos() {
       try {
-        const response = await axios.get(
-          `/target/api/v1/recommendations/collection`,
-          {
-              headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-          }
-        );
-        console.log("response in videoRecommendation",response);
-        setVideos(response.data.recommended); // assuming response.data is an array of videos
+        setIsLoading(true);
+        let response;
+        if (isLoggedIn) {
+          // ✅ fetch recommended videos for logged in user
+          response = await getVideoRecommendations();
+          setVideos(response.data.recommended || []);
+        } else {
+          // ✅ fetch random videos for guest user
+          response = await getRandomVideos();
+          setVideos(response.data.data || []);
+        }
       } catch (err) {
-        console.error('Error fetching recommendations:', err);
+        console.error("Error fetching videos:", err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
-    fetchRecommendations();
-  }, []);
+    fetchVideos();
+  }, [isLoggedIn]);
 
-//   if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
+  if (isLoading) {
+    return (
+      <div className="w-full space-y-4" style={containerStyle}>
+        <div className="rounded-xl p-6 shadow-lg border" style={cardStyle}>
+          <h2 className="text-lg font-bold mb-6" style={headingStyle}>
+            {isLoggedIn ? "Recommended Videos" : "Explore Videos"}
+          </h2>
+          <div className="space-y-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className="rounded-lg aspect-video mb-3" style={skeletonStyle}></div>
+                <div className="space-y-2">
+                  <div className="h-4 rounded w-3/4" style={skeletonStyle}></div>
+                  <div className="h-3 rounded w-1/2" style={skeletonStyle}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  
 
   return (
-    <div className={'w-[100%] p-8 bg-${theme.background} flex flex-col gap-4'}>
-      {/* <h3>Recommended Videos</h3> */}
-      <ul>
-        {videos.map((video) => (
-           <div
-              key={video._id}
-              className="w-full bg-black m-2 shadow-md rounded-md overflow-hidden cursor-pointer"
-              onClick={()=>navigate('/videoPlay/streaming',{state:{VideoInfo:video}})}
-            >
-              <img
-                src={video.thumbnail}
-                alt={`Thumbnail for ${video.title}`}
-                className="w-full h-48 object-contain"
-              />
-              <div className="p-2">
-                <h1 className="text-sm font-bold mb-1">{video.title}</h1>
-                {/* <p className="text-xs text-gray-600">{video.description}</p> */}
-                <p className="text-xs text-gray-500 mt-1">
-                  {new Date(video.createdAt).toLocaleDateString()}
-                </p>
-              </div>
+    <div className="w-full">
+      <div className="rounded-xl shadow-lg overflow-hidden border" style={cardStyle}>
+        {/* Header */}
+        <div className="p-4 sm:p-6 border-b" style={navBorderStyle}>
+          <h2 className="text-lg lg:text-xl font-bold" style={headingStyle}>
+            {isLoggedIn ? "Recommended Videos" : "Explore Videos"}
+          </h2>
+        </div>
+
+        {/* Videos List */}
+        <div className="p-2 sm:p-4">
+          {videos.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-4">🎬</div>
+              <p style={loadingStyle}>
+                {isLoggedIn
+                  ? "No recommendations available"
+                  : "No videos to display"}
+              </p>
             </div>
-        ))}
-      </ul>
+          ) : (
+            <div className="space-y-3 lg:space-y-4">
+              {videos.map((video) => (
+                <VideoCard key={video._id} video={video} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
