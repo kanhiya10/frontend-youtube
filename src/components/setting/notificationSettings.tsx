@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken } from 'firebase/messaging';
-import { messaging } from '../../firebase'; // Adjust path
+import { initializeFirebaseMessaging } from '../../firebase'; // Adjust path
 
 const VAPID_KEY = 'BF4TFslNWwWhxOeWb060JYTlx82keMX02npTdIaqlRfmUy2qfCJXd70_WJox3on_hoRxxgrbWccmzv0_WVhTjQI';
 const TOPICS = ['news', 'offers', 'alerts']; // Add your desired topics
@@ -47,24 +47,54 @@ const NotificationSettings = () => {
 }, [token]);
 
 
-  const handleEnableNotifications = async () => {
+ const handleEnableNotifications = async () => {
+  const isSecure =
+    window.location.hostname === 'localhost' ||
+    window.location.protocol === 'https:';
+
+  if (!isSecure) {
+    alert(
+      'Push notifications require HTTPS.'
+    );
+    return;
+  }
     const perm = await Notification.requestPermission();
     setPermission(perm);
 
-    if (perm === 'granted') {
-      const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY });
-      if (fcmToken) {
-        setToken(fcmToken);
-        localStorage.setItem('fcmToken', fcmToken);
+   if (perm === 'granted') {
+  const messaging = await initializeFirebaseMessaging();
 
-        // Send token to backend
-        await axios.post(
-          '/target/api/v1/notifications/save-token',
-          { token: fcmToken, platform: 'web' },
-          {withCredentials:true}
-        );
+  if (!messaging) {
+    alert(
+      'Push notifications are not supported in this environment.'
+    );
+    return;
+  }
+
+try {
+  const fcmToken = await getToken(messaging, {
+    vapidKey: VAPID_KEY,
+  });
+
+  if (fcmToken) {
+    setToken(fcmToken);
+    localStorage.setItem("fcmToken", fcmToken);
+
+    await axios.post(
+      "/target/api/v1/notifications/save-token",
+      {
+        token: fcmToken,
+        platform: "web",
+      },
+      {
+        withCredentials: true,
       }
-    }
+    );
+  }
+} catch (error) {
+  console.error("Failed to get FCM token:", error);
+}
+}
   };
 
 

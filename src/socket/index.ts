@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Connect to your backend
-const socket = io("http://localhost:9000", {
+const socket = io("/", {
   path: "/socket.io/", // must match backend path
   withCredentials: true,
   transports: ["websocket", "polling"],

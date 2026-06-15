@@ -11,11 +11,12 @@ interface VideoType {
 }
 
 const WatchHistory: React.FC = () => {
-  const { info } = useSelector((state: RootState) => state.User);
+  const info = useSelector((state: RootState) => state.User.info);
   const [watchedHistory, setWatchedHistory] = useState<VideoType[]>([]);
 
   useEffect(() => {
     const getHistory = async () => {
+      if (!info || !info._id) return;
       try {
         const response = await axios.get(
           `/target/api/v1/users/GetHistory/${info._id}`,
@@ -32,9 +33,10 @@ const WatchHistory: React.FC = () => {
     };
 
     getHistory();
-  }, [info._id]);
+  }, [info]);
 
   const handleClearHistory = async () => {
+    if (!info || !info._id) return;
     try {
       const response = await axios.get(
         `/target/api/v1/users/ClearHistory/${info._id}`,

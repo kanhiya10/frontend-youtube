@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getToken } from "firebase/messaging";
-import { messaging } from "../../firebase"; // adjust path
+import { initializeFirebaseMessaging } from "../../firebase"; // adjust path
 import { AppDispatch } from "../../store";
 
 const VAPID_KEY = 'BF4TFslNWwWhxOeWb060JYTlx82keMX02npTdIaqlRfmUy2qfCJXd70_WJox3on_hoRxxgrbWccmzv0_WVhTjQI';
@@ -34,11 +34,22 @@ export const registerFcmToken = createAsyncThunk<string | null>(
   "notifications/registerFcmToken",
   async (_, { rejectWithValue }) => {
     try {
+  const isSecure =
+    window.location.protocol === "https:" ||
+    window.location.hostname === "localhost";
+
+  if (!isSecure) {
+    return null;
+  }
+      const messaging = await initializeFirebaseMessaging();
+      if (!messaging) {
+        return null;
+      }
         const registration = await navigator.serviceWorker.ready;
       const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: registration });
       if (fcmToken) {
         await axios.post(
-          `http://localhost:9000/target/api/v1/notifications/save-token`,
+          `/target/api/v1/notifications/save-token`,
           { token: fcmToken, platform: "web" },
           { withCredentials: true }
         );
@@ -57,7 +68,7 @@ export const removeFcmToken = createAsyncThunk<string, string>(
   async (token, { rejectWithValue }) => {
     try {
       await axios.post(
-        `http://localhost:9000/target/api/v1/notifications/deactivate-token`,
+        `/target/api/v1/notifications/deactivate-token`,
         { token },
         { withCredentials: true }
       );

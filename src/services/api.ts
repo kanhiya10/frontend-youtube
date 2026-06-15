@@ -2,7 +2,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: `http://localhost:9000/target/api/v1`,
+  baseURL: `/target/api/v1`,
   withCredentials: true, // ✅ so cookies (access + refresh) are sent automatically
   headers: {
     "Content-Type": "application/json",

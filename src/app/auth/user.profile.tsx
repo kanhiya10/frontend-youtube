@@ -31,7 +31,7 @@ const UserProfile: React.FC = () => {
     try {
       const option = { password, username, email };
        const result = await dispatch(
-      UserApi({ url: `http://localhost:9000/target/api/v1/users/login`, option })
+      UserApi({ url: `/target/api/v1/users/login`, option })
     );
     if (UserApi.fulfilled.match(result)) {
       dispatch(initNotificationsAfterLogin());

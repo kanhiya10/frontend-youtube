@@ -21,8 +21,8 @@ const UploadVideo = lazyImport(() => import('./components/common/uploadVideo'));
 import NotificationPage from './app/notifications/notificationPage';
 const Chat = lazyImport(() => import('./app/chat/index'));
 import { useEffect, Suspense } from 'react';
-import { messaging } from './firebase';
-import { getToken, getMessaging, onMessage } from 'firebase/messaging';
+import { initializeFirebaseMessaging } from './firebase';
+import { onMessage } from 'firebase/messaging';
 import SearchResult from './app/search/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPermission, registerFcmToken, removeFcmToken } from './features/slice/notificationFcm.slice';
@@ -43,29 +43,52 @@ function App() {
 
 
 
-  useEffect(() => {
-    // Foreground message listener
-    const unsubscribe = onMessage(messaging, (payload) => {
+useEffect(() => {
+  let unsubscribe;
+
+  const setupMessaging = async () => {
+    const messaging = await initializeFirebaseMessaging();
+
+    if (!messaging) {
+      console.log("Firebase Messaging not available");
+      return;
+    }
+
+    unsubscribe = onMessage(messaging, (payload) => {
       setNotification({
-        title: payload.notification.title,
-        body: payload.notification.body,
+        title: payload.notification?.title,
+        body: payload.notification?.body,
       });
 
-      // Optional: show a custom toast or popup here
-      alert(`${payload.notification.title}\n${payload.notification.body}`);
+      alert(
+        `${payload.notification?.title}\n${payload.notification?.body}`
+      );
     });
+  };
 
-    // Cleanup listener on unmount
-    return () => unsubscribe();
-  }, []);
+  setupMessaging();
+
+  return () => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  };
+}, []);
 
 
-  useEffect(() => {
-    navigator.permissions.query({ name: "notifications" }).then((permissionStatus) => {
+useEffect(() => {
+  if (!("permissions" in navigator)) {
+    return;
+  }
+
+  navigator.permissions
+    .query({ name: "notifications" })
+    .then((permissionStatus) => {
       dispatch(setPermission(permissionStatus.state));
 
       permissionStatus.onchange = () => {
         const newPermission = permissionStatus.state;
+
         dispatch(setPermission(newPermission));
 
         if (isLoggedIn) {
@@ -76,8 +99,9 @@ function App() {
           }
         }
       };
-    });
-  }, [dispatch, isLoggedIn, token]);
+    })
+    .catch(console.error);
+}, [dispatch, isLoggedIn, token]);
 
 
 
