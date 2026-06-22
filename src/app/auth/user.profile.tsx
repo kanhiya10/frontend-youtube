@@ -18,7 +18,18 @@ const UserProfile: React.FC = () => {
 
   const [password, setPassword] = useState<string>('');
   const [username, setUserName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+ const [email, setEmail] = useState('');
+const [emailError, setEmailError] = useState('');
+
+const validateEmail = () => {
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+  if (email && !gmailRegex.test(email)) {
+    setEmailError('Please enter a valid Gmail address (example@gmail.com)');
+  } else {
+    setEmailError('');
+  }
+};
 
   // useEffect(() => {
   //   if (info && Object.keys(info).length > 0) {
@@ -28,6 +39,12 @@ const UserProfile: React.FC = () => {
 
   const loginData = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+  if (!gmailRegex.test(email)) {
+    setEmailError('Please enter a valid Gmail address');
+    return;
+  }
     try {
       const option = { password, username, email };
        const result = await dispatch(
@@ -63,10 +80,16 @@ const UserProfile: React.FC = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onBlur={validateEmail}
           placeholder="Email"
           className="w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
           style={inputStyle}
         />
+        {emailError && (
+  <p className="text-red-500 text-sm mt-1">
+    {emailError}
+  </p>
+)}
         <input
           type="password"
           value={password}
