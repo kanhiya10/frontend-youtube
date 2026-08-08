@@ -7,18 +7,27 @@ interface Video {
   thumbnail: string;
   videoFile: string;
   createdAt?: string;
+  visibility:string
+}
+interface UserVideosResponse {
+  videos: Video[];
+  canWatchMembersOnly: boolean;
 }
 
 export const useUserVideos = (username?: string) => {
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [videosData, setVideosData] = useState<UserVideosResponse>({
+    videos:[],
+    canWatchMembersOnly:false
+  });
   const [loading, setLoading] = useState(true);
+
 
   const fetchVideos = useCallback(async () => {
     setLoading(true);
     try {
-      const endpoint = `https://backend-youtube-zba1.onrender.com/api/v1/videos/user${username ? `/${username}` : ""}`;
-      const response = await axios.get<{ data: Video[] }>(endpoint, { withCredentials: true });
-      setVideos(response.data.data);
+      const endpoint = `http://localhost:8000/api/v1/videos/user${username ? `/${username}` : ""}`;
+      const response = await axios.get<{ data: UserVideosResponse }>(endpoint, { withCredentials: true });
+      setVideosData(response.data.data);
     } catch (error) {
       console.error("Error fetching videos:", error);
     } finally {
@@ -30,5 +39,10 @@ export const useUserVideos = (username?: string) => {
     fetchVideos();
   }, [fetchVideos]);
 
-  return { videos, loading, refetch: fetchVideos };
+  return {
+    videos: videosData?.videos,
+    canWatch: videosData?.canWatchMembersOnly,
+    loading,
+    refetch: fetchVideos,
+  };
 };

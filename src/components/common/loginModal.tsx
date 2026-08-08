@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../context/themeContext";
 import { useStyles } from "../../utils/styleImports";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 interface LoginModalProps {
   onClose: () => void;
@@ -10,6 +12,8 @@ interface LoginModalProps {
 const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const { theme } = useTheme();
   const { textSecondaryStyle } = useStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: theme.background }}>
@@ -20,21 +24,21 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
       ></div>
 
       {/* Modal */}
-      <div 
+      <div
         className="relative rounded-2xl shadow-lg w-[90%] max-w-md p-6 text-center z-10"
-        style={{ 
+        style={{
           backgroundColor: theme.card,
-          boxShadow: `0 25px 50px -12px ${theme.shadow}` ,
+          boxShadow: `0 25px 50px -12px ${theme.shadow}`,
           border: `2px solid ${theme.border}`
         }}
       >
-        <h2 
+        <h2
           className="text-xl font-semibold mb-4"
           style={{ color: theme.text }}
         >
           Login Required
         </h2>
-        <p 
+        <p
           className="mb-6"
           style={textSecondaryStyle}
         >
@@ -42,26 +46,24 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
         </p>
 
         <div className="flex flex-col gap-3">
-          <Link
-            to="/auth/index"
+          <button
+            onClick={() =>
+              navigate("/auth/index", {
+                state: { from: location.pathname }
+              })
+            }
             className="py-2 px-4 rounded-lg font-medium transition-all duration-200"
-            style={{ 
+            style={{
               backgroundColor: theme.primary,
               color: theme.background
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '0.9';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '1';
-            }}
           >
             Go to Login
-          </Link>
+          </button>
           <button
             onClick={onClose}
             className="py-2 px-4 rounded-lg font-medium transition-all duration-200"
-            style={{ 
+            style={{
               backgroundColor: theme.surface,
               color: theme.textSecondary,
               border: `1px solid ${theme.border}`

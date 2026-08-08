@@ -1,4 +1,5 @@
 export interface VideoInfoType {
+  canWatch: boolean;
   likes: number;
   dislikes: number;
   isSubscribed: boolean;
@@ -29,6 +30,7 @@ export interface HomeInfoType {
 //   owner:string;
 //   isPublished:boolean;
   views:number;
+  visibility: string;
   // likes:number;
   duration:number;
 
@@ -146,4 +148,44 @@ export interface MessageProps {
   isSender: boolean;
   mediaUrl?: string;
   mediaType?: 'image' | 'video' | 'file';
+}
+
+export type MembershipStatus =
+  | "active"
+  | "cancelled"
+  | "expired"
+  | null;
+
+export interface MembershipType {
+  _id: string;
+  member: string;
+  channel: string;
+  amount: number;
+  status: "active" | "cancelled";
+  startDate: string;
+  expiryDate: string;
+  paymentId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MembershipInfo {
+  status: MembershipStatus;
+  membership: MembershipType | null;
+  displayPrice: number;
+}
+
+export interface ChannelMember {
+    _id: string;
+    member: {
+        _id: string;
+        fullName: string;
+        username: string;
+        avatar: string;
+    };
+    amount: number;
+    status: "active" | "cancelled";
+    startDate: string;
+    expiryDate: string;
+    createdAt: string;
 }

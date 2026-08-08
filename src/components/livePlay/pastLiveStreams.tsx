@@ -17,7 +17,7 @@ const PastLiveStreams = ({ username }: { username: string }) => {
     const fetchPast = async () => {
       try {
         const res = await axios.get(
-          `https://backend-youtube-zba1.onrender.com/api/v1/stream/history/${username}`
+          `http://localhost:8000/api/v1/stream/history/${username}`
         );
         setPastStreams(res.data.data);
       } catch (err) {

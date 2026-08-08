@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 
 // Define the shape of your user object (based on your backend response)
 interface User {
-  id: string;
+  _id: string;
   username: string;
   email: string;
   fullName?: string;
@@ -66,6 +66,7 @@ const UserSlice = createSlice({
     builder.addCase(UserApi.fulfilled, (state, action: PayloadAction<AxiosResponse<LoginResponse>>) => {
       state.isLoading = false;
       state.info = action.payload.data.data.user;
+      console.log('info val',state.info);
     });
     builder.addCase(UserApi.rejected, (state) => {
       state.isLoading = false;

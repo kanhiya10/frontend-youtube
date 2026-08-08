@@ -31,14 +31,14 @@ const Live = () => {
     const fetchLiveAndPast = async () => {
       try {
         if (!isCurrentUser) {
-          const liveRes = await axios.get(`https://backend-youtube-zba1.onrender.com/api/v1/stream/fetchLive/${username}`, {
+          const liveRes = await axios.get(`http://localhost:8000/api/v1/stream/fetchLive/${username}`, {
             withCredentials: true,
           });
           setStreamData(liveRes.data.data);
         }
 
         const historyRes = await axios.get(
-            `https://backend-youtube-zba1.onrender.com/api/v1/stream/history${username ? `/${username}` : ""}`,
+            `http://localhost:8000/api/v1/stream/history${username ? `/${username}` : ""}`,
             { withCredentials: true }
           );
           

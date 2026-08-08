@@ -83,6 +83,7 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
               { to: "getVideo", label: "Videos" },
               // { to: "live", label: "Live" },
               { to: "watchHistory", label: "Watch History" },
+              { to: "members", label: "Members" },
             ] : [
               { to: "home", label: "Home" },
               { to: "getVideo", label: "Videos" },
@@ -112,6 +113,7 @@ const DisplayInfo = ({ username }: DisplayInfoProps) => {
                 { to: "getVideo", label: "Videos" },
                 // { to: "live", label: "Live" },
                 { to: "watchHistory", label: "History" },
+                { to: "members", label: "Members" },
               ] : [
                 { to: "home", label: "Home" },
                 { to: "getVideo", label: "Videos" },

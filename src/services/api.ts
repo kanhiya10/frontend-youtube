@@ -2,7 +2,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: "https://backend-youtube-zba1.onrender.com/api/v1",
+  baseURL: "http://localhost:8000/api/v1", // ✅ local backend
   withCredentials: true, // ✅ so cookies (access + refresh) are sent automatically
   headers: {
     "Content-Type": "application/json",
@@ -55,7 +55,7 @@ api.interceptors.response.use(
 
       try {
         const {data}=await axios.post(
-          "https://backend-youtube-zba1.onrender.com/api/v1/users/refresh-token",
+          "http://localhost:8000/api/v1/users/refresh-token",
           {},
           { withCredentials: true }
         );

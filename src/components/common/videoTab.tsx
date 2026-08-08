@@ -12,7 +12,7 @@ import { deleteVideo } from "../../services/videos";
 
 const VideosTab = () => {
   const { username } = useParams<{ username: string }>();
-  const { videos, loading, refetch } = useUserVideos(username);
+  const { videos, canWatch, loading, refetch } = useUserVideos(username);
   const { theme } = useTheme();
   const { containerStylev2, headingStyle, select, labelStyle, noVideosText } = useStyles();
 
@@ -94,22 +94,43 @@ const VideosTab = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentVideos.map((video) => (
               <div key={video._id} className="relative group">
-                <VideoPlayer
-                  src={video.videoFile}
-                  poster={video.thumbnail}
-                  onPlay={() => trackPlay(video._id)}
-                  className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
-                  timestamps={videoTimestamps}
-                />
-                
-                {/* Delete button - only show for current user's own videos */}
+
+                {video.visibility === "members" && !canWatch ? (
+                  <div className="relative">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-full rounded-lg"
+                    />
+
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg">
+                      <div className="text-center text-white">
+                        <p className="font-semibold">
+                          Members Only
+                        </p>
+
+                        <p className="text-sm mt-1">
+                          Join this channel to watch
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <VideoPlayer
+                    src={video.videoFile!}
+                    poster={video.thumbnail}
+                    onPlay={() => trackPlay(video._id)}
+                    className="w-full h-auto max-h-[60vh] rounded-lg shadow-xl"
+                    timestamps={videoTimestamps}
+                  />
+                )}
+
                 {isCurrentUser && (
                   <button
                     onClick={() => handleDeleteVideo(video._id)}
                     disabled={deletingVideoId === video._id}
-                    className={`absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 ${
-                      deletingVideoId === video._id ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                    className={`absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 ${deletingVideoId === video._id ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                     title="Delete video"
                   >
                     {deletingVideoId === video._id ? (
@@ -122,12 +143,13 @@ const VideosTab = () => {
                   </button>
                 )}
 
-                {/* Video title overlay (optional) */}
+                {/* title */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 rounded-b-lg">
                   <h3 className="text-white text-sm font-medium truncate">
                     {video.title || "Untitled Video"}
                   </h3>
                 </div>
+
               </div>
             ))}
           </div>
@@ -144,3 +166,6 @@ const VideosTab = () => {
 };
 
 export default VideosTab;
+
+
+
