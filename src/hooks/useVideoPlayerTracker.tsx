@@ -11,7 +11,7 @@ export const useVideoPlayTracker = () => {
     if (!sessionStorage.getItem(viewedKey)) {
 
       // Increment view count
-      axios.post(`import.meta.env.VITE_API_URL/api/v1/viewVideo/viewVideo/${videoId}`, {}, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/v1/viewVideo/viewVideo/${videoId}`, {}, {
         withCredentials: true,
       }).then((res) => {
         sessionStorage.setItem(viewedKey, 'true');
@@ -20,7 +20,7 @@ export const useVideoPlayTracker = () => {
       });
 
       // Add to watch history (no userId needed)
-      axios.post(`import.meta.env.VITE_API_URL/api/v1/users/history/${videoId}`, {}, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/v1/users/history/${videoId}`, {}, {
         withCredentials: true,
       }).then((res) => {
       }).catch((err) => {

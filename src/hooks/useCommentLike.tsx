@@ -15,7 +15,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
   const toggleLike = async () => {
     try {
       const res = await axios.post(
-        `import.meta.env.VITE_API_URL/api/v1/comments/like/${commentId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/comments/like/${commentId}`,
         {},
         { withCredentials: true }
       );
@@ -33,7 +33,7 @@ export const useCommentLike = ({ initialLikes = [], initialDislikes = [], commen
   const toggleDislike = async () => {
     try {
       const res = await axios.post(
-        `import.meta.env.VITE_API_URL/api/v1/comments/dislike/${commentId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/comments/dislike/${commentId}`,
         {},
         { withCredentials: true }
       );

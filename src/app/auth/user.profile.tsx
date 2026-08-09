@@ -50,8 +50,9 @@ const validateEmail = () => {
   }
     try {
       const option = { password, username, email };
+      console.log('env var',import.meta.env.VITE_API_URL);
        const result = await dispatch(
-      UserApi({ url: `import.meta.env.VITE_API_URL/api/v1/users/login`, option })
+      UserApi({ url: `${import.meta.env.VITE_API_URL}/api/v1/users/login`, option })
     );
     if (UserApi.fulfilled.match(result)) {
       dispatch(initNotificationsAfterLogin());

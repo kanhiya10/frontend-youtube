@@ -31,14 +31,14 @@ const Live = () => {
     const fetchLiveAndPast = async () => {
       try {
         if (!isCurrentUser) {
-          const liveRes = await axios.get(`import.meta.env.VITE_API_URL/api/v1/stream/fetchLive/${username}`, {
+          const liveRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/stream/fetchLive/${username}`, {
             withCredentials: true,
           });
           setStreamData(liveRes.data.data);
         }
 
         const historyRes = await axios.get(
-            `import.meta.env.VITE_API_URL/api/v1/stream/history${username ? `/${username}` : ""}`,
+            `${import.meta.env.VITE_API_URL}/api/v1/stream/history${username ? `/${username}` : ""}`,
             { withCredentials: true }
           );
           
