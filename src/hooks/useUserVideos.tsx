@@ -25,7 +25,7 @@ export const useUserVideos = (username?: string) => {
   const fetchVideos = useCallback(async () => {
     setLoading(true);
     try {
-      const endpoint = `http://localhost:8000/api/v1/videos/user${username ? `/${username}` : ""}`;
+      const endpoint = `import.meta.env.VITE_API_URL/api/v1/videos/user${username ? `/${username}` : ""}`;
       const response = await axios.get<{ data: UserVideosResponse }>(endpoint, { withCredentials: true });
       setVideosData(response.data.data);
     } catch (error) {

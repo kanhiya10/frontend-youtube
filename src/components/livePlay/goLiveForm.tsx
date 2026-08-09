@@ -12,7 +12,7 @@ const GoLiveForm: React.FC = () => {
 
   const handleGoLive = async () => {
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/stream/start', { title, category }, {
+      const res = await axios.post('import.meta.env.VITE_API_URL/api/v1/stream/start', { title, category }, {
         withCredentials: true, // if using cookies for auth
       });
       setStreamKey(res.data.data.streamKey);
@@ -23,7 +23,7 @@ const GoLiveForm: React.FC = () => {
 
   const handleStopStream = async () => {
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/stream/stop', {}, {
+      const res = await axios.post('import.meta.env.VITE_API_URL/api/v1/stream/stop', {}, {
         withCredentials: true,
       });
       setStreamKey('');

@@ -2,7 +2,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1", // ✅ local backend
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`, // ✅ local backend
   withCredentials: true, // ✅ so cookies (access + refresh) are sent automatically
   headers: {
     "Content-Type": "application/json",
@@ -55,7 +55,7 @@ api.interceptors.response.use(
 
       try {
         const {data}=await axios.post(
-          "http://localhost:8000/api/v1/users/refresh-token",
+          `import.meta.env.VITE_API_URL/api/v1/users/refresh-token`,
           {},
           { withCredentials: true }
         );
