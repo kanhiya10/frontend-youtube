@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import socket from "../../socket";
 import { useTheme } from "../../context/themeContext"; // Import useTheme
-import { Conversation, UserType } from "../../types/types";
+import { Conversation, UserType,selectedChatUser } from "../../types/types";
 import { getUserConversations } from "../../services/chats"; // Import the API service
 import { searchUsers } from "../../services/searchApi"; // Import the API service
 import { useStyles } from "../../utils/styleImports";
@@ -12,8 +12,8 @@ import { useStyles } from "../../utils/styleImports";
 
 
 interface Props {
-  selectedUser: string | null;
-  onSelectUser: (userId: string) => void;
+  selectedUser: selectedChatUser | null;
+  onSelectUser: (userId: string,fullName:string) => void;
   currentUserId: string;
 }
 
@@ -73,6 +73,7 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
     const timeout = setTimeout(async () => {
       try {
         const response = await searchUsers(search);
+        console.log('111',response.data);
         setSearchResults(response.data);
         setError("");
       } catch (err: any) {
@@ -128,18 +129,18 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
                 {searchResults.map((user) => (
                   <li
                     key={user._id}
-                    onClick={() => onSelectUser(user._id)}
+                    onClick={() => onSelectUser(user._id,user.fullName)}
                     className={`flex items-center gap-2 p-2 cursor-pointer rounded transition-colors duration-200`}
                     style={
-                      selectedUser === user._id
+                      selectedUser?.id === user._id
                         ? listItemSelectedStyle
                         : listItemDefaultStyle
                     }
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = selectedUser === user._id ? theme.active : theme.hover;
+                      e.currentTarget.style.backgroundColor = selectedUser?.id === user._id ? theme.active : theme.hover;
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = selectedUser === user._id ? theme.active : 'transparent';
+                      e.currentTarget.style.backgroundColor = selectedUser?.id === user._id ? theme.active : 'transparent';
                     }}
                   >
                     <img
@@ -168,18 +169,18 @@ export default function UserList({ selectedUser, onSelectUser, currentUserId }: 
             {chatUsers.map((user) => (
               <li
                 key={user._id}
-                onClick={() => onSelectUser(user._id)}
+                onClick={() => onSelectUser(user._id,user.fullName)}
                 className={`flex items-center gap-2 p-2 cursor-pointer rounded transition-colors duration-200`}
                 style={
-                  selectedUser === user._id
+                  selectedUser?.id === user._id
                     ? listItemSelectedStyle
                     : listItemDefaultStyle
                 }
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = selectedUser === user._id ? theme.active : theme.hover;
+                  e.currentTarget.style.backgroundColor = selectedUser?.id === user._id ? theme.active : theme.hover;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = selectedUser === user._id ? theme.active : 'transparent';
+                  e.currentTarget.style.backgroundColor = selectedUser?.id === user._id ? theme.active : 'transparent';
                 }}
               >
                 <img

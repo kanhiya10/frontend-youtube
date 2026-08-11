@@ -78,10 +78,15 @@ export interface UserType {
   _id: string;
   username: string;
   email: string;
-  fullName?: string;
+  fullName: string;
   avatar?: string;
   coverImage?: string;
   description?: string;
+}
+
+export interface selectedChatUser {
+  id:string;
+  fullName?:string;
 }
 
 export interface ChatMessage {

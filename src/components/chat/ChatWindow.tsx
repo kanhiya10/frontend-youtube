@@ -8,11 +8,11 @@ import {
   getConversationMessages, 
   uploadMediaFile 
 } from "../../services/chats"; // Import the API services
-import { ChatMessage } from "../../types/types";
+import { ChatMessage,selectedChatUser } from "../../types/types";
 import { useStyles } from "../../utils/styleImports";
 
 interface Props {
-  selectedUser: string | null;
+  selectedUser: selectedChatUser | null;
   currentUserId: string;
 }
 
@@ -32,7 +32,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
   useEffect(() => {
     const loadConversationHistory = async () => {
       setMessages([]);
-      if (!selectedUser) {
+      if (!selectedUser?.id) {
         setConversationId(null);
         return;
       }
@@ -40,7 +40,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       setIsLoading(true);
       try {
         // Get conversation between users
-        const conversationResponse = await getConversationBetween(selectedUser);
+        const conversationResponse = await getConversationBetween(selectedUser.id);
         const conversation = conversationResponse.data.data;
         setConversationId(conversation._id);
         
@@ -59,7 +59,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     };
 
     loadConversationHistory();
-  }, [selectedUser]);
+  }, [selectedUser?.id]);
 
   useEffect(() => {
     socket.emit("register", currentUserId);
@@ -67,7 +67,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
 
   useEffect(() => {
     setMessages([]);
-  }, [selectedUser]);
+  }, [selectedUser?.id]);
 
   if (!conversationId) {
   }
@@ -78,8 +78,8 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       if (
         currentUserId &&
         (
-          (msg.from === currentUserId && msg.to === selectedUser) ||
-          (msg.from === selectedUser && msg.to === currentUserId)
+          (msg.from === currentUserId && msg.to === selectedUser?.id) ||
+          (msg.from === selectedUser?.id && msg.to === currentUserId)
         )
       ) {
         setMessages((prev) => [...prev, msg]);
@@ -90,13 +90,13 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
     return () => {
       socket.off("message", handleMessage);
     };
-  }, [selectedUser, currentUserId]);
+  }, [selectedUser?.id, currentUserId]);
 
   const sendMessage = () => {
-    if (!input.trim() || !selectedUser || !currentUserId) return;
+    if (!input.trim() || !selectedUser?.id || !currentUserId) return;
     const newMsg: ChatMessage = {
       from: currentUserId,
-      to: selectedUser,
+      to: selectedUser?.id,
       text: input,
     };
     socket.emit("sendMessage", newMsg);
@@ -105,7 +105,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
   };
 
   const sendMedia = async (file: File) => {
-    if (!file || !selectedUser || !currentUserId) return;
+    if (!file || !selectedUser?.id || !currentUserId) return;
     
     setIsUploadingMedia(true);
     try {
@@ -116,7 +116,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
       
       const newMsg: ChatMessage = {
         from: currentUserId,
-        to: selectedUser,
+        to: selectedUser?.id,
         mediaUrl: response.data.url,
         mediaType: file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : 'file',
       };
@@ -139,7 +139,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
   };
 
 
-  if (!selectedUser) {
+  if (!selectedUser?.id) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center" style={windowStyle}>
         <img
@@ -155,7 +155,7 @@ export default function ChatWindow({ selectedUser, currentUserId }: Props) {
   return (
     <div className="flex-1 p-4 flex flex-col" style={windowStyle}>
       <h2 className="text-lg font-semibold mb-2 border-b pb-2" style={headerStyle}>
-        Chat with {selectedUser}
+        Chat with {selectedUser?.fullName}
       </h2>
       
       <div className="flex-1 overflow-y-auto space-y-2 p-2 border rounded" style={messageListStyle}>
