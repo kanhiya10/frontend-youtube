@@ -16,11 +16,13 @@ interface Video {
 
 const HomeProfile = () => {
   const { username } = useParams<{ username: string }>();
-  const { videos, loading } = useUserVideos(username);
+  const { videos,canWatch, loading } = useUserVideos(username);
   const trackPlay = useVideoPlayTracker();
   const { theme } = useTheme();
 
   const { containerStylev2, loadingStyle, videoCardStyle } = useStyles();
+  useEffect(()=>{
+  },[videos])
 
 
 
@@ -55,6 +57,27 @@ const HomeProfile = () => {
           <div>
             <h2 className="text-xl font-semibold mb-3">Featured Video</h2>
             <div className="w-full max-w-2xl mx-auto shadow rounded-lg overflow-hidden" style={videoCardStyle}>
+               {videos[0].visibility === "members" && !canWatch ? (
+                  <div className="relative">
+                    <img
+                      src={videos[0].thumbnail}
+                      alt={videos[0].title}
+                      className="w-full rounded-lg"
+                    />
+
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg">
+                      <div className="text-center text-white">
+                        <p className="font-semibold">
+                          Members Only
+                        </p>
+
+                        <p className="text-sm mt-1">
+                          Join this channel to watch
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ):(
               <VideoPlayer
                 src={videos[0].videoFile}
                 poster={videos[0].thumbnail}
@@ -62,6 +85,7 @@ const HomeProfile = () => {
                 className="w-full h-auto max-h-[60vh] rounded-t-lg shadow-xl"
                 timestamps={videoTimestamps}
               />
+                )}
               <div className="p-4">
                 <h3 className="text-lg font-medium">{videos[0].title}</h3>
               </div>

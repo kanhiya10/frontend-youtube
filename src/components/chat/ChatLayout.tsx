@@ -3,11 +3,11 @@ import UserList from "./UserList";
 import ChatWindow from "./ChatWindow";
 import socket from "../../socket";
 import { getCurrentUser } from "../../services/users"; // Import the API service
-import { UserType } from "@/types/types";
+import { UserType,selectedChatUser } from "@/types/types";
 
 
 export default function ChatLayout() {
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<null | selectedChatUser>(null);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -38,6 +38,14 @@ export default function ChatLayout() {
     //   socket.disconnect();
     // };
   }, []);
+
+  const setUser=(id:string,name:string)=>{
+    setSelectedUser({
+      'id':id,
+      'fullName':name
+    })
+
+  }
 
   if (isLoading) {
     return (
@@ -81,7 +89,7 @@ export default function ChatLayout() {
     <div className="flex h-screen">
       <UserList
         selectedUser={selectedUser}
-        onSelectUser={setSelectedUser}
+        onSelectUser={setUser}
         currentUserId={currentUser._id}
       />
       <ChatWindow selectedUser={selectedUser} currentUserId={currentUser._id} />

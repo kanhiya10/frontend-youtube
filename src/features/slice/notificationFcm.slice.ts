@@ -38,7 +38,7 @@ export const registerFcmToken = createAsyncThunk<string | null>(
       const fcmToken = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: registration });
       if (fcmToken) {
         await axios.post(
-          "https://backend-youtube-zba1.onrender.com/api/v1/notifications/save-token",
+          `${import.meta.env.VITE_API_URL}/api/v1/notifications/save-token`,
           { token: fcmToken, platform: "web" },
           { withCredentials: true }
         );
@@ -57,7 +57,7 @@ export const removeFcmToken = createAsyncThunk<string, string>(
   async (token, { rejectWithValue }) => {
     try {
       await axios.post(
-        "https://backend-youtube-zba1.onrender.com/api/v1/notifications/deactivate-token",
+        `${import.meta.env.VITE_API_URL}/api/v1/notifications/deactivate-token`,
         { token },
         { withCredentials: true }
       );

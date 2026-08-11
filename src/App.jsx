@@ -19,6 +19,7 @@ const LiveStreaming = lazyImport(() => import('./components/common/liveStreaming
 import VideosTab from './components/common/videoTab';
 const UploadVideo = lazyImport(() => import('./components/common/uploadVideo'));
 import NotificationPage from './app/notifications/notificationPage';
+import ChannelMembers from './components/common/members';
 const Chat = lazyImport(() => import('./app/chat/index'));
 import { useEffect, Suspense } from 'react';
 import { messaging } from './firebase';
@@ -36,7 +37,9 @@ function App() {
   const dispatch = useDispatch();
 
   const { info } = useSelector((state) => state.User);
+  console.log('info',info);
   const isLoggedIn = !!info; // true if user is logged in
+
 
 
   const { token } = useSelector((state) => state.notifications);
@@ -119,6 +122,7 @@ function App() {
               <Route path="getVideo" element={<VideosTab />} />
               <Route path="watchHistory" element={<WatchHistory />} />
               <Route path="uploadVideo" element={< UploadVideo />} />
+              <Route path="members" element={<ChannelMembers/>} />
             </Route>
             <Route path="/videoPlay/ownerProfile/:username" element={<OwnerProfile />} >
               <Route index element={<HomeProfile />} />

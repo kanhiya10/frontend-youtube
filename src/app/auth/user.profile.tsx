@@ -2,15 +2,18 @@ import { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { UserApi } from '../../features/slice/fetchUser.slice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { initNotificationsAfterLogin } from '../../features/slice/notificationFcm.slice';
 import { useTheme } from '../../context/themeContext';
 import { useStyles } from '../../utils/styleImports';
+
+
 // import { headingStyle, inputStyle, forgotPasswordStyle, buttonStyle } from '../../utils/styleImports';
 
 const UserProfile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme } = useTheme();
   const { headingStyle, inputStyle, forgotPasswordStyle, buttonStyle } = useStyles();
 
@@ -47,11 +50,14 @@ const validateEmail = () => {
   }
     try {
       const option = { password, username, email };
+      console.log('env var',import.meta.env.VITE_API_URL);
        const result = await dispatch(
-      UserApi({ url: `https://backend-youtube-zba1.onrender.com/api/v1/users/login`, option })
+      UserApi({ url: `${import.meta.env.VITE_API_URL}/api/v1/users/login`, option })
     );
     if (UserApi.fulfilled.match(result)) {
       dispatch(initNotificationsAfterLogin());
+      const from = location.state?.from || "/";
+      navigate(from, { replace: true });
     } else {
       console.warn("Login failed, skipping notification setup");
     }

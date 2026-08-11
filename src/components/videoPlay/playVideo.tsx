@@ -64,13 +64,21 @@ const PlayVideo: React.FC<PlayVideoProps> = ({ VideoInfo }) => {
       {/* Video Player Container */}
       <div className="rounded-xl shadow-lg overflow-hidden border" style={cardStyle}>
         <div className="relative aspect-video bg-black overflow-hidden">
-          <VideoPlayer
-            src={VideoInfo.video.videoFile}
-            poster={VideoInfo.video.thumbnail}
-            onPlay={() => trackPlay(VideoInfo.video._id)}
-            timestamps={videoTimestamps}
-            className="w-full h-full object-contain"
-          />
+          {!VideoInfo.canWatch ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 z-10">
+              <h2 className="text-xl font-semibold text-white">
+                🔒 Members-only Video
+              </h2>
+            </div>
+          ) : (
+            <VideoPlayer
+              src={VideoInfo.video.videoFile}
+              poster={VideoInfo.video.thumbnail}
+              onPlay={() => trackPlay(VideoInfo.video._id)}
+              timestamps={videoTimestamps}
+              className="w-full h-full object-contain"
+            />
+          )}
         </div>
 
         {/* Video Title */}
