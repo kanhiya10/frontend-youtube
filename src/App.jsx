@@ -30,14 +30,17 @@ import { setPermission, registerFcmToken, removeFcmToken } from './features/slic
 import Loader from './components/common/loader';
 import PrivateRoute from './utils/privateRoute';
 import PublicRoute from './utils/publicRoute';
+import { fetchCurrentUser } from './features/slice/fetchUser.slice';
+import { useTheme } from './context/themeContext';
 
 function App() {
   const [sidebarData, setSidebarData] = useState(false);
   const [notification, setNotification] = useState(null);
+  const { theme } = useTheme();
   const dispatch = useDispatch();
 
   const { info } = useSelector((state) => state.User);
-  console.log('info',info);
+  console.log('info', info);
   const isLoggedIn = !!info; // true if user is logged in
 
 
@@ -83,6 +86,11 @@ function App() {
   }, [dispatch, isLoggedIn, token]);
 
 
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
+
 
 
   const handleSideBar = () => {
@@ -92,7 +100,7 @@ function App() {
 
   return (
 
-    <div>
+    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
 
       <Header handleSideBar={handleSideBar} />
       <Sidebar sidebarData={sidebarData} />
@@ -113,16 +121,16 @@ function App() {
             <Route path="/manageSecurity" element={<SecuritySettings />} />
             <Route path="/manageNotifications" element={<NotificationSettings />} />
             <Route path="/videoPlay/streaming/:id" element={<Streaming />} />
-            <Route path="/auth/index" element={<PublicRoute><AuthIndex /></PublicRoute>}/>
+            <Route path="/auth/index" element={<PublicRoute><AuthIndex /></PublicRoute>} />
             <Route path="/search" element={<SearchResult />} />
-            <Route path="/profile/index" element={<PrivateRoute><ProfileIndex/></PrivateRoute>} >
+            <Route path="/profile/index" element={<PrivateRoute><ProfileIndex /></PrivateRoute>} >
               <Route index element={<HomeProfile />} />
               {/* <Route path="live" element={<LiveStreaming />} /> */}
               <Route path="home" element={<HomeProfile />} />
               <Route path="getVideo" element={<VideosTab />} />
               <Route path="watchHistory" element={<WatchHistory />} />
               <Route path="uploadVideo" element={< UploadVideo />} />
-              <Route path="members" element={<ChannelMembers/>} />
+              <Route path="members" element={<ChannelMembers />} />
             </Route>
             <Route path="/videoPlay/ownerProfile/:username" element={<OwnerProfile />} >
               <Route index element={<HomeProfile />} />
@@ -130,7 +138,7 @@ function App() {
               <Route path="home" element={<HomeProfile />} />
               <Route path="getVideo" element={<VideosTab />} />
             </Route>
-            <Route path="/chat" element={ <PrivateRoute><Chat /></PrivateRoute>} />
+            <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
           </Routes>
         </Suspense>
 

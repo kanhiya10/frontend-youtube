@@ -20,9 +20,36 @@ interface HeaderProps {
   handleSideBar: () => void;
 }
 
-const IconButton = ({ onClick, Icon, label }: { onClick: () => void; Icon: React.ReactNode; label: string }) => (
-  <button onClick={onClick} aria-label={label} className="hover:scale-105 transition">
+const IconButton = ({
+  onClick,
+  Icon,
+  label
+}: {
+  onClick: () => void;
+  Icon: React.ReactNode;
+  label: string;
+}) => (
+  <button
+    onClick={onClick}
+    aria-label={label}
+    className="relative group hover:scale-105 transition"
+  >
     {Icon}
+
+    <span
+      className="
+        absolute top-full left-1/2 -translate-x-1/2 mt-2
+        whitespace-nowrap
+        bg-black text-white text-xs
+        px-2 py-1 rounded
+        opacity-0 invisible
+        group-hover:opacity-100 group-hover:visible
+        transition-opacity duration-200
+        z-50
+      "
+    >
+      {label}
+    </span>
   </button>
 );
 

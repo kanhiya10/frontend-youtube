@@ -1,6 +1,7 @@
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosResponse } from 'axios';
+import { getCurrentUser } from '../../services/users';
 
 // Define the shape of your user object (based on your backend response)
 interface User {
@@ -43,6 +44,14 @@ export const UserApi = createAsyncThunk<
   return response;
 });
 
+export const fetchCurrentUser = createAsyncThunk(
+  'fetchCurrentUser',
+  async () => {
+    const response = await getCurrentUser();
+    return response.data;
+  }
+);
+
 const initialState: UserState = {
   info: null,
   isLoading: false,
@@ -59,6 +68,7 @@ const UserSlice = createSlice({
       state.info = action.payload; // ✅ set user manually (Google login)
     },
   },
+  
   extraReducers: (builder) => {
     builder.addCase(UserApi.pending, (state) => {
       state.isLoading = true;
@@ -70,6 +80,20 @@ const UserSlice = createSlice({
     });
     builder.addCase(UserApi.rejected, (state) => {
       state.isLoading = false;
+    });
+     builder.addCase(fetchCurrentUser.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      console.log('Fetched current user:', action.payload);
+      state.info = action.payload.data; // Assuming the backend response structure is { data: { data: User } }
+    });
+
+    builder.addCase(fetchCurrentUser.rejected, (state) => {
+      state.isLoading = false;
+      state.info = null;
     });
   },
 });
